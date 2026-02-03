@@ -17,21 +17,8 @@ collections:
           - label: "Videos"
             name: "videos"
             widget: "list"
-            summary: "{{fields.title}}"
             fields:
               - { label: "Title", name: "title", widget: "string" }
               - { label: "Type", name: "type", widget: "select", options: ["youtube", "vimeo"] }
               - { label: "Video ID", name: "id", widget: "string" }
               - { label: "Thumbnail", name: "thumb", widget: "image" }
-              - { label: "Tag", name: "tag", widget: "string", required: false }
-
-      - name: "site"
-        label: "Site Content"
-        file: "data/site.json"
-        format: "json"
-        fields:
-          - { label: "Logo Text", name: "logo", widget: "string" }
-          - { label: "Headline", name: "headline", widget: "string" }
-          - { label: "Description", name: "description", widget: "text" }
-          - { label: "Location Line", name: "location", widget: "string", required: false }
-          - { label: "CTA Button Text", name: "cta", widget: "string" }
