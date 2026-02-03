@@ -1,86 +1,82 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Name — Video Portfolio</title>
+  <title>Toy Boat — Video Portfolio</title>
 
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+
+  <!-- Netlify Identity (needed for CMS auth redirects) -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
     body {
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #0b0b0c;
-      color: #f4f4f5;
+      background: #fff;
+      color: #000;
     }
 
-    header {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 48px 20px 20px;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    p {
-      margin: 0;
-      color: #b6b6bd;
-    }
-
-    <header class="site-header">
-  <div class="header-inner">
-    <div class="logo">TOY BOAT</div>
-    <a href="mailto:hello@toyboat.co" class="email-link">EMAIL</a>
-  </div>
-</header>
-
+    /* ---------- HEADER ---------- */
     .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-}
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
 
-.header-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 32px;
-}
+    .header-inner {
+      padding: 24px 32px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
 
-.logo {
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
+    /* ---------- INTRO ---------- */
+    .intro {
+      max-width: 720px;
+      padding: 120px 32px 80px;
+    }
 
-.email-link {
-  text-decoration: none;
-  color: #000;
-  font-size: 13px;
-  letter-spacing: 0.1em;
-}
-    
+    .intro h1 {
+      font-size: 38px;
+      margin-bottom: 24px;
+    }
+
+    .intro p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .location {
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .cta {
+      background: none;
+      border: 2px solid #000;
+      padding: 14px 24px;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+
+    /* ---------- GRID ---------- */
     main {
-  margin: 0;
-  padding: 0 32px 80px;
-}
+      padding: 0 32px 80px;
+    }
 
     .grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
-}
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
 
-    /* Mobile: 1 column */
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       .grid {
         grid-template-columns: 1fr;
       }
@@ -88,10 +84,6 @@
 
     .card {
       position: relative;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #141416;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
       text-decoration: none;
       color: inherit;
     }
@@ -100,24 +92,8 @@
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
-      display: block;
       background: #222;
-    }
-
-    .meta {
-      padding: 12px 12px 14px;
-    }
-
-    .title {
-      font-weight: 650;
-      font-size: 14px;
-      margin: 0 0 6px;
-    }
-
-    .tag {
-      font-size: 12px;
-      color: #a0a0a8;
-      margin: 0;
+      display: block;
     }
 
     .play {
@@ -129,31 +105,124 @@
     }
 
     .play span {
-      font-size: 52px;
-      opacity: 0.9;
+      font-size: 56px;
+      color: white;
       text-shadow: 0 10px 25px rgba(0,0,0,.6);
+    }
+
+    .meta {
+      padding-top: 10px;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 14px;
+      margin: 0 0 4px;
+    }
+
+    .tag {
+      font-size: 12px;
+      color: #777;
+      margin: 0;
+    }
+
+    /* ---------- MODAL ---------- */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 48px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .modal-content button {
+      border: 2px solid #000;
+      background: none;
+      padding: 12px 20px;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+
+    .close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Your Name</h1>
-    <p>Selected video work</p>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">TOY BOAT</div>
   </header>
 
+  <!-- INTRO -->
+  <section class="intro">
+    <h1>Videos that connect</h1>
+    <p>
+      We are a small team of local filmmakers creating thoughtful,
+      story-driven videos with a hands-on, collaborative approach.
+    </p>
+    <p class="location">
+      Based in Poulsbo, serving the Puget Sound
+    </p>
+    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
+  </section>
+
+  <!-- GRID -->
   <main>
     <section class="grid" id="videoGrid"></section>
   </main>
 
-  <!-- GLightbox -->
+  <!-- CONTACT MODAL -->
+  <div class="modal" id="contactModal">
+    <div class="modal-content">
+      <button class="close" id="closeContact">×</button>
+      <h2>Schedule a call to plan your video project!</h2>
+
+      <form name="contact" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="contact">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="tel" name="phone" placeholder="Phone">
+        <textarea name="message" placeholder="Tell us about your project" required></textarea>
+        <button type="submit">SUBMIT</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
   <script>
     async function loadVideos() {
       const res = await fetch("/data/videos.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("Could not load videos.json");
       const data = await res.json();
       return data.videos || [];
     }
@@ -161,55 +230,32 @@
     function render(videos) {
       const grid = document.getElementById("videoGrid");
 
-      grid.innerHTML = videos.map(v => {
-        const href = v.type === "youtube"
-          ? `https://www.youtube.com/watch?v=${v.id}`
-          : `https://vimeo.com/${v.id}`;
-
-      const thumb = v.thumb;
-
-        return `
-          <a class="card glightbox"
-             href="${href}"
-             data-gallery="videos"
-             data-type="video"
-             data-title="${v.title}">
-            ${thumb
-              ? `<img class="thumb" src="${thumb}" alt="${v.title}">`
-              : `<div class="thumb"></div>`
-            }
-            <div class="play"><span>▶</span></div>
-            <div class="meta">
-              <p class="title">${v.title}</p>
-              ${v.tag ? `<p class="tag">${v.tag}</p>` : ``}
-            </div>
-          </a>
-        `;
-      }).join("");
+      grid.innerHTML = videos.map(v => `
+        <a class="card glightbox"
+           href="${v.type === "youtube"
+             ? `https://www.youtube.com/watch?v=${v.id}`
+             : `https://vimeo.com/${v.id}`}"
+           data-gallery="videos"
+           data-type="video"
+           data-title="${v.title}">
+          <img class="thumb" src="${v.thumb}" alt="${v.title}">
+          <div class="play"><span>▶</span></div>
+          <div class="meta">
+            <p class="title">${v.title}</p>
+            ${v.tag ? `<p class="tag">${v.tag}</p>` : ``}
+          </div>
+        </a>
+      `).join("");
 
       GLightbox({ selector: ".glightbox" });
     }
 
-    (async () => {
-      try {
-        const videos = await loadVideos();
-        render(videos);
-      } catch (err) {
-        console.error(err);
-        document.getElementById("videoGrid").innerHTML =
-          "<p style='color:#b6b6bd'>Could not load videos.</p>";
-      }
-      // If an invite/recovery token hits the homepage, forward it to /admin so Decap can handle it
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", () => {
-      const h = window.location.hash || "";
-      if (h.includes("invite_token=") || h.includes("recovery_token=") || h.includes("confirmation_token=")) {
-        window.location.href = "/admin/" + h;
-      }
-    });
-    window.netlifyIdentity.init();
-  }
-    })();
+    loadVideos().then(render);
+
+    // Contact modal
+    const modal = document.getElementById("contactModal");
+    document.getElementById("openContact").onclick = () => modal.style.display = "flex";
+    document.getElementById("closeContact").onclick = () => modal.style.display = "none";
   </script>
 
 </body>
