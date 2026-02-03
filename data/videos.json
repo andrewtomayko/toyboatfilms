@@ -1,10 +1,11 @@
 {
   "videos": [
     {
-      "title": "YouTube Project",
-      "tag": "Commercial • 2025",
+      "title": "Silverwood School Promo Video",
+      "tag": "",
       "type": "youtube",
-      "id": "VIDEO_ID"
+      "id": "VYHBzXdmlmA",
+      "thumb": "/thumbnails/silverwood-school-thumb.jpg"
     },
     {
       "title": "Vimeo Project",
