@@ -247,7 +247,12 @@
         </a>
       `).join("");
 
-      GLightbox({ selector: ".glightbox" });
+      GLightbox({
+  selector: ".glightbox",
+  width: "95vw",
+  height: "95vh",
+  zoomable: false
+});
     }
 
     loadVideos().then(render);
