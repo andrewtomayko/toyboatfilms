@@ -1,0 +1,10 @@
+{
+  "bg": "#ffffff",
+  "text": "#000000",
+  "muted": "#777777",
+  "border": "#eeeeee",
+  "columns": 2,
+  "gap": 32,
+  "sidePadding": 32,
+  "introWidth": 720
+}
