@@ -23,6 +23,15 @@
       --introWidth: 720px;
     }
 
+    .glightbox-container .gvideo iframe,
+.glightbox-container .gvideo video {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+
+
     * { box-sizing: border-box; }
 
     body{
@@ -291,12 +300,15 @@
       }).join("");
 
       // Bigger lightbox video, no title
-      GLightbox({
-        selector: ".glightbox",
-        width: "95vw",
-        height: "95vh",
-        zoomable: false
-      });
+    GLightbox({
+  selector: ".glightbox",
+  width: "100vw",
+  height: "100vh",
+  zoomable: false,
+  touchNavigation: true,
+  closeOnOutsideClick: true
+});
+
     }
 
     // Contact modal open/close
