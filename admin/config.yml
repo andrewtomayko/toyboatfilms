@@ -6,25 +6,28 @@ media_folder: "thumbnails"
 public_folder: "/thumbnails"
 
 collections:
-  - name: "videos"
-    label: "Videos"
-    file: "data/videos.json"
-    format: "json"
-    fields:
-      - label: "Videos"
-        name: "videos"
-        widget: "list"
-        summary: "{{fields.title}} ({{fields.type}})"
+  - name: "content"
+    label: "Content"
+    files:
+      - name: "videos"
+        label: "Videos"
+        file: "data/videos.json"
+        format: "json"
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Tag", name: "tag", widget: "string", required: false }
-          - label: "Type"
-            name: "type"
-            widget: "select"
-            options: ["youtube", "vimeo"]
-          - { label: "Video ID", name: "id", widget: "string" }
-          - label: "Vimeo Thumbnail"
-            name: "thumb"
-            widget: "image"
-            required: false
-            hint: "Required for Vimeo. YouTube thumbnails are automatic."
+          - label: "Videos"
+            name: "videos"
+            widget: "list"
+            summary: "{{fields.title}} ({{fields.type}})"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Tag", name: "tag", widget: "string", required: false }
+              - label: "Type"
+                name: "type"
+                widget: "select"
+                options: ["youtube", "vimeo"]
+              - { label: "Video ID", name: "id", widget: "string" }
+              - label: "Vimeo Thumbnail"
+                name: "thumb"
+                widget: "image"
+                required: false
+                hint: "Required for Vimeo. YouTube thumbnails are automatic."
