@@ -18,7 +18,33 @@ collections:
             name: "videos"
             widget: "list"
             fields:
-              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Title", name: "title", widget: "string", required: false }
               - { label: "Type", name: "type", widget: "select", options: ["youtube", "vimeo"] }
               - { label: "Video ID", name: "id", widget: "string" }
               - { label: "Thumbnail", name: "thumb", widget: "image" }
+              - { label: "Tag", name: "tag", widget: "string", required: false }
+
+      - name: "site"
+        label: "Site Content"
+        file: "data/site.json"
+        format: "json"
+        fields:
+          - { label: "Logo Text", name: "logo", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Location Line", name: "location", widget: "string", required: false }
+          - { label: "CTA Button Text", name: "cta", widget: "string" }
+
+      - name: "theme"
+        label: "Site Styles"
+        file: "data/theme.json"
+        format: "json"
+        fields:
+          - { label: "Background Color", name: "bg", widget: "string", default: "#ffffff" }
+          - { label: "Text Color", name: "text", widget: "string", default: "#000000" }
+          - { label: "Muted Text Color", name: "muted", widget: "string", default: "#777777" }
+          - { label: "Header Border Color", name: "border", widget: "string", default: "#eeeeee" }
+          - { label: "Grid Columns (desktop)", name: "columns", widget: "number", default: 2, value_type: "int", min: 1, max: 4 }
+          - { label: "Grid Gap (px)", name: "gap", widget: "number", default: 32, value_type: "int", min: 8, max: 80 }
+          - { label: "Page Side Padding (px)", name: "sidePadding", widget: "number", default: 32, value_type: "int", min: 12, max: 80 }
+          - { label: "Intro Max Width (px)", name: "introWidth", widget: "number", default: 720, value_type: "int", min: 420, max: 1000 }
