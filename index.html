@@ -133,9 +133,7 @@
           ? `https://www.youtube.com/watch?v=${v.id}`
           : `https://vimeo.com/${v.id}`;
 
-        const thumb = v.type === "youtube"
-          ? `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`
-          : v.thumb;
+      const thumb = v.thumb;
 
         return `
           <a class="card glightbox"
