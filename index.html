@@ -179,21 +179,15 @@
 
   <!-- HEADER -->
   <header class="site-header">
-    <div class="header-inner">TOY BOAT</div>
-  </header>
+  <div class="header-inner" id="logo"></div>
+</header>
 
-  <!-- INTRO -->
-  <section class="intro">
-    <h1>Videos that connect</h1>
-    <p>
-      We are a small team of local filmmakers creating thoughtful,
-      story-driven videos with a hands-on, collaborative approach.
-    </p>
-    <p class="location">
-      Based in Poulsbo, serving the Puget Sound
-    </p>
-    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
-  </section>
+<section class="intro">
+  <h1 id="headline"></h1>
+  <p id="description"></p>
+  <p class="location" id="location"></p>
+  <button class="cta" id="openContact"></button>
+</section>
 
   <!-- GRID -->
   <main>
@@ -221,6 +215,12 @@
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
   <script>
+
+async function loadSite() {
+  const res = await fetch("/data/site.json", { cache: "no-store" });
+  return res.json();
+}
+    
     async function loadVideos() {
       const res = await fetch("/data/videos.json", { cache: "no-store" });
       const data = await res.json();
@@ -254,7 +254,19 @@
 });
     }
 
-    loadVideos().then(render);
+  (async () => {
+  const site = await loadSite();
+
+  document.getElementById("logo").textContent = site.logo;
+  document.getElementById("headline").textContent = site.headline;
+  document.getElementById("description").textContent = site.description;
+  document.getElementById("location").textContent = site.location || "";
+  document.getElementById("openContact").textContent = site.cta;
+
+  const videos = await loadVideos();
+  render(videos);
+})();
+
 
     // Contact modal
     const modal = document.getElementById("contactModal");
