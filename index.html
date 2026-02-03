@@ -168,6 +168,16 @@
         document.getElementById("videoGrid").innerHTML =
           "<p style='color:#b6b6bd'>Could not load videos.</p>";
       }
+      // If an invite/recovery token hits the homepage, forward it to /admin so Decap can handle it
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", () => {
+      const h = window.location.hash || "";
+      if (h.includes("invite_token=") || h.includes("recovery_token=") || h.includes("confirmation_token=")) {
+        window.location.href = "/admin/" + h;
+      }
+    });
+    window.netlifyIdentity.init();
+  }
     })();
   </script>
 
