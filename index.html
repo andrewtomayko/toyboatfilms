@@ -12,6 +12,18 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
+
+:root{
+  --bg:#fff;
+  --text:#000;
+  --muted:#777;
+  --border:#eee;
+  --columns:2;
+  --gap:32px;
+  --sidePadding:32px;
+  --introWidth:720px;
+}
+    
     body {
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -216,6 +228,31 @@
 
   <script>
 
+    async function loadSite() {
+  const res = await fetch("/data/site.json", { cache: "no-store" });
+  if (!res.ok) throw new Error("Could not load site.json");
+  return res.json();
+}
+
+async function loadTheme() {
+  const res = await fetch("/data/theme.json", { cache: "no-store" });
+  if (!res.ok) throw new Error("Could not load theme.json");
+  return res.json();
+}
+
+function applyTheme(t) {
+  // CSS variables = safe “style editing”
+  document.documentElement.style.setProperty("--bg", t.bg);
+  document.documentElement.style.setProperty("--text", t.text);
+  document.documentElement.style.setProperty("--muted", t.muted);
+  document.documentElement.style.setProperty("--border", t.border);
+  document.documentElement.style.setProperty("--columns", String(t.columns));
+  document.documentElement.style.setProperty("--gap", t.gap + "px");
+  document.documentElement.style.setProperty("--sidePadding", t.sidePadding + "px");
+  document.documentElement.style.setProperty("--introWidth", t.introWidth + "px");
+}
+
+
 async function loadSite() {
   const res = await fetch("/data/site.json", { cache: "no-store" });
   return res.json();
@@ -255,8 +292,10 @@ async function loadSite() {
     }
 
   (async () => {
-  const site = await loadSite();
+  const theme = await loadTheme();
+  applyTheme(theme);
 
+  const site = await loadSite();
   document.getElementById("logo").textContent = site.logo;
   document.getElementById("headline").textContent = site.headline;
   document.getElementById("description").textContent = site.description;
@@ -265,6 +304,7 @@ async function loadSite() {
 
   const videos = await loadVideos();
   render(videos);
+
 })();
 
 
