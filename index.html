@@ -8,138 +8,133 @@
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
-  <!-- Netlify Identity (needed for CMS auth redirects) -->
+  <!-- Netlify Identity (helps with CMS auth flows; safe to keep) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
+    :root{
+      --bg: #ffffff;
+      --text: #000000;
+      --muted: #777777;
+      --border: #eeeeee;
+      --columns: 2;
+      --gap: 32px;
+      --sidePadding: 32px;
+      --introWidth: 720px;
+    }
 
-:root{
-  --bg:#fff;
-  --text:#000;
-  --muted:#777;
-  --border:#eee;
-  --columns:2;
-  --gap:32px;
-  --sidePadding:32px;
-  --introWidth:720px;
-}
-    
-    body {
-      margin: 0;
+    * { box-sizing: border-box; }
+
+    body{
+      margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #fff;
-      color: #000;
+      background: var(--bg);
+      color: var(--text);
     }
 
     /* ---------- HEADER ---------- */
-    .site-header {
+    .site-header{
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: #fff;
-      border-bottom: 1px solid #eee;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
 
-    .header-inner {
-      padding: 24px 32px;
+    .header-inner{
+      padding: 24px var(--sidePadding);
       font-weight: 600;
       letter-spacing: 0.08em;
+      text-transform: uppercase;
+      user-select: none;
     }
 
     /* ---------- INTRO ---------- */
-    .intro {
-      max-width: 720px;
-      padding: 120px 32px 80px;
+    .intro{
+      max-width: var(--introWidth);
+      padding: 120px var(--sidePadding) 80px;
     }
 
-    .intro h1 {
+    .intro h1{
       font-size: 38px;
-      margin-bottom: 24px;
+      margin: 0 0 24px;
+      line-height: 1.15;
     }
 
-    .intro p {
+    .intro p{
       font-size: 18px;
       line-height: 1.6;
-      margin-bottom: 16px;
+      margin: 0 0 16px;
+      color: var(--text);
     }
 
-    .location {
+    .location{
       font-size: 14px;
-      margin-bottom: 32px;
+      color: var(--muted);
+      margin: 0 0 32px;
     }
 
-    .cta {
+    .cta{
       background: none;
-      border: 2px solid #000;
+      border: 2px solid var(--text);
+      color: var(--text);
       padding: 14px 24px;
       font-size: 13px;
       letter-spacing: 0.1em;
       cursor: pointer;
+      text-transform: uppercase;
     }
 
     /* ---------- GRID ---------- */
-    main {
-      padding: 0 32px 80px;
+    main{
+      padding: 0 var(--sidePadding) 80px;
     }
 
-    .grid {
+    .grid{
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 32px;
+      grid-template-columns: repeat(var(--columns), 1fr);
+      gap: var(--gap);
     }
 
-    @media (max-width: 800px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 800px){
+      .grid{ grid-template-columns: 1fr; }
+      .intro{ padding-top: 72px; }
     }
 
-    .card {
+    .card{
       position: relative;
       text-decoration: none;
       color: inherit;
+      border-radius: 0; /* square edges */
+      overflow: hidden;
     }
 
-    .thumb {
+    .thumb{
       width: 100%;
       aspect-ratio: 16 / 9;
       object-fit: cover;
-      background: #222;
       display: block;
+      background: #222;
+      border-radius: 0; /* square edges */
     }
 
-    .play {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      pointer-events: none;
+    .play{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
     }
 
-    .play span {
+    .play span{
       font-size: 56px;
-      color: white;
+      color: #fff;
       text-shadow: 0 10px 25px rgba(0,0,0,.6);
-    }
-
-    .meta {
-      padding-top: 10px;
-    }
-
-    .title {
-      font-weight: 600;
-      font-size: 14px;
-      margin: 0 0 4px;
-    }
-
-    .tag {
-      font-size: 12px;
-      color: #777;
-      margin: 0;
+      opacity: 0.9;
     }
 
     /* ---------- MODAL ---------- */
-    .modal {
+    .modal{
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.6);
@@ -147,42 +142,63 @@
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      padding: 18px;
     }
 
-    .modal-content {
-      background: #fff;
-      padding: 48px;
-      width: 90%;
-      max-width: 600px;
+    .modal-content{
+      background: var(--bg);
+      color: var(--text);
+      padding: 42px;
+      width: 100%;
+      max-width: 640px;
       position: relative;
+      border-radius: 0;
+    }
+
+    .modal-content h2{
+      margin: 0 0 18px;
+      font-size: 20px;
+      line-height: 1.25;
     }
 
     .modal-content input,
-    .modal-content textarea {
+    .modal-content textarea{
       width: 100%;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       padding: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: #000;
       font-size: 14px;
+      border-radius: 0;
     }
 
-    .modal-content button {
-      border: 2px solid #000;
+    .modal-content textarea{
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .modal-content button[type="submit"]{
+      border: 2px solid var(--text);
       background: none;
-      padding: 12px 20px;
+      color: var(--text);
+      padding: 12px 18px;
       font-size: 13px;
       letter-spacing: 0.1em;
       cursor: pointer;
+      text-transform: uppercase;
     }
 
-    .close {
+    .close{
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 10px;
+      right: 12px;
       background: none;
       border: none;
       font-size: 28px;
       cursor: pointer;
+      color: var(--text);
+      line-height: 1;
     }
   </style>
 </head>
@@ -191,15 +207,18 @@
 
   <!-- HEADER -->
   <header class="site-header">
-  <div class="header-inner" id="logo"></div>
-</header>
+    <div class="header-inner" id="logo">TOY BOAT</div>
+  </header>
 
-<section class="intro">
-  <h1 id="headline"></h1>
-  <p id="description"></p>
-  <p class="location" id="location"></p>
-  <button class="cta" id="openContact"></button>
-</section>
+  <!-- INTRO -->
+  <section class="intro">
+    <h1 id="headline">Videos that connect</h1>
+    <p id="description">
+      We are a small team of local filmmakers creating thoughtful, story-driven videos with a hands-on, collaborative approach.
+    </p>
+    <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
+    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
+  </section>
 
   <!-- GRID -->
   <main>
@@ -207,16 +226,17 @@
   </main>
 
   <!-- CONTACT MODAL -->
-  <div class="modal" id="contactModal">
+  <div class="modal" id="contactModal" aria-hidden="true">
     <div class="modal-content">
-      <button class="close" id="closeContact">×</button>
-      <h2>Schedule a call to plan your video project!</h2>
+      <button class="close" id="closeContact" aria-label="Close">×</button>
+      <h2>Plan your project</h2>
 
+      <!-- Netlify Forms -->
       <form name="contact" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="contact">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="tel" name="phone" placeholder="Phone">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="tel" name="phone" placeholder="Phone (optional)" />
         <textarea name="message" placeholder="Tell us about your project" required></textarea>
         <button type="submit">SUBMIT</button>
       </form>
@@ -227,91 +247,111 @@
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
   <script>
-
-    async function loadSite() {
-  const res = await fetch("/data/site.json", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load site.json");
-  return res.json();
-}
-
-async function loadTheme() {
-  const res = await fetch("/data/theme.json", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load theme.json");
-  return res.json();
-}
-
-function applyTheme(t) {
-  // CSS variables = safe “style editing”
-  document.documentElement.style.setProperty("--bg", t.bg);
-  document.documentElement.style.setProperty("--text", t.text);
-  document.documentElement.style.setProperty("--muted", t.muted);
-  document.documentElement.style.setProperty("--border", t.border);
-  document.documentElement.style.setProperty("--columns", String(t.columns));
-  document.documentElement.style.setProperty("--gap", t.gap + "px");
-  document.documentElement.style.setProperty("--sidePadding", t.sidePadding + "px");
-  document.documentElement.style.setProperty("--introWidth", t.introWidth + "px");
-}
-
-
-async function loadSite() {
-  const res = await fetch("/data/site.json", { cache: "no-store" });
-  return res.json();
-}
-    
-    async function loadVideos() {
-      const res = await fetch("/data/videos.json", { cache: "no-store" });
-      const data = await res.json();
-      return data.videos || [];
+    async function loadJSON(path) {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error("Could not load " + path);
+      return res.json();
     }
 
-    function render(videos) {
+    function applyTheme(t) {
+      // Apply safe "style controls" as CSS variables
+      const root = document.documentElement.style;
+
+      if (t.bg) root.setProperty("--bg", t.bg);
+      if (t.text) root.setProperty("--text", t.text);
+      if (t.muted) root.setProperty("--muted", t.muted);
+      if (t.border) root.setProperty("--border", t.border);
+
+      if (Number.isFinite(t.columns)) root.setProperty("--columns", String(t.columns));
+      if (Number.isFinite(t.gap)) root.setProperty("--gap", t.gap + "px");
+      if (Number.isFinite(t.sidePadding)) root.setProperty("--sidePadding", t.sidePadding + "px");
+      if (Number.isFinite(t.introWidth)) root.setProperty("--introWidth", t.introWidth + "px");
+    }
+
+    function renderVideos(videos) {
       const grid = document.getElementById("videoGrid");
 
-      grid.innerHTML = videos.map(v => `
-        <a class="card glightbox"
-           href="${v.type === "youtube"
-             ? `https://www.youtube.com/watch?v=${v.id}`
-             : `https://vimeo.com/${v.id}`}"
-           data-gallery="videos"
-           data-type="video">
-          <img class="thumb" src="${v.thumb}" alt="${v.title}">
-          <div class="play"><span>▶</span></div>
-          <div class="meta">
-            <p class="title">${v.title}</p>
-            ${v.tag ? `<p class="tag">${v.tag}</p>` : ``}
-          </div>
-        </a>
-      `).join("");
+      grid.innerHTML = videos.map(v => {
+        const href = (v.type === "youtube")
+          ? `https://www.youtube.com/watch?v=${v.id}`
+          : `https://vimeo.com/${v.id}`;
 
+        // Custom thumbnails only (required)
+        const thumb = v.thumb || "";
+
+        return `
+          <a class="card glightbox"
+             href="${href}"
+             data-gallery="videos"
+             data-type="video">
+            <img class="thumb" src="${thumb}" alt="">
+            <div class="play"><span>▶</span></div>
+          </a>
+        `;
+      }).join("");
+
+      // Bigger lightbox video, no title
       GLightbox({
-  selector: ".glightbox",
-  width: "95vw",
-  height: "95vh",
-  zoomable: false
-});
+        selector: ".glightbox",
+        width: "95vw",
+        height: "95vh",
+        zoomable: false
+      });
     }
 
-  (async () => {
-  const theme = await loadTheme();
-  applyTheme(theme);
+    // Contact modal open/close
+    function setupModal() {
+      const modal = document.getElementById("contactModal");
+      const openBtn = document.getElementById("openContact");
+      const closeBtn = document.getElementById("closeContact");
 
-  const site = await loadSite();
-  document.getElementById("logo").textContent = site.logo;
-  document.getElementById("headline").textContent = site.headline;
-  document.getElementById("description").textContent = site.description;
-  document.getElementById("location").textContent = site.location || "";
-  document.getElementById("openContact").textContent = site.cta;
+      openBtn.onclick = () => { modal.style.display = "flex"; modal.setAttribute("aria-hidden", "false"); };
+      closeBtn.onclick = () => { modal.style.display = "none"; modal.setAttribute("aria-hidden", "true"); };
 
-  const videos = await loadVideos();
-  render(videos);
+      // Close when clicking the dark backdrop
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          modal.setAttribute("aria-hidden", "true");
+        }
+      });
 
-})();
+      // Close on Escape
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          modal.style.display = "none";
+          modal.setAttribute("aria-hidden", "true");
+        }
+      });
+    }
 
+    (async () => {
+      try {
+        // Load and apply theme (optional file, but recommended)
+        const theme = await loadJSON("/data/theme.json");
+        applyTheme(theme);
+      } catch (_) {
+        // If theme.json doesn't exist yet, site still works with defaults
+      }
 
-    // Contact modal
-    const modal = document.getElementById("contactModal");
-    document.getElementById("openContact").onclick = () => modal.style.display = "flex";
-    document.getElementById("closeContact").onclick = () => modal.style.display = "none";
+      try {
+        // Load and apply site content (optional file, but recommended)
+        const site = await loadJSON("/data/site.json");
+        if (site.logo) document.getElementById("logo").textContent = site.logo;
+        if (site.headline) document.getElementById("headline").textContent = site.headline;
+        if (site.description) document.getElementById("description").textContent = site.description;
+        document.getElementById("location").textContent = site.location || "";
+        if (site.cta) document.getElementById("openContact").textContent = site.cta;
+      } catch (_) {
+        // If site.json doesn't exist yet, defaults in HTML remain
+      }
+
+      setupModal();
+
+      // Load and render videos
+      const videoData = await loadJSON("/data/videos.json");
+      renderVideos(videoData.videos || []);
+    })();
   </script>
 
 </body>
