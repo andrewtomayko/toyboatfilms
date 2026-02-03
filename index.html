@@ -34,6 +34,40 @@
       color: #b6b6bd;
     }
 
+    <header class="site-header">
+  <div class="header-inner">
+    <div class="logo">TOY BOAT</div>
+    <a href="mailto:hello@toyboat.co" class="email-link">EMAIL</a>
+  </div>
+</header>
+
+    .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+}
+
+.logo {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.email-link {
+  text-decoration: none;
+  color: #000;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+    
     main {
   margin: 0;
   padding: 0 32px 80px;
