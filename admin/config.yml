@@ -31,3 +31,14 @@ collections:
                 widget: "image"
                 required: false
                 hint: "Required for Vimeo. YouTube thumbnails are automatic."
+        - name: "site"
+        label: "Site Content"
+        file: "data/site.json"
+        format: "json"
+        fields:
+          - { label: "Logo Text", name: "logo", widget: "string" }
+          - { label: "Headline", name: "headline", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Location Line", name: "location", widget: "string", required: false }
+          - { label: "CTA Button Text", name: "cta", widget: "string" }
+
