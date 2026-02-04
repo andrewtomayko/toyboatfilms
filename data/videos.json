@@ -17,7 +17,13 @@
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
       "id": "i2hEBU5ltA4",
       "type": "youtube",
-      "thumb": "/thumbnails/vinatta-thumbnail.jpg"
+      "thumb": "/thumbnails/vinatta-thumb_2.4.1.png"
+    },
+    {
+      "title": "North Coast Credit Union - Online Banking",
+      "id": "https://vimeo.com/1161824636",
+      "type": "vimeo",
+      "thumb": "/thumbnails/nccu-thumb-01_2.3.1.png"
     }
   ]
 }
