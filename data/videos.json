@@ -8,16 +8,16 @@
       "thumb": "/thumbnails/silverwood-school-thumb.jpg"
     },
     {
-      "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
-      "id": "i2hEBU5ltA4",
-      "type": "youtube",
-      "thumb": "/thumbnails/vinatta-thumbnail.jpg"
-    },
-    {
       "title": "Seattle Credit Union with Jonah Coleman - Banking for All",
       "type": "youtube",
       "id": "y2IbomNJZ9c",
       "thumb": "/thumbnails/seattle-credit-union-thumb.png"
+    },
+    {
+      "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
+      "id": "i2hEBU5ltA4",
+      "type": "youtube",
+      "thumb": "/thumbnails/vinatta-thumbnail.jpg"
     }
   ]
 }
