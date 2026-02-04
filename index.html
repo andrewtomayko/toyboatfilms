@@ -302,14 +302,9 @@
           </a>
         `;
       }).join("");
+      
+GLightbox({ selector: ".glightbox", zoomable: false });
 
-      // Bigger lightbox, but not fullscreen + no title
-      GLightbox({
-        selector: ".glightbox",
-        width: "92vw",
-        height: "86vh",
-        zoomable: false
-      });
     }
 
     function setupContactModal() {
