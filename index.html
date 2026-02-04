@@ -8,15 +8,16 @@
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
-  <!-- Netlify Identity -->
+  <!-- Netlify Identity (safe to keep; helps with CMS auth flows) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
     :root{
-      --bg:#fff;
-      --text:#000;
-      --muted:#777;
-      --border:#eee;
+      --bg:#ffffff;
+      --text:#000000;
+      --muted:#777777;
+      --border:#eeeeee;
+
       --columns:2;
       --gap:32px;
       --sidePadding:32px;
@@ -46,6 +47,7 @@
       font-weight:600;
       letter-spacing:.08em;
       text-transform:uppercase;
+      user-select:none;
     }
 
     /* ---------- INTRO ---------- */
@@ -57,6 +59,7 @@
     .intro h1{
       font-size:38px;
       margin:0 0 24px;
+      line-height:1.15;
     }
 
     .intro p{
@@ -68,12 +71,13 @@
     .location{
       font-size:14px;
       color:var(--muted);
-      margin-bottom:32px;
+      margin:0 0 32px;
     }
 
     .cta{
       background:none;
       border:2px solid var(--text);
+      color:var(--text);
       padding:14px 24px;
       font-size:13px;
       letter-spacing:.1em;
@@ -102,6 +106,7 @@
       text-decoration:none;
       color:inherit;
       overflow:hidden;
+      border-radius:0;
     }
 
     .thumb{
@@ -110,6 +115,7 @@
       object-fit:cover;
       display:block;
       background:#222;
+      border-radius:0;
     }
 
     .play{
@@ -124,6 +130,7 @@
       font-size:56px;
       color:#fff;
       text-shadow:0 10px 25px rgba(0,0,0,.6);
+      opacity:.9;
     }
 
     /* ---------- CONTACT MODAL ---------- */
@@ -135,14 +142,23 @@
       align-items:center;
       justify-content:center;
       z-index:2000;
+      padding:18px;
     }
 
     .modal-content{
-      background:#fff;
+      background:var(--bg);
+      color:var(--text);
       padding:42px;
-      width:90%;
+      width:100%;
       max-width:640px;
       position:relative;
+      border-radius:0;
+    }
+
+    .modal-content h2{
+      margin:0 0 18px;
+      font-size:20px;
+      line-height:1.25;
     }
 
     .modal-content input,
@@ -151,14 +167,21 @@
       margin-bottom:14px;
       padding:12px;
       border:1px solid var(--border);
+      background:#fff;
+      color:#000;
       font-size:14px;
+      border-radius:0;
     }
 
-    .modal-content textarea{ min-height:120px; }
+    .modal-content textarea{
+      min-height:120px;
+      resize:vertical;
+    }
 
-    .modal-content button{
+    .modal-content button[type="submit"]{
       border:2px solid var(--text);
       background:none;
+      color:var(--text);
       padding:12px 18px;
       font-size:13px;
       letter-spacing:.1em;
@@ -170,116 +193,175 @@
       position:absolute;
       top:10px;
       right:12px;
-      font-size:28px;
       background:none;
       border:none;
+      font-size:28px;
       cursor:pointer;
+      color:var(--text);
+      line-height:1;
     }
 
-    /* ---------- GLIGHTBOX FULLSCREEN FIX ---------- */
-    .glightbox-container,
-    .glightbox-container .gcontainer,
-    .glightbox-container .ginner-container,
-    .glightbox-container .gslide,
-    .glightbox-container .gslide-inner-content,
-    .glightbox-container .gvideo-container{
-      width:100vw !important;
-      height:100vh !important;
-      max-width:100vw !important;
-      max-height:100vh !important;
-    }
-
+    /* ---------- GLIGHTBOX: bigger player, NOT fullscreen ---------- */
+    /* Keep a little breathing room so you see the page behind */
     .glightbox-container .gcontainer{
-      padding:0 !important;
+      padding: 4vh 4vw !important;
+    }
+
+    /* Constrain the lightbox content area to a large, comfortable size */
+    .glightbox-container .gslide-inner-content{
+      max-width: 92vw !important;
+      max-height: 86vh !important;
+      margin: auto !important;
+    }
+
+    /* Make the video fill that area */
+    .glightbox-container .gvideo-container{
+      width: 92vw !important;
+      height: 86vh !important;
+      max-width: 92vw !important;
+      max-height: 86vh !important;
+      margin: auto !important;
     }
 
     .glightbox-container .gvideo iframe,
     .glightbox-container .gvideo video{
-      width:100% !important;
-      height:100% !important;
+      width: 100% !important;
+      height: 100% !important;
     }
   </style>
 </head>
 
 <body>
 
-<header class="site-header">
-  <div class="header-inner" id="logo">TOY BOAT</div>
-</header>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner" id="logo">TOY BOAT</div>
+  </header>
 
-<section class="intro">
-  <h1 id="headline">Videos that connect</h1>
-  <p id="description">We are a small team of local filmmakers creating thoughtful, story-driven videos.</p>
-  <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
-  <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
-</section>
+  <!-- INTRO -->
+  <section class="intro">
+    <h1 id="headline">Videos that connect</h1>
+    <p id="description">
+      We are a small team of local filmmakers creating thoughtful, story-driven videos with a hands-on, collaborative approach.
+    </p>
+    <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
+    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
+  </section>
 
-<main>
-  <section class="grid" id="videoGrid"></section>
-</main>
+  <!-- GRID -->
+  <main>
+    <section class="grid" id="videoGrid"></section>
+  </main>
 
-<div class="modal" id="contactModal">
-  <div class="modal-content">
-    <button class="close" id="closeContact">×</button>
-    <form name="contact" method="POST" data-netlify="true">
-      <input type="hidden" name="form-name" value="contact">
-      <input type="text" name="name" placeholder="Name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <textarea name="message" placeholder="Tell us about your project" required></textarea>
-      <button type="submit">SUBMIT</button>
-    </form>
+  <!-- CONTACT MODAL -->
+  <div class="modal" id="contactModal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close" id="closeContact" aria-label="Close">×</button>
+      <h2>Plan your project</h2>
+
+      <!-- Netlify Forms -->
+      <form name="contact" method="POST" data-netlify="true">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="tel" name="phone" placeholder="Phone (optional)" />
+        <textarea name="message" placeholder="Tell us about your project" required></textarea>
+        <button type="submit">SUBMIT</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-<script>
-  async function loadJSON(path){
-    const res = await fetch(path,{cache:"no-store"});
-    return res.json();
-  }
+  <script>
+    async function loadJSON(path) {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error("Could not load " + path);
+      return res.json();
+    }
 
-  function renderVideos(videos){
-    const grid = document.getElementById("videoGrid");
+    function renderVideos(videos) {
+      const grid = document.getElementById("videoGrid");
 
-    grid.innerHTML = videos.map(v => `
-      <a class="card glightbox"
-         href="${v.type === "youtube"
-           ? `https://www.youtube.com/watch?v=${v.id}`
-           : `https://vimeo.com/${v.id}`}"
-         data-gallery="videos"
-         data-type="video">
-        <img class="thumb" src="${v.thumb}" alt="">
-        <div class="play"><span>▶</span></div>
-      </a>
-    `).join("");
+      grid.innerHTML = videos.map(v => {
+        const href = (v.type === "youtube")
+          ? `https://www.youtube.com/watch?v=${v.id}`
+          : `https://vimeo.com/${v.id}`;
 
-    GLightbox({
-      selector:".glightbox",
-      width:"100vw",
-      height:"100vh",
-      zoomable:false
-    });
-  }
+        // Custom thumbnails only (required)
+        const thumb = v.thumb || "";
 
-  (async()=>{
-    try{
-      const site = await loadJSON("/data/site.json");
-      if(site.logo) document.getElementById("logo").textContent = site.logo;
-      if(site.headline) document.getElementById("headline").textContent = site.headline;
-      if(site.description) document.getElementById("description").textContent = site.description;
-      document.getElementById("location").textContent = site.location || "";
-      if(site.cta) document.getElementById("openContact").textContent = site.cta;
-    }catch{}
+        return `
+          <a class="card glightbox"
+             href="${href}"
+             data-gallery="videos"
+             data-type="video">
+            <img class="thumb" src="${thumb}" alt="">
+            <div class="play"><span>▶</span></div>
+          </a>
+        `;
+      }).join("");
 
-    const data = await loadJSON("/data/videos.json");
-    renderVideos(data.videos || []);
+      // Bigger lightbox, but not fullscreen + no title
+      GLightbox({
+        selector: ".glightbox",
+        width: "92vw",
+        height: "86vh",
+        zoomable: false
+      });
+    }
 
-    const modal = document.getElementById("contactModal");
-    document.getElementById("openContact").onclick = () => modal.style.display="flex";
-    document.getElementById("closeContact").onclick = () => modal.style.display="none";
-  })();
-</script>
+    function setupContactModal() {
+      const modal = document.getElementById("contactModal");
+      const openBtn = document.getElementById("openContact");
+      const closeBtn = document.getElementById("closeContact");
+
+      openBtn.onclick = () => {
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden", "false");
+      };
+
+      closeBtn.onclick = () => {
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+      };
+
+      // Click backdrop to close
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          modal.setAttribute("aria-hidden", "true");
+        }
+      });
+
+      // Escape to close
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          modal.style.display = "none";
+          modal.setAttribute("aria-hidden", "true");
+        }
+      });
+    }
+
+    (async () => {
+      // Load editable site content (if present)
+      try {
+        const site = await loadJSON("/data/site.json");
+        if (site.logo) document.getElementById("logo").textContent = site.logo;
+        if (site.headline) document.getElementById("headline").textContent = site.headline;
+        if (site.description) document.getElementById("description").textContent = site.description;
+        document.getElementById("location").textContent = site.location || "";
+        if (site.cta) document.getElementById("openContact").textContent = site.cta;
+      } catch (e) {}
+
+      setupContactModal();
+
+      // Load videos
+      const videoData = await loadJSON("/data/videos.json");
+      renderVideos(videoData.videos || []);
+    })();
+  </script>
 
 </body>
 </html>
