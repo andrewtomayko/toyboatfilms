@@ -8,7 +8,7 @@
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
-  <!-- Netlify Identity (safe to keep; helps with CMS auth flows) -->
+  <!-- Netlify Identity (safe to keep; helps CMS auth flows) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
@@ -200,34 +200,6 @@
       color:var(--text);
       line-height:1;
     }
-
-    /* ---------- GLIGHTBOX: bigger player, NOT fullscreen ---------- */
-    /* Keep a little breathing room so you see the page behind */
-    .glightbox-container .gcontainer{
-      padding: 4vh 4vw !important;
-    }
-
-    /* Constrain the lightbox content area to a large, comfortable size */
-    .glightbox-container .gslide-inner-content{
-      max-width: 92vw !important;
-      max-height: 86vh !important;
-      margin: auto !important;
-    }
-
-    /* Make the video fill that area */
-    .glightbox-container .gvideo-container{
-      width: 92vw !important;
-      height: 86vh !important;
-      max-width: 92vw !important;
-      max-height: 86vh !important;
-      margin: auto !important;
-    }
-
-    .glightbox-container .gvideo iframe,
-    .glightbox-container .gvideo video{
-      width: 100% !important;
-      height: 100% !important;
-    }
   </style>
 </head>
 
@@ -289,22 +261,22 @@
           ? `https://www.youtube.com/watch?v=${v.id}`
           : `https://vimeo.com/${v.id}`;
 
-        // Custom thumbnails only (required)
-        const thumb = v.thumb || "";
-
         return `
           <a class="card glightbox"
              href="${href}"
              data-gallery="videos"
              data-type="video">
-            <img class="thumb" src="${thumb}" alt="">
+            <img class="thumb" src="${v.thumb}" alt="">
             <div class="play"><span>▶</span></div>
           </a>
         `;
       }).join("");
-      
-GLightbox({ selector: ".glightbox", zoomable: false });
 
+      /* DEFAULT GLIGHTBOX (no forced size = no extra letterboxing UI) */
+      GLightbox({
+        selector: ".glightbox",
+        zoomable: false
+      });
     }
 
     function setupContactModal() {
@@ -322,7 +294,6 @@ GLightbox({ selector: ".glightbox", zoomable: false });
         modal.setAttribute("aria-hidden", "true");
       };
 
-      // Click backdrop to close
       modal.addEventListener("click", (e) => {
         if (e.target === modal) {
           modal.style.display = "none";
@@ -330,7 +301,6 @@ GLightbox({ selector: ".glightbox", zoomable: false });
         }
       });
 
-      // Escape to close
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           modal.style.display = "none";
@@ -340,7 +310,7 @@ GLightbox({ selector: ".glightbox", zoomable: false });
     }
 
     (async () => {
-      // Load editable site content (if present)
+      // Editable site text (optional)
       try {
         const site = await loadJSON("/data/site.json");
         if (site.logo) document.getElementById("logo").textContent = site.logo;
@@ -352,7 +322,7 @@ GLightbox({ selector: ".glightbox", zoomable: false });
 
       setupContactModal();
 
-      // Load videos
+      // Videos
       const videoData = await loadJSON("/data/videos.json");
       renderVideos(videoData.videos || []);
     })();
