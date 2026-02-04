@@ -231,16 +231,19 @@
       <button class="close" id="closeContact" aria-label="Close">×</button>
       <h2>Plan your project</h2>
 
-      <!-- Netlify Forms -->
-      <form action="https://formspree.io/f/xbdknpvr" method="POST">
-  <input type="hidden" name="form-name" value="contact">
+      <!-- Email Forms -->
+      <form id="contactForm">
   <input type="text" name="name" placeholder="Name" required>
   <input type="email" name="email" placeholder="Email" required>
   <input type="tel" name="phone" placeholder="Phone (optional)">
   <textarea name="message" placeholder="Tell us about your project" required></textarea>
-
   <button type="submit">Send</button>
 </form>
+
+<p id="formSuccess" style="display:none;">
+  Thank you! We will be in touch.
+</p>
+
 
     </div>
   </div>
@@ -330,6 +333,33 @@
       // Videos
       const videoData = await loadJSON("/data/videos.json");
       renderVideos(videoData.videos || []);
+
+const form = document.getElementById("contactForm");
+const success = document.getElementById("formSuccess");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const data = new FormData(form);
+
+  const res = await fetch("https://formspree.io/f/YOUR_FORM_ID", {
+    method: "POST",
+    body: data,
+    headers: {
+      "Accept": "application/json"
+    }
+  });
+
+  if (res.ok) {
+    form.reset();
+    form.style.display = "none";
+    success.style.display = "block";
+  } else {
+    alert("Something went wrong. Please try again.");
+  }
+});
+
+      
     })();
   </script>
 
