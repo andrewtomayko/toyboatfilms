@@ -272,11 +272,13 @@
         `;
       }).join("");
 
-      /* DEFAULT GLIGHTBOX (no forced size = no extra letterboxing UI) */
+      /*  GLIGHTBOX (85% of screen size) */
       GLightbox({
-        selector: ".glightbox",
-        zoomable: false
-      });
+  selector: ".glightbox",
+  zoomable: false,
+  width: "85vw"
+});
+
     }
 
     function setupContactModal() {
