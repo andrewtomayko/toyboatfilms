@@ -8,123 +8,108 @@
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
-  <!-- Netlify Identity (helps with CMS auth flows; safe to keep) -->
+  <!-- Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
   <style>
     :root{
-      --bg: #ffffff;
-      --text: #000000;
-      --muted: #777777;
-      --border: #eeeeee;
-      --columns: 2;
-      --gap: 32px;
-      --sidePadding: 32px;
-      --introWidth: 720px;
+      --bg:#fff;
+      --text:#000;
+      --muted:#777;
+      --border:#eee;
+      --columns:2;
+      --gap:32px;
+      --sidePadding:32px;
+      --introWidth:720px;
     }
 
-    .glightbox-container .gvideo iframe,
-.glightbox-container .gvideo video {
-  width: 100vw !important;
-  height: 100vh !important;
-  max-width: 100vw !important;
-  max-height: 100vh !important;
-}
-
-
-    * { box-sizing: border-box; }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background:var(--bg);
+      color:var(--text);
     }
 
     /* ---------- HEADER ---------- */
     .site-header{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:var(--bg);
+      border-bottom:1px solid var(--border);
     }
 
     .header-inner{
-      padding: 24px var(--sidePadding);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      user-select: none;
+      padding:24px var(--sidePadding);
+      font-weight:600;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
     /* ---------- INTRO ---------- */
     .intro{
-      max-width: var(--introWidth);
-      padding: 120px var(--sidePadding) 80px;
+      max-width:var(--introWidth);
+      padding:120px var(--sidePadding) 80px;
     }
 
     .intro h1{
-      font-size: 38px;
-      margin: 0 0 24px;
-      line-height: 1.15;
+      font-size:38px;
+      margin:0 0 24px;
     }
 
     .intro p{
-      font-size: 18px;
-      line-height: 1.6;
-      margin: 0 0 16px;
-      color: var(--text);
+      font-size:18px;
+      line-height:1.6;
+      margin:0 0 16px;
     }
 
     .location{
-      font-size: 14px;
-      color: var(--muted);
-      margin: 0 0 32px;
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:32px;
     }
 
     .cta{
-      background: none;
-      border: 2px solid var(--text);
-      color: var(--text);
-      padding: 14px 24px;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      text-transform: uppercase;
+      background:none;
+      border:2px solid var(--text);
+      padding:14px 24px;
+      font-size:13px;
+      letter-spacing:.1em;
+      cursor:pointer;
+      text-transform:uppercase;
     }
 
     /* ---------- GRID ---------- */
     main{
-      padding: 0 var(--sidePadding) 80px;
+      padding:0 var(--sidePadding) 80px;
     }
 
     .grid{
-      display: grid;
-      grid-template-columns: repeat(var(--columns), 1fr);
-      gap: var(--gap);
+      display:grid;
+      grid-template-columns:repeat(var(--columns),1fr);
+      gap:var(--gap);
     }
 
-    @media (max-width: 800px){
-      .grid{ grid-template-columns: 1fr; }
-      .intro{ padding-top: 72px; }
+    @media (max-width:800px){
+      .grid{ grid-template-columns:1fr; }
+      .intro{ padding-top:72px; }
     }
 
     .card{
-      position: relative;
-      text-decoration: none;
-      color: inherit;
-      border-radius: 0; /* square edges */
-      overflow: hidden;
+      position:relative;
+      text-decoration:none;
+      color:inherit;
+      overflow:hidden;
     }
 
     .thumb{
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      display: block;
-      background: #222;
-      border-radius: 0; /* square edges */
+      width:100%;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      display:block;
+      background:#222;
     }
 
     .play{
@@ -136,235 +121,165 @@
     }
 
     .play span{
-      font-size: 56px;
-      color: #fff;
-      text-shadow: 0 10px 25px rgba(0,0,0,.6);
-      opacity: 0.9;
+      font-size:56px;
+      color:#fff;
+      text-shadow:0 10px 25px rgba(0,0,0,.6);
     }
 
-    /* ---------- MODAL ---------- */
+    /* ---------- CONTACT MODAL ---------- */
     .modal{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      padding: 18px;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:2000;
     }
 
     .modal-content{
-      background: var(--bg);
-      color: var(--text);
-      padding: 42px;
-      width: 100%;
-      max-width: 640px;
-      position: relative;
-      border-radius: 0;
-    }
-
-    .modal-content h2{
-      margin: 0 0 18px;
-      font-size: 20px;
-      line-height: 1.25;
+      background:#fff;
+      padding:42px;
+      width:90%;
+      max-width:640px;
+      position:relative;
     }
 
     .modal-content input,
     .modal-content textarea{
-      width: 100%;
-      margin-bottom: 14px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      color: #000;
-      font-size: 14px;
-      border-radius: 0;
+      width:100%;
+      margin-bottom:14px;
+      padding:12px;
+      border:1px solid var(--border);
+      font-size:14px;
     }
 
-    .modal-content textarea{
-      min-height: 120px;
-      resize: vertical;
-    }
+    .modal-content textarea{ min-height:120px; }
 
-    .modal-content button[type="submit"]{
-      border: 2px solid var(--text);
-      background: none;
-      color: var(--text);
-      padding: 12px 18px;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      text-transform: uppercase;
+    .modal-content button{
+      border:2px solid var(--text);
+      background:none;
+      padding:12px 18px;
+      font-size:13px;
+      letter-spacing:.1em;
+      cursor:pointer;
+      text-transform:uppercase;
     }
 
     .close{
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      background: none;
-      border: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: var(--text);
-      line-height: 1;
+      position:absolute;
+      top:10px;
+      right:12px;
+      font-size:28px;
+      background:none;
+      border:none;
+      cursor:pointer;
+    }
+
+    /* ---------- GLIGHTBOX FULLSCREEN FIX ---------- */
+    .glightbox-container,
+    .glightbox-container .gcontainer,
+    .glightbox-container .ginner-container,
+    .glightbox-container .gslide,
+    .glightbox-container .gslide-inner-content,
+    .glightbox-container .gvideo-container{
+      width:100vw !important;
+      height:100vh !important;
+      max-width:100vw !important;
+      max-height:100vh !important;
+    }
+
+    .glightbox-container .gcontainer{
+      padding:0 !important;
+    }
+
+    .glightbox-container .gvideo iframe,
+    .glightbox-container .gvideo video{
+      width:100% !important;
+      height:100% !important;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner" id="logo">TOY BOAT</div>
-  </header>
+<header class="site-header">
+  <div class="header-inner" id="logo">TOY BOAT</div>
+</header>
 
-  <!-- INTRO -->
-  <section class="intro">
-    <h1 id="headline">Videos that connect</h1>
-    <p id="description">
-      We are a small team of local filmmakers creating thoughtful, story-driven videos with a hands-on, collaborative approach.
-    </p>
-    <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
-    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
-  </section>
+<section class="intro">
+  <h1 id="headline">Videos that connect</h1>
+  <p id="description">We are a small team of local filmmakers creating thoughtful, story-driven videos.</p>
+  <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
+  <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
+</section>
 
-  <!-- GRID -->
-  <main>
-    <section class="grid" id="videoGrid"></section>
-  </main>
+<main>
+  <section class="grid" id="videoGrid"></section>
+</main>
 
-  <!-- CONTACT MODAL -->
-  <div class="modal" id="contactModal" aria-hidden="true">
-    <div class="modal-content">
-      <button class="close" id="closeContact" aria-label="Close">×</button>
-      <h2>Plan your project</h2>
-
-      <!-- Netlify Forms -->
-      <form name="contact" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="contact" />
-        <input type="text" name="name" placeholder="Name" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="tel" name="phone" placeholder="Phone (optional)" />
-        <textarea name="message" placeholder="Tell us about your project" required></textarea>
-        <button type="submit">SUBMIT</button>
-      </form>
-    </div>
+<div class="modal" id="contactModal">
+  <div class="modal-content">
+    <button class="close" id="closeContact">×</button>
+    <form name="contact" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="contact">
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="message" placeholder="Tell us about your project" required></textarea>
+      <button type="submit">SUBMIT</button>
+    </form>
   </div>
+</div>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
-  <script>
-    async function loadJSON(path) {
-      const res = await fetch(path, { cache: "no-store" });
-      if (!res.ok) throw new Error("Could not load " + path);
-      return res.json();
-    }
+<script>
+  async function loadJSON(path){
+    const res = await fetch(path,{cache:"no-store"});
+    return res.json();
+  }
 
-    function applyTheme(t) {
-      // Apply safe "style controls" as CSS variables
-      const root = document.documentElement.style;
+  function renderVideos(videos){
+    const grid = document.getElementById("videoGrid");
 
-      if (t.bg) root.setProperty("--bg", t.bg);
-      if (t.text) root.setProperty("--text", t.text);
-      if (t.muted) root.setProperty("--muted", t.muted);
-      if (t.border) root.setProperty("--border", t.border);
+    grid.innerHTML = videos.map(v => `
+      <a class="card glightbox"
+         href="${v.type === "youtube"
+           ? `https://www.youtube.com/watch?v=${v.id}`
+           : `https://vimeo.com/${v.id}`}"
+         data-gallery="videos"
+         data-type="video">
+        <img class="thumb" src="${v.thumb}" alt="">
+        <div class="play"><span>▶</span></div>
+      </a>
+    `).join("");
 
-      if (Number.isFinite(t.columns)) root.setProperty("--columns", String(t.columns));
-      if (Number.isFinite(t.gap)) root.setProperty("--gap", t.gap + "px");
-      if (Number.isFinite(t.sidePadding)) root.setProperty("--sidePadding", t.sidePadding + "px");
-      if (Number.isFinite(t.introWidth)) root.setProperty("--introWidth", t.introWidth + "px");
-    }
-
-    function renderVideos(videos) {
-      const grid = document.getElementById("videoGrid");
-
-      grid.innerHTML = videos.map(v => {
-        const href = (v.type === "youtube")
-          ? `https://www.youtube.com/watch?v=${v.id}`
-          : `https://vimeo.com/${v.id}`;
-
-        // Custom thumbnails only (required)
-        const thumb = v.thumb || "";
-
-        return `
-          <a class="card glightbox"
-             href="${href}"
-             data-gallery="videos"
-             data-type="video">
-            <img class="thumb" src="${thumb}" alt="">
-            <div class="play"><span>▶</span></div>
-          </a>
-        `;
-      }).join("");
-
-      // Bigger lightbox video, no title
     GLightbox({
-  selector: ".glightbox",
-  width: "100vw",
-  height: "100vh",
-  zoomable: false,
-  touchNavigation: true,
-  closeOnOutsideClick: true
-});
+      selector:".glightbox",
+      width:"100vw",
+      height:"100vh",
+      zoomable:false
+    });
+  }
 
-    }
+  (async()=>{
+    try{
+      const site = await loadJSON("/data/site.json");
+      if(site.logo) document.getElementById("logo").textContent = site.logo;
+      if(site.headline) document.getElementById("headline").textContent = site.headline;
+      if(site.description) document.getElementById("description").textContent = site.description;
+      document.getElementById("location").textContent = site.location || "";
+      if(site.cta) document.getElementById("openContact").textContent = site.cta;
+    }catch{}
 
-    // Contact modal open/close
-    function setupModal() {
-      const modal = document.getElementById("contactModal");
-      const openBtn = document.getElementById("openContact");
-      const closeBtn = document.getElementById("closeContact");
+    const data = await loadJSON("/data/videos.json");
+    renderVideos(data.videos || []);
 
-      openBtn.onclick = () => { modal.style.display = "flex"; modal.setAttribute("aria-hidden", "false"); };
-      closeBtn.onclick = () => { modal.style.display = "none"; modal.setAttribute("aria-hidden", "true"); };
-
-      // Close when clicking the dark backdrop
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-          modal.style.display = "none";
-          modal.setAttribute("aria-hidden", "true");
-        }
-      });
-
-      // Close on Escape
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          modal.style.display = "none";
-          modal.setAttribute("aria-hidden", "true");
-        }
-      });
-    }
-
-    (async () => {
-      try {
-        // Load and apply theme (optional file, but recommended)
-        const theme = await loadJSON("/data/theme.json");
-        applyTheme(theme);
-      } catch (_) {
-        // If theme.json doesn't exist yet, site still works with defaults
-      }
-
-      try {
-        // Load and apply site content (optional file, but recommended)
-        const site = await loadJSON("/data/site.json");
-        if (site.logo) document.getElementById("logo").textContent = site.logo;
-        if (site.headline) document.getElementById("headline").textContent = site.headline;
-        if (site.description) document.getElementById("description").textContent = site.description;
-        document.getElementById("location").textContent = site.location || "";
-        if (site.cta) document.getElementById("openContact").textContent = site.cta;
-      } catch (_) {
-        // If site.json doesn't exist yet, defaults in HTML remain
-      }
-
-      setupModal();
-
-      // Load and render videos
-      const videoData = await loadJSON("/data/videos.json");
-      renderVideos(videoData.videos || []);
-    })();
-  </script>
+    const modal = document.getElementById("contactModal");
+    document.getElementById("openContact").onclick = () => modal.style.display="flex";
+    document.getElementById("closeContact").onclick = () => modal.style.display="none";
+  })();
+</script>
 
 </body>
 </html>
