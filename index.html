@@ -113,6 +113,15 @@
       .intro{ padding-top:72px; }
     }
 
+/* ensure play button centers ONLY over the image */
+.card .play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
     .card{
       position:relative;
       text-decoration:none;
