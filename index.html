@@ -232,14 +232,16 @@
       <h2>Plan your project</h2>
 
       <!-- Netlify Forms -->
-      <form name="contact" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="contact" />
-        <input type="text" name="name" placeholder="Name" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="tel" name="phone" placeholder="Phone (optional)" />
-        <textarea name="message" placeholder="Tell us about your project" required></textarea>
-        <button type="submit">SUBMIT</button>
-      </form>
+      <form name="contact" method="POST" netlify>
+  <input type="hidden" name="form-name" value="contact">
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="tel" name="phone" placeholder="Phone (optional)">
+  <textarea name="message" placeholder="Tell us about your project" required></textarea>
+
+  <button type="submit">Send</button>
+</form>
+
     </div>
   </div>
 
