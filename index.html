@@ -118,6 +118,18 @@
       border-radius:0;
     }
 
+    .meta {
+    padding-top: 10px;
+    }
+
+    .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+    }
+
+
     .play{
       position:absolute;
       inset:0;
@@ -266,14 +278,17 @@
           ? `https://www.youtube.com/watch?v=${v.id}`
           : `https://vimeo.com/${v.id}`;
 
-        return `
-          <a class="card glightbox"
-             href="${href}"
-             data-gallery="videos"
-             data-type="video">
-            <img class="thumb" src="${v.thumb}" alt="">
-            <div class="play"><span>▶</span></div>
-          </a>
+      return `
+  <a class="card glightbox"
+     href="${href}"
+     data-gallery="videos"
+     data-type="video">
+    <img class="thumb" src="${v.thumb}" alt="">
+    <div class="play"><span>▶</span></div>
+    <div class="meta">
+      <p class="title">${v.title || ""}</p>
+    </div>
+  </a>
         `;
       }).join("");
 
