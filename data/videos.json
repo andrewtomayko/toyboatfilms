@@ -30,6 +30,12 @@
       "id": "i2hEBU5ltA4",
       "type": "youtube",
       "thumb": "/thumbnails/vinatta-thumb-16-9.jpg"
+    },
+    {
+      "title": "TWIST Curated Jewelry - Retail Video",
+      "type": "vimeo",
+      "id": "https://vimeo.com/376715092",
+      "thumb": "/thumbnails/twist-thumb.jpg"
     }
   ]
 }
