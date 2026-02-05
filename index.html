@@ -11,10 +11,6 @@
   <!-- Netlify Identity (safe to keep; helps CMS auth flows) -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --bg:#ffffff;
@@ -29,14 +25,6 @@
     }
 
     *{ box-sizing:border-box; }
-
-    
-.montserrat-<uniquifier> {
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
 
     body{
       margin:0;
@@ -113,21 +101,16 @@
       .intro{ padding-top:72px; }
     }
 
-/* ensure play button centers ONLY over the image */
-.card .play {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
     .card{
-      position:relative;
       text-decoration:none;
       color:inherit;
+      display:block;
+    }
+
+    /* Wrap thumbnail so play icon centers on the image only (fixes mobile issue) */
+    .thumbWrap{
+      position:relative;
       overflow:hidden;
-      border-radius:0;
     }
 
     .thumb{
@@ -136,20 +119,7 @@
       object-fit:cover;
       display:block;
       background:#222;
-      border-radius:0;
     }
-
-    .meta {
-    padding-top: 4px;
-    }
-
-   .title {
-  font-size: 14px;        /* increase from 14px → 16px (adjust if needed) */
-  margin: 0;          /* remove default paragraph margin */
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.02em; /* optional, looks nice with caps */
-}
 
     .play{
       position:absolute;
@@ -164,6 +134,21 @@
       color:#fff;
       text-shadow:0 10px 25px rgba(0,0,0,.6);
       opacity:.9;
+      line-height:1;
+    }
+
+    /* Titles under thumbs (main page only) */
+    .meta{
+      padding-top:4px; /* tighten gap */
+    }
+
+    .title{
+      margin:0;
+      font-size:16px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.06em;
+      line-height:1.35;
     }
 
     /* ---------- CONTACT MODAL ---------- */
@@ -233,6 +218,14 @@
       color:var(--text);
       line-height:1;
     }
+
+    /* Success message */
+    #formSuccess{
+      display:none;
+      margin-top:16px;
+      font-size:14px;
+      color:var(--muted);
+    }
   </style>
 </head>
 
@@ -264,20 +257,15 @@
       <button class="close" id="closeContact" aria-label="Close">×</button>
       <h2>Plan your project</h2>
 
-      <!-- Email Forms -->
       <form id="contactForm">
-  <input type="text" name="name" placeholder="Name" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <input type="tel" name="phone" placeholder="Phone (optional)">
-  <textarea name="message" placeholder="Tell us about your project" required></textarea>
-  <button type="submit">Send</button>
-</form>
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="tel" name="phone" placeholder="Phone (optional)" />
+        <textarea name="message" placeholder="Tell us about your project" required></textarea>
+        <button type="submit">SEND</button>
+      </form>
 
-<p id="formSuccess" style="display:none;">
-  Thank you! We will be in touch.
-</p>
-
-
+      <p id="formSuccess">Thanks — I’ll be in touch shortly.</p>
     </div>
   </div>
 
@@ -285,6 +273,10 @@
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
   <script>
+    // ====== CONFIG ======
+    // Replace with your real Formspree endpoint:
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
+
     async function loadJSON(path) {
       const res = await fetch(path, { cache: "no-store" });
       if (!res.ok) throw new Error("Could not load " + path);
@@ -299,28 +291,29 @@
           ? `https://www.youtube.com/watch?v=${v.id}`
           : `https://vimeo.com/${v.id}`;
 
-      return `
-  <a class="card glightbox"
-     href="${href}"
-     data-gallery="videos"
-     data-type="video">
-    <img class="thumb" src="${v.thumb}" alt="">
-    <div class="play"><span>▶</span></div>
-    <div class="meta">
-      <p class="title">${v.title || ""}</p>
-    </div>
-  </a>
+        return `
+          <a class="card glightbox"
+             href="${href}"
+             data-gallery="videos"
+             data-type="video">
+
+            <div class="thumbWrap">
+              <img class="thumb" src="${v.thumb}" alt="">
+              <div class="play"><span>▶</span></div>
+            </div>
+
+            <div class="meta">
+              <p class="title">${v.title || ""}</p>
+            </div>
+          </a>
         `;
       }).join("");
 
-      /*  GLIGHTBOX (85% of screen size) */
+      // Default sizing (keeps the clean "no bars" look you liked)
       GLightbox({
-  selector: ".glightbox",
-  zoomable: false,
-  width: "85vw"
-
-});
-
+        selector: ".glightbox",
+        zoomable: false
+      });
     }
 
     function setupContactModal() {
@@ -353,8 +346,65 @@
       });
     }
 
+    function setupFormspree() {
+      const form = document.getElementById("contactForm");
+      const success = document.getElementById("formSuccess");
+      const modal = document.getElementById("contactModal");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Basic guard in case you forget to set the endpoint
+        if (FORMSPREE_ENDPOINT.includes("YOUR_FORM_ID")) {
+          alert("Set your Formspree ID in FORMSPREE_ENDPOINT first.");
+          return;
+        }
+
+        const payload = Object.fromEntries(new FormData(form).entries());
+
+        try {
+          const res = await fetch(FORMSPREE_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Accept": "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            // Fade out form, then show success
+            form.style.opacity = "1";
+            form.style.transition = "opacity 0.4s ease";
+            form.style.opacity = "0";
+
+            setTimeout(() => {
+              form.reset();
+              form.style.display = "none";
+              success.style.display = "block";
+            }, 400);
+
+            // Optional: auto-close modal after success
+            setTimeout(() => {
+              modal.style.display = "none";
+              modal.setAttribute("aria-hidden", "true");
+            }, 2500);
+
+            return;
+          }
+
+          const data = await res.json().catch(() => ({}));
+          console.log("Formspree error:", res.status, data);
+          alert(data.error || "Something went wrong. Please try again.");
+        } catch (err) {
+          console.log("Network error:", err);
+          alert("Network error. Please try again.");
+        }
+      });
+    }
+
     (async () => {
-      // Editable site text (optional)
+      // Load editable site text (optional)
       try {
         const site = await loadJSON("/data/site.json");
         if (site.logo) document.getElementById("logo").textContent = site.logo;
@@ -365,37 +415,11 @@
       } catch (e) {}
 
       setupContactModal();
+      setupFormspree();
 
       // Videos
       const videoData = await loadJSON("/data/videos.json");
       renderVideos(videoData.videos || []);
-
-const form = document.getElementById("contactForm");
-const success = document.getElementById("formSuccess");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const data = new FormData(form);
-
-  const res = await fetch("https://formspree.io/f/xbdknpvr", {
-    method: "POST",
-    body: data,
-    headers: {
-      "Accept": "application/json"
-    }
-  });
-
-  if (res.ok) {
-    form.reset();
-    form.style.display = "none";
-    success.style.display = "block";
-  } else {
-    alert("Something went wrong. Please try again.");
-  }
-});
-
-      
     })();
   </script>
 
