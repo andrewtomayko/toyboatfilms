@@ -95,7 +95,7 @@
     /* ---------- INTRO ---------- */
     .intro{
       max-width:var(--introWidth);
-      padding:120px var(--sidePadding) 80px;
+      padding:72px var(--sidePadding) 80px;
     }
 
     .intro h1{
@@ -461,20 +461,34 @@
       });
     }
 
-    (() => {
-  const embed = document.querySelector(".reelEmbed");
-  const img = document.querySelector(".reelFallback");
-  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    /* Reel goes full-bleed */
+.reel{
+  width: 100vw;
+  margin-left: calc(50% - 50vw); /* breaks out of page padding */
+  margin-right: calc(50% - 50vw);
+  padding: 0;
+}
 
-  if (!embed || !img || !conn) return;
+/* Aspect ratio container */
+.reelEmbed{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9; /* keep cinematic */
+  overflow: hidden;
+  background: #000;
+}
 
-  if (conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType)) {
-    embed.style.display = "none";
-    img.style.display = "block";
-  }
-})();
-
-
+/* Vimeo iframe fills + crops to edges */
+.reelEmbed iframe{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  transform: translate(-50%, -50%);
+  border: 0;
+}
+    
     (async () => {
       // Load editable site text (optional)
       try {
