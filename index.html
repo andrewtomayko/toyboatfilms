@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Toy Boat — Video Portfolio</title>
+  <title>Toy Boat Films</title>
 
   <!-- GLightbox -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
@@ -49,6 +49,48 @@
       text-transform:uppercase;
       user-select:none;
     }
+
+    .reel{
+  padding: 24px var(--sidePadding) 0;
+}
+
+/* Aspect ratio wrapper */
+.reelEmbed{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9; /* cinematic */
+  overflow: hidden;
+  background: #111;
+}
+
+/* Vimeo iframe fills container */
+.reelEmbed iframe{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Fallback image */
+.reelFallback{
+  display: none;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+}
+
+/* Mobile + reduced motion = image instead of video */
+@media (max-width: 800px){
+  .reelEmbed{ display:none; }
+  .reelFallback{ display:block; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reelEmbed{ display:none; }
+  .reelFallback{ display:block; }
+}
+
 
     /* ---------- INTRO ---------- */
     .intro{
@@ -236,6 +278,21 @@
     <div class="header-inner" id="logo">TOY BOAT</div>
   </header>
 
+  <section class="reel" aria-label="Showreel">
+  <div class="reelEmbed">
+    <iframe
+      src="https://player.vimeo.com/1062301999?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <!-- Fallback image (mobile / reduced motion / slow connection) -->
+  <img class="reelFallback" src="/assets/reel-poster.jpg" alt="Showreel still">
+</section>
+
+
   <!-- INTRO -->
   <section class="intro">
     <h1 id="headline">Videos that connect</h1>
@@ -402,6 +459,20 @@
         }
       });
     }
+
+    (() => {
+  const embed = document.querySelector(".reelEmbed");
+  const img = document.querySelector(".reelFallback");
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  if (!embed || !img || !conn) return;
+
+  if (conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType)) {
+    embed.style.display = "none";
+    img.style.display = "block";
+  }
+})();
+
 
     (async () => {
       // Load editable site text (optional)
