@@ -158,6 +158,43 @@
       text-transform:uppercase;
     }
 
+    /* ===== CLIENT LOGO STRIP ===== */
+.logoStrip{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 22px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+
+.logoStripInner{
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  padding: 0 var(--sidePadding);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;           /* Firefox */
+}
+.logoStripInner::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
+
+.logoStripInner img{
+  height: 34px;
+  width: auto;
+  flex: 0 0 auto;
+  opacity: 0.85;
+}
+
+/* Optional: slightly smaller on mobile */
+@media (max-width: 800px){
+  .logoStripInner{ gap: 44px; }
+  .logoStripInner img{ height: 28px; }
+}
+
+
+
     /* ---------- GRID ---------- */
     main{
       padding:0 var(--sidePadding) 80px;
@@ -336,6 +373,17 @@
     <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
     <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
   </section>
+
+   <section class="logoStrip" aria-label="Client logos">
+  <div class="logoStripInner">
+    <img src="/assets/logos/conde-nast-traveler.svg" alt="Conde Nast Traveler" loading="lazy">
+    <img src="/assets/logos/bluesky.svg" alt="Bluesky" loading="lazy">
+    <img src="/assets/logos/allstate.svg" alt="Allstate" loading="lazy">
+    <img src="/assets/logos/samsung-8.svg" alt="Samsung" loading="lazy">
+    <img src="/assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy">
+    <img src="/assets/logos/intel.svg" alt="Intel" loading="lazy">
+  </div>
+</section>
 
   <!-- GRID -->
   <main>
