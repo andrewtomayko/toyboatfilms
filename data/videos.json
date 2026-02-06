@@ -54,6 +54,12 @@
       "id": "625pZM5jVJg",
       "title": "Stout Tent - Testimonial ",
       "thumb": "/thumbnails/stout-tent-6x9.jpg"
+    },
+    {
+      "id": "https://vimeo.com/132672631",
+      "type": "vimeo",
+      "thumb": "/thumbnails/samsung-thumb.jpg",
+      "title": "Samsung Galaxy S6 - Behind the Scenes"
     }
   ]
 }
