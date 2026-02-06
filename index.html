@@ -405,37 +405,36 @@
         selector: ".glightbox",
         zoomable: false
       });
+      
     }
+function setupContactModal() {
+  const modal = document.getElementById("contactModal");
+  const openBtn = document.getElementById("openContact");
+  const headerBtn = document.getElementById("openContactHeader");
+  const closeBtn = document.getElementById("closeContact");
 
-    function setupContactModal() {
-      const modal = document.getElementById("contactModal");
-      const openBtn = document.getElementById("openContact");
-      const closeBtn = document.getElementById("closeContact");
+  function openModal() {
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+  }
 
-      openBtn.onclick = () => {
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
-      };
+  function closeModal() {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  }
 
-      closeBtn.onclick = () => {
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
-      };
+  if (openBtn) openBtn.onclick = openModal;
+  if (headerBtn) headerBtn.onclick = openModal;
+  if (closeBtn) closeBtn.onclick = closeModal;
 
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-          modal.style.display = "none";
-          modal.setAttribute("aria-hidden", "true");
-        }
-      });
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
 
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          modal.style.display = "none";
-          modal.setAttribute("aria-hidden", "true");
-        }
-      });
-    }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+}
 
     function setupFormspree() {
       const form = document.getElementById("contactForm");
