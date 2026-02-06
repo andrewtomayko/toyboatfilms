@@ -50,35 +50,44 @@
       user-select:none;
     }
 
-    .reel{
-  padding: 24px var(--sidePadding) 0;
+ /* ===== REEL (FULL BLEED + FILLS WRAPPER) ===== */
+.reel{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 0;
 }
 
-/* Aspect ratio wrapper */
+/* Cinematic wrapper (adjust ratio if you want taller) */
 .reelEmbed{
   position: relative;
   width: 100%;
-  aspect-ratio: 21 / 9; /* cinematic */
+  aspect-ratio: 21 / 9;
   overflow: hidden;
-  background: #111;
+  background: #000;
 }
 
-/* Vimeo iframe fills container */
+/* Force Vimeo to COVER (slight crop, no side gutters) */
 .reelEmbed iframe{
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
   border: 0;
 }
 
-/* Fallback image */
+/* Fallback image matches full-bleed reel */
 .reelFallback{
   display: none;
   width: 100%;
   aspect-ratio: 21 / 9;
   object-fit: cover;
+  display: block;
+  background: #000;
 }
+
 
 /* Mobile + reduced motion = image instead of video */
 @media (max-width: 800px){
@@ -95,7 +104,7 @@
     /* ---------- INTRO ---------- */
     .intro{
       max-width:var(--introWidth);
-      padding:120px var(--sidePadding) 80px;
+      padding:70px var(--sidePadding) 80px;
     }
 
     .intro h1{
