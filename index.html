@@ -181,10 +181,11 @@
 .logoStripInner::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
 
 .logoStripInner img{
-  height: 34px;
+  height: 42px;          /* ← increase this (try 42–48px) */
   width: auto;
   flex: 0 0 auto;
-  opacity: 0.85;
+  object-fit: contain;
+  opacity: 0.9;
 }
 
 /* Optional: slightly smaller on mobile */
