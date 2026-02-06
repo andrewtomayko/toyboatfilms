@@ -204,7 +204,32 @@
   .logoStripInner img{ height: 28px; }
 }
 
+.logoStripInner{
+  display: flex;
+  overflow: hidden;
+  gap: 64px;
+}
 
+.logoTrack{
+  display: flex;
+  gap: 64px;
+  animation: scrollLogos 40s linear infinite;
+}
+
+/* Pause on hover (nice touch) */
+.logoStrip:hover .logoTrack{
+  animation-play-state: paused;
+}
+
+/* Disable auto-scroll on mobile */
+@media (max-width: 800px){
+  .logoTrack{
+    animation: none;
+  }
+@keyframes scrollLogos{
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
 
     /* ---------- GRID ---------- */
     main{
