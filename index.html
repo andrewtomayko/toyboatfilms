@@ -65,18 +65,19 @@
   aspect-ratio: 21 / 9;
   overflow: hidden;
   background: #000;
+  line-height: 0;
 }
 
-/* Force Vimeo to COVER (slight crop, no side gutters) */
 .reelEmbed iframe{
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120%;
-  height: 120%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
+  display: block;
+  
 }
+
 
 /* Fallback image matches full-bleed reel */
 .reelFallback{
@@ -84,9 +85,9 @@
   width: 100%;
   aspect-ratio: 21 / 9;
   object-fit: cover;
-  display: block;
   background: #000;
 }
+
 
 
 /* Mobile + reduced motion = image instead of video */
