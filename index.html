@@ -95,7 +95,7 @@
     /* ---------- INTRO ---------- */
     .intro{
       max-width:var(--introWidth);
-      padding:72px var(--sidePadding) 80px;
+      padding:120px var(--sidePadding) 80px;
     }
 
     .intro h1{
@@ -281,7 +281,7 @@
   <section class="reel" aria-label="Showreel">
   <div class="reelEmbed">
     <iframe
-      src="https://player.vimeo.com/video/1062301999?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+      src="https://player.vimeo.com/1062301999?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
       frameborder="0"
       allow="autoplay; fullscreen; picture-in-picture"
       allowfullscreen>
@@ -291,7 +291,6 @@
   <!-- Fallback image (mobile / reduced motion / slow connection) -->
   <img class="reelFallback" src="/assets/reel-poster.jpg" alt="Showreel still">
 </section>
-
 
 
   <!-- INTRO -->
@@ -461,34 +460,20 @@
       });
     }
 
-    /* Reel goes full-bleed */
-.reel{
-  width: 100vw;
-  margin-left: calc(50% - 50vw); /* breaks out of page padding */
-  margin-right: calc(50% - 50vw);
-  padding: 0;
-}
+    (() => {
+  const embed = document.querySelector(".reelEmbed");
+  const img = document.querySelector(".reelFallback");
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 
-/* Aspect ratio container */
-.reelEmbed{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 21 / 9; /* keep cinematic */
-  overflow: hidden;
-  background: #000;
-}
+  if (!embed || !img || !conn) return;
 
-/* Vimeo iframe fills + crops to edges */
-.reelEmbed iframe{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 110%;
-  height: 110%;
-  transform: translate(-50%, -50%);
-  border: 0;
-}
-    
+  if (conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType)) {
+    embed.style.display = "none";
+    img.style.display = "block";
+  }
+})();
+
+
     (async () => {
       // Load editable site text (optional)
       try {
