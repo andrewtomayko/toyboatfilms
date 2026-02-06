@@ -180,12 +180,16 @@
 }
 .logoStripInner::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
 
+.logoStripInner .logo{
+  height: 48px;              /* change this to make logos bigger/smaller */
+  display: flex;
+  align-items: center;
+}
+
 .logoStripInner img{
-  height: 42px;          /* ← increase this (try 42–48px) */
+  max-height: 100%;
   width: auto;
-  flex: 0 0 auto;
-  object-fit: contain;
-  opacity: 0.9;
+  display: block;
 }
 
 /* Optional: slightly smaller on mobile */
