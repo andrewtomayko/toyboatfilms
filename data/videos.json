@@ -48,6 +48,12 @@
       "type": "vimeo",
       "id": "https://vimeo.com/376715092",
       "thumb": "/thumbnails/twist-thumb.jpg"
+    },
+    {
+      "type": "youtube",
+      "id": "625pZM5jVJg",
+      "title": "Stout Tent - Testimonial ",
+      "thumb": "/thumbnails/stout-tent-6x9.jpg"
     }
   ]
 }
