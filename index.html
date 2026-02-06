@@ -181,16 +181,21 @@
 .logoStripInner::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
 
 .logoStripInner .logo{
-  height: 48px;              /* change this to make logos bigger/smaller */
+  height: 54px;            /* overall size */
+  width: 190px;            /* forces consistent “slot” */
   display: flex;
   align-items: center;
+  justify-content: center; /* centers smaller ones */
+  flex: 0 0 auto;
 }
 
 .logoStripInner img{
   max-height: 100%;
+  max-width: 100%;
   width: auto;
   display: block;
 }
+
 
 /* Optional: slightly smaller on mobile */
 @media (max-width: 800px){
