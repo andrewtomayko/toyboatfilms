@@ -35,13 +35,13 @@
 
     /* ---------- HEADER ---------- */
     .site-header{
-      position:sticky;
-      top:0;
-      z-index:1000;
-      background:var(--bg);
-      .site-header{
-      border-bottom:none;
-    }
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:var(--bg);
+  border-bottom:none; /* remove the line */
+}
+
 ;
     }
 
@@ -158,35 +158,43 @@
       text-transform:uppercase;
     }
 
-    /* ===== CLIENT LOGO STRIP ===== */
+  /* ===== CLIENT LOGO STRIP (AUTO-SCROLL + LOOP) ===== */
 .logoStrip{
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-bottom: 48px; /* adjust to taste: 32–64px */
+  margin-bottom: 48px; /* space before videos */
   padding: 22px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   background: #fff;
+  overflow: hidden;
 }
 
 .logoStripInner{
   display: flex;
-  align-items: center;
   gap: 64px;
-  padding: 0 var(--sidePadding);
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;           /* Firefox */
+  will-change: transform;
 }
-.logoStripInner::-webkit-scrollbar{ display:none; } /* Chrome/Safari */
 
-.logoStripInner .logo{
-  height: 54px;            /* overall size */
-  width: 190px;            /* forces consistent “slot” */
+.logoTrack{
   display: flex;
   align-items: center;
-  justify-content: center; /* centers smaller ones */
+  gap: 64px;
+  animation: scrollLogos 40s linear infinite;
+}
+
+/* Pause on hover */
+.logoStrip:hover .logoTrack{
+  animation-play-state: paused;
+}
+
+.logoStripInner .logo{
+  height: 54px;
+  width: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
 }
 
@@ -197,39 +205,19 @@
   display: block;
 }
 
-
-/* Optional: slightly smaller on mobile */
-@media (max-width: 800px){
-  .logoStripInner{ gap: 44px; }
-  .logoStripInner img{ height: 28px; }
-}
-
-.logoStripInner{
-  display: flex;
-  overflow: hidden;
-  gap: 64px;
-}
-
-.logoTrack{
-  display: flex;
-  gap: 64px;
-  animation: scrollLogos 40s linear infinite;
-}
-
-/* Pause on hover (nice touch) */
-.logoStrip:hover .logoTrack{
-  animation-play-state: paused;
-}
-
-/* Disable auto-scroll on mobile */
-@media (max-width: 800px){
-  .logoTrack{
-    animation: none;
-  }
+/* Desktop loop animation */
 @keyframes scrollLogos{
   from { transform: translateX(0); }
   to   { transform: translateX(-100%); }
 }
+
+/* Mobile: disable auto-scroll and allow swipe */
+@media (max-width: 800px){
+  .logoStrip{ overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .logoStripInner{ width: max-content; padding: 0 var(--sidePadding); }
+  .logoTrack{ animation: none; }
+}
+
 }
 
     /* ---------- GRID ---------- */
@@ -413,56 +401,34 @@
 
    <section class="logoStrip" aria-label="Client logos">
   <div class="logoStripInner">
-      <div class="logo">
-    <img src="/assets/logos/conde-nast-traveler.svg" alt="Conde Nast Traveler" loading="lazy">
-      </div>
-      <div class="logo">
-    <img src="/assets/logos/bluesky.svg" alt="Bluesky" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/allstate.svg" alt="Allstate" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/samsung.svg" alt="Samsung" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/intel.svg" alt="Intel" loading="lazy">
-       </div>
-     <div class="logo">
-    <img src="/assets/logos/IDEO.svg" alt="Ideo" loading="lazy">
-       </div>
-    <div class="logo">
-    <img src="/assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy">
-       </div>
-    <div class="logo">
-    <img src="/assets/logos/conde-nast-traveler.svg" alt="Conde Nast Traveler" loading="lazy">
-      </div>
-      <div class="logo">
-    <img src="/assets/logos/bluesky.svg" alt="Bluesky" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/allstate.svg" alt="Allstate" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/samsung.svg" alt="Samsung" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy">
-       </div>
-      <div class="logo">
-    <img src="/assets/logos/intel.svg" alt="Intel" loading="lazy">
-       </div>
-     <div class="logo">
-    <img src="/assets/logos/IDEO.svg" alt="Ideo" loading="lazy">
-       </div>
-    <div class="logo">
-    <img src="/assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy">
-       </div>
+
+    <div class="logoTrack">
+      <!-- ONE SET OF LOGOS -->
+      <div class="logo"><img src="/assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/bluesky.svg" alt="Bluesky" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/allstate.svg" alt="Allstate" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/samsung.svg" alt="Samsung" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/intel.svg" alt="Intel" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/IDEO.svg" alt="IDEO" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy"></div>
+    </div>
+
+    <div class="logoTrack" aria-hidden="true">
+      <!-- SAME LOGOS AGAIN (COPY/PASTE THE SAME SET) -->
+      <div class="logo"><img src="/assets/logos/conde-nast-traveler.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/bluesky.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/allstate.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/samsung.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/SCU.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/intel.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/IDEO.svg" alt="" loading="lazy"></div>
+      <div class="logo"><img src="/assets/logos/NCCU.svg" alt="" loading="lazy"></div>
+    </div>
+
   </div>
 </section>
+
 
   <!-- GRID -->
   <main>
