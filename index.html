@@ -53,6 +53,23 @@
       user-select:none;
     }
 
+    .header-flex{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.header-cta{
+  background:none;
+  border:2px solid var(--text);
+  padding:10px 16px;
+  font-size:12px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+
  /* ===== REEL (FULL BLEED + FILLS WRAPPER) ===== */
 .reel{
   width: 100vw;
@@ -289,8 +306,11 @@
 
   <!-- HEADER -->
   <header class="site-header">
-    <div class="header-inner" id="logo">TOY BOAT</div>
-  </header>
+  <div class="header-inner header-flex">
+    <div id="logo">TOY BOAT</div>
+    <button class="header-cta" id="openContactHeader">BOOK A CALL</button>
+  </div>
+</header>
 
   <section class="reel" aria-label="Showreel">
   <div class="reelEmbed">
