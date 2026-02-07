@@ -60,6 +60,12 @@
       "type": "vimeo",
       "thumb": "/thumbnails/samsung-thumb.jpg",
       "title": "Samsung Galaxy S6 - Behind the Scenes"
+    },
+    {
+      "id": "137718045",
+      "type": "vimeo",
+      "title": "TrueCar L.E.D - Case Study",
+      "thumb": "/thumbnails/truecar-led-thumb.jpg"
     }
   ]
 }
