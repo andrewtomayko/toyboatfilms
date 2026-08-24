@@ -1,6 +1,12 @@
 {
   "videos": [
     {
+      "title": "Honda of Burlington",
+      "type": "youtube",
+      "id": "https://youtu.be/ZYBbER5MR0k",
+      "thumb": "/thumbnails/hob-thumb_1.74.1.png"
+    },
+    {
       "title": "North Coast Credit Union - Online Banking",
       "id": "https://vimeo.com/1161824636",
       "type": "vimeo",
