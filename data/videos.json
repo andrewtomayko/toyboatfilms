@@ -6,6 +6,10 @@
         {
           "label": "Client",
           "value": "TWIST"
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat"
         }
       ],
       "url": "https://vimeo.com/367326427",
@@ -91,35 +95,91 @@
     },
     {
       "title": "Graphic Products - ToroMax Product Video",
-      "details": [],
+      "details": [
+        {
+          "label": "Agency",
+          "value": "LocalEyes"
+        }
+      ],
       "url": "https://vimeo.com/543790754/c79f433258",
       "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg",
       "description": "",
-      "credits": []
+      "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        }
+      ],
+      "thumbDetail": "Agency"
     },
     {
       "title": "Seattle Credit Union with Jonah Coleman - Banking for All",
-      "details": [],
+      "details": [
+        {
+          "label": "Agency",
+          "value": "Localeyes"
+        }
+      ],
       "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
       "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
       "description": "",
-      "credits": []
+      "credits": [
+        {
+          "role": "director",
+          "name": "Andrew Tomayko"
+        }
+      ],
+      "thumbDetail": "Agency"
     },
     {
       "title": "MILAMORE FINE JEWELRY",
-      "details": [],
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST"
+        }
+      ],
       "url": "https://vimeo.com/1023607953",
       "thumb": "/thumbnails/milamore-frames_2.1.7.jpg",
-      "description": "",
-      "credits": []
+      "description": "We sat down with George in his SoHo home, followed him through the streets and subways of New York, and paired those moments with footage from his atelier in Japan. The result is a portrait of a designer whose work, like his story, moves between cultures, connecting the energy of the city with the patience and precision of traditional craft.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ],
+      "thumbDetail": "Client"
     },
     {
-      "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
-      "details": [],
+      "title": "Vinátta - Poulsbo 48 Hour Film Challenge ",
+      "details": [
+        {
+          "label": "Client",
+          "value": "(Audience Choice Winner)"
+        }
+      ],
       "url": "https://www.youtube.com/watch?v=i2hEBU5ltA4",
       "thumb": "/thumbnails/vinatta-thumb-16-9-2.jpg",
-      "description": "",
-      "credits": []
+      "description": "A sailor and his son set course for Poulsbo, Washington. Our submission for the 2025 Poulsbo 47.7 Hour Film Challenge, and the audience choice award winner! \n\nWe were assigned our film parameters at 6 PM on Friday, February 28th, and had until 6 PM on Sunday to submit our final film.\n\nProp: A doughnut from Sluys Bakery\nLocation: Spice & Tea Exchange\nLine: \"This must be my lucky day\"\n\nFriday night after the opening event, we set sail to a nearby anchorage, choosing to capture the story chronologically on Saturday. Aside from a few quick pickups on Sunday, what you see in the film unfolded in the same order it was experienced. All the music was composed by Chad during filming. We had a great time–it felt less like a challenge and more like capturing the moments we’d be having anyway. \n\nWe are incredibly grateful to everyone who felt the heart in our story. Winning the Audience Choice Award means the world to us. ",
+      "credits": [
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Music/Father",
+          "name": "Chad Brigman"
+        },
+        {
+          "role": "Son",
+          "name": "Avi Brigman"
+        }
+      ],
+      "thumbDetail": "Prod. Company"
     },
     {
       "title": "Samsung Galaxy S6 - Behind the Scenes",
