@@ -308,7 +308,8 @@
           "role": "Song Produced by",
           "name": "Johnny K"
         }
-      ]
+      ],
+      "client": "Digital Twigs"
     },
     {
       "title": "Wanderlist",
@@ -373,7 +374,7 @@
       "credits": []
     },
     {
-      "title": "Pool Cosby – “I Like You”",
+      "title": "“I Like You”",
       "details": [
         {
           "label": "Year",
@@ -384,7 +385,17 @@
       "url": "https://vimeo.com/368661670",
       "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
       "description": "",
-      "credits": []
+      "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Visual Effects",
+          "name": "Ryan Wehner"
+        }
+      ],
+      "client": "Pool Cosby"
     },
     {
       "title": "Prounis",
@@ -417,7 +428,8 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ]
+      ],
+      "client": "Twist"
     },
     {
       "title": "Graphic Products - ToroMax",
