@@ -56,7 +56,7 @@
         {
           "label": "Agency",
           "value": "Apex Media",
-          "thumb": false
+          "thumb": true
         },
         {
           "label": "Prod. Company",
@@ -80,7 +80,7 @@
         {
           "label": "Agency",
           "value": "Apex Media",
-          "thumb": false
+          "thumb": true
         },
         {
           "label": "Prod. Company",
