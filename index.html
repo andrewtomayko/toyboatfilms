@@ -355,13 +355,13 @@
     .playerBar{
       position:sticky;
       top:0;
-      z-index:2;
+      z-index:5; /* above the prev/next arrows, which scroll beneath it on phones */
       display:flex;
       align-items:center;
       justify-content:space-between;
       height:64px;
       padding:0 var(--sidePadding);
-      background:linear-gradient(var(--playerBg) 60%, transparent);
+      background:var(--playerBg);
       font-size:12px;
       letter-spacing:.14em;
       text-transform:uppercase;
@@ -419,9 +419,44 @@
       display:grid;
       grid-template-columns:minmax(0, 3fr) minmax(0, 2fr);
       gap:48px;
-      padding:36px 0 96px;
+      padding:36px 0 56px;
     }
     .playerInfo.no-credits{ grid-template-columns:minmax(0, 1fr); }
+
+    .playerFooter{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:24px;
+      padding:28px 0 72px;
+      border-top:1px solid var(--playerLine);
+    }
+
+    .footerLink{
+      display:inline-flex;
+      align-items:baseline;
+      gap:10px;
+      min-width:0;
+      padding:8px 0;
+      border:0;
+      background:none;
+      color:var(--playerText);
+      font-size:13px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      opacity:.8;
+      transition:opacity .2s ease;
+    }
+    .footerLink:hover{ opacity:1; }
+    .footerLink.next{ text-align:right; }
+    .footerLabel{ color:var(--playerMuted); flex:none; }
+    .footerTitle{
+      font-weight:700;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
 
     .playerTitle{
       margin:0 0 8px;
@@ -497,8 +532,15 @@
       .playerInfo{
         grid-template-columns:1fr;
         gap:36px;
-        padding:20px var(--sidePadding) 72px;
+        padding:20px var(--sidePadding) 40px;
       }
+      .playerFooter{
+        flex-direction:column;
+        align-items:stretch;
+        gap:4px;
+        padding:20px var(--sidePadding) 56px;
+      }
+      .footerLink.next{ order:-1; justify-content:flex-start; text-align:left; }
     }
     @media (min-width: 801px){
       .playerMobileNav{ display:contents; }
@@ -719,6 +761,17 @@
           <dl class="credits" id="playerCredits"></dl>
         </div>
       </div>
+
+      <nav class="playerFooter" aria-label="Video navigation">
+        <button class="footerLink" id="playerBack" type="button">
+          <span aria-hidden="true">←</span> Back to all work
+        </button>
+        <button class="footerLink next" id="playerFooterNext" type="button">
+          <span class="footerLabel">Next</span>
+          <span class="footerTitle" id="playerNextTitle"></span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </nav>
     </div>
   </div>
 
@@ -917,6 +970,8 @@
       document.getElementById("playerCreditsWrap").hidden = !credits.length;
       document.getElementById("playerInfo").classList.toggle("no-credits", !credits.length);
 
+      document.getElementById("playerNextTitle").textContent = videos[(i + 1) % videos.length].title || "";
+
       player.scrollTop = 0;
     }
 
@@ -937,7 +992,8 @@
 
     function step(dir) {
       const i = (current + dir + videos.length) % videos.length;
-      history.replaceState({ tbVideo: true }, "", "#video/" + videos[i].slug);
+      // Keep the existing state: only a popup opened from the grid may close with history.back()
+      history.replaceState(history.state, "", "#video/" + videos[i].slug);
       showVideo(i);
     }
 
@@ -970,6 +1026,8 @@
       document.getElementById("playerClose").onclick = closePlayer;
       document.getElementById("playerPrev").onclick = () => step(-1);
       document.getElementById("playerNext").onclick = () => step(1);
+      document.getElementById("playerFooterNext").onclick = () => step(1);
+      document.getElementById("playerBack").onclick = closePlayer;
 
       document.addEventListener("keydown", e => {
         if (player.hidden) return;
