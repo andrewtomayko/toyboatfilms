@@ -1,12 +1,81 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Admin</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  </head>
-  <body>
-    <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Toy Boat · Site Editor</title>
+  <link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+  <script>
+    /* Live preview: shows each video the way it appears in the popup on the site */
+    CMS.registerPreviewStyle(`
+      body{ margin:0; background:#0b0b0b; color:#f2f2f2; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+      .wrap{ padding:24px; }
+      .note{ font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#9a9a9a; margin:0 0 24px; }
+      .item{ margin:0 0 56px; }
+      .thumb{ position:relative; aspect-ratio:16/9; background:#1a1a1a; overflow:hidden; }
+      .thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+      .thumb .ov{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+                  background:rgba(0,0,0,.55); text-align:center; padding:16px; opacity:0; transition:opacity .3s; }
+      .thumb:hover .ov{ opacity:1; }
+      .ov .t{ margin:0; font-size:20px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .ov .c{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.75); }
+      .empty{ display:flex; align-items:center; justify-content:center; height:100%; color:#666; font-size:13px; }
+      .info{ display:grid; grid-template-columns:3fr 2fr; gap:32px; padding-top:20px; }
+      .info.solo{ grid-template-columns:1fr; }
+      h2{ margin:0 0 6px; font-size:20px; letter-spacing:.06em; text-transform:uppercase; }
+      .meta{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
+      .desc{ margin:16px 0 0; font-size:15px; line-height:1.7; color:#d6d6d6; white-space:pre-line; }
+      h3{ margin:0 0 12px; padding-bottom:10px; border-bottom:1px solid #262626; font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
+      dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 20px; font-size:14px; }
+      dt{ color:#9a9a9a; text-transform:uppercase; letter-spacing:.1em; font-size:11px; padding-top:2px; }
+      dd{ margin:0; }
+    `, { raw: true });
+
+    const VideosPreview = createClass({
+      render() {
+        const list = this.props.entry.getIn(["data", "videos"]);
+        const items = list ? list.toJS() : [];
+        const asset = p => (p ? this.props.getAsset(p).toString() : "");
+
+        return h("div", { className: "wrap" },
+          h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
+          items.map((v, i) => {
+            const credits = (v.credits || []).filter(c => c && (c.role || c.name));
+            const meta = [v.client, v.year].filter(Boolean).join(" · ");
+            return h("div", { className: "item", key: i },
+              h("div", { className: "thumb" },
+                v.thumb ? h("img", { src: asset(v.thumb) }) : h("div", { className: "empty" }, "No thumbnail yet"),
+                h("div", { className: "ov" },
+                  h("p", { className: "t" }, v.title || "Untitled"),
+                  v.client ? h("p", { className: "c" }, v.client) : null
+                )
+              ),
+              h("div", { className: "info" + (credits.length ? "" : " solo") },
+                h("div", null,
+                  h("h2", null, v.title || "Untitled"),
+                  meta ? h("p", { className: "meta" }, meta) : null,
+                  v.description ? h("p", { className: "desc" }, v.description) : null
+                ),
+                credits.length ? h("div", null,
+                  h("h3", null, "Credits"),
+                  h("dl", null, credits.flatMap((c, j) => [
+                    h("dt", { key: "r" + j }, c.role),
+                    h("dd", { key: "n" + j }, c.name)
+                  ]))
+                ) : null
+              )
+            );
+          })
+        );
+      }
+    });
+
+    CMS.registerPreviewTemplate("videos", VideosPreview);
+  </script>
+</body>
 </html>

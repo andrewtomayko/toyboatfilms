@@ -2,82 +2,120 @@
   "videos": [
     {
       "title": "Honda of Burlington",
-      "type": "youtube",
-      "id": "https://youtu.be/ZYBbER5MR0k",
-      "thumb": "/thumbnails/hob-thumb_1.74.1.png"
+      "client": "",
+      "year": "",
+      "url": "https://www.youtube.com/watch?v=ZYBbER5MR0k",
+      "thumb": "/thumbnails/hob-thumb-16-9.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "North Coast Credit Union - Online Banking",
-      "id": "https://vimeo.com/1161824636",
-      "type": "vimeo",
-      "thumb": "/thumbnails/nccu-thumb-16-9.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/1161824636",
+      "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "Silverwood School Promo Video",
-      "tag": "",
-      "type": "youtube",
-      "id": "VYHBzXdmlmA",
-      "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
+      "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
+      "description": "",
+      "credits": []
     },
     {
-      "id": "https://vimeo.com/543790754/c79f433258",
-      "type": "vimeo",
       "title": "Graphic Products - ToroMax Product Video",
-      "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/543790754/c79f433258",
+      "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "Polly Wales - Fine Jewelry",
-      "type": "vimeo",
-      "id": "https://vimeo.com/367326427",
-      "thumb": "/thumbnails/polly-wales.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/367326427",
+      "thumb": "/thumbnails/polly-wales.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "Seattle Credit Union with Jonah Coleman - Banking for All",
-      "type": "youtube",
-      "id": "y2IbomNJZ9c",
-      "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
+      "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "MILAMORE FINE JEWELRY",
-      "type": "vimeo",
-      "id": "https://vimeo.com/1023607953",
-      "thumb": "/thumbnails/milamore-frames_2.1.7.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/1023607953",
+      "thumb": "/thumbnails/milamore-frames_2.1.7.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
-      "id": "i2hEBU5ltA4",
-      "type": "youtube",
-      "thumb": "/thumbnails/vinatta-thumb-16-9-2.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://www.youtube.com/watch?v=i2hEBU5ltA4",
+      "thumb": "/thumbnails/vinatta-thumb-16-9-2.jpg",
+      "description": "",
+      "credits": []
     },
     {
-      "id": "https://vimeo.com/132672631",
-      "type": "vimeo",
+      "title": "Samsung Galaxy S6 - Behind the Scenes",
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/132672631",
       "thumb": "/thumbnails/samsung-thumb.jpg",
-      "title": "Samsung Galaxy S6 - Behind the Scenes"
+      "description": "",
+      "credits": []
     },
     {
       "title": "TWIST Curated Jewelry - Retail Video",
-      "type": "vimeo",
-      "id": "https://vimeo.com/376715092",
-      "thumb": "/thumbnails/twist-thumb.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/376715092",
+      "thumb": "/thumbnails/twist-thumb.jpg",
+      "description": "",
+      "credits": []
     },
     {
-      "type": "youtube",
-      "id": "625pZM5jVJg",
-      "title": "Stout Tent - Testimonial ",
-      "thumb": "/thumbnails/stout-tent-6x9.jpg"
+      "title": "Stout Tent - Testimonial",
+      "client": "",
+      "year": "",
+      "url": "https://www.youtube.com/watch?v=625pZM5jVJg",
+      "thumb": "/thumbnails/stout-tent-6x9.jpg",
+      "description": "",
+      "credits": []
     },
     {
-      "id": "137718045",
-      "type": "vimeo",
       "title": "TrueCar L.E.D - Case Study",
-      "thumb": "/thumbnails/truecar-led-thumb.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/137718045",
+      "thumb": "/thumbnails/truecar-led-thumb.jpg",
+      "description": "",
+      "credits": []
     },
     {
       "title": "Odesza - In Return Tour Announcement Video",
-      "type": "vimeo",
-      "id": "100283854",
-      "thumb": "/thumbnails/odesza-thumb.jpg"
+      "client": "",
+      "year": "",
+      "url": "https://vimeo.com/100283854",
+      "thumb": "/thumbnails/odesza-thumb.jpg",
+      "description": "",
+      "credits": []
     }
   ]
 }
