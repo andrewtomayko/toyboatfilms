@@ -241,9 +241,14 @@
       "title": "Mars Argo – Using You",
       "details": [
         {
+          "label": "Client",
+          "value": "Digital Twigs",
+          "thumb": true
+        },
+        {
           "label": "Artist",
           "value": "Mars Argo",
-          "thumb": true
+          "thumb": false
         },
         {
           "label": "Prod. Company",
@@ -308,8 +313,7 @@
           "role": "Song Produced by",
           "name": "Johnny K"
         }
-      ],
-      "client": "Digital Twigs"
+      ]
     },
     {
       "title": "Wanderlist",
@@ -355,8 +359,7 @@
           "role": "Director of Photography",
           "name": "Andrew Tomayko"
         }
-      ],
-      "client": "Condé Nast Traveler"
+      ]
     },
     {
       "title": "Sea Change: By the Wind",
@@ -377,6 +380,11 @@
       "title": "“I Like You”",
       "details": [
         {
+          "label": "Client",
+          "value": "Pool Cosby",
+          "thumb": true
+        },
+        {
           "label": "Year",
           "value": "2019",
           "thumb": false
@@ -394,8 +402,7 @@
           "role": "Visual Effects",
           "name": "Ryan Wehner"
         }
-      ],
-      "client": "Pool Cosby"
+      ]
     },
     {
       "title": "Prounis",
@@ -428,8 +435,7 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ],
-      "client": "Twist"
+      ]
     },
     {
       "title": "Graphic Products - ToroMax",
