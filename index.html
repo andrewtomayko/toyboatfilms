@@ -93,12 +93,41 @@
       background:var(--bg);
     }
 
+    /* Three columns so the wave mark sits in the true center regardless of the side widths */
     .header-inner{
-      display:flex;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
       align-items:center;
-      justify-content:space-between;
       gap:16px;
       padding:20px var(--sidePadding);
+    }
+    .header-inner > :last-child{ justify-self:end; }
+
+    .header-mark{
+      display:block;
+      line-height:0;
+    }
+    .header-mark img{
+      display:block;
+      height:38px;
+      width:auto;
+      opacity:.9;
+      transition:opacity .2s ease;
+    }
+    .header-mark:hover img{ opacity:1; }
+
+    .header-inner .btn{ white-space:nowrap; }
+
+    @media (max-width: 800px){
+      .header-mark img{ height:30px; }
+    }
+    @media (max-width: 420px){
+      .header-inner{ gap:10px; }
+      .header-mark img{ height:24px; }
+      .header-inner .btn-small{ padding:9px 11px; font-size:11px; letter-spacing:.06em; }
+    }
+    @media (max-width: 360px){
+      .header-mark{ display:none; }
     }
 
     #logo{
@@ -664,6 +693,9 @@
     <header class="site-header">
       <div class="header-inner">
         <a href="#top" id="logo">TOY BOAT</a>
+        <a href="#top" class="header-mark" aria-label="Back to top">
+          <img src="/Assets/logo-wave-white.png" alt="" width="439" height="171">
+        </a>
         <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
       </div>
     </header>
