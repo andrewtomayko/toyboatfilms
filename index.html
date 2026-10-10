@@ -915,7 +915,8 @@
           player.hidden = false;
           lockPage(true);
           requestAnimationFrame(() => player.classList.add("is-open"));
-          document.getElementById("playerClose").focus();
+          // Keyboard users still land on Close; mouse users don't get a focus box
+          document.getElementById("playerClose").focus({ preventScroll: true, focusVisible: false });
         }
       } else if (!player.hidden) {
         player.classList.remove("is-open");
