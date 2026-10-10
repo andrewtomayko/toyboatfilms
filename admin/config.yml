@@ -41,7 +41,7 @@ collections:
                 label_singular: "detail"
                 collapsed: false
                 summary: "{{fields.label}}: {{fields.value}}"
-                hint: "Optional. Add only the lines you need and drag them into the order you want. They appear under the title in the popup; the Client also appears on the thumbnail."
+                hint: "Optional. Add only the lines you need and drag them into the order you want. They appear under the title in the popup."
                 fields:
                   - label: "Label"
                     name: "label"
@@ -49,6 +49,14 @@ collections:
                     options: ["Client", "Agency", "Prod. Company", "Year"]
                     default: "Client"
                   - { label: "Value", name: "value", widget: "string" }
+
+              - label: "Show under thumbnail title"
+                name: "thumbDetail"
+                widget: "select"
+                required: false
+                default: "Client"
+                options: ["Client", "Agency", "Prod. Company", "Year", "Nothing"]
+                hint: "Which detail appears in small text under the title when someone hovers over the thumbnail. If that detail is empty, nothing shows."
 
               - label: "Video link"
                 name: "url"

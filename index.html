@@ -800,8 +800,11 @@
       return list.filter(d => d && d.label && String(d.value ?? "").trim());
     }
 
-    function clientOf(v) {
-      const d = detailsOf(v).find(d => d.label === "Client");
+    // The detail chosen in the editor's "Show under thumbnail title" (Client unless set)
+    function thumbDetailOf(v) {
+      const label = v.thumbDetail || "Client";
+      if (label === "Nothing") return "";
+      const d = detailsOf(v).find(d => d.label === label);
       return d ? d.value : "";
     }
 
@@ -829,7 +832,7 @@
               <circle cx="22" cy="22" r="21"/><path d="M18 15l11 7-11 7z" fill="currentColor" stroke="none"/>
             </svg>
             <p class="cardTitle">${esc(v.title)}</p>
-            ${clientOf(v) ? `<p class="cardClient">${esc(clientOf(v))}</p>` : ""}
+            ${thumbDetailOf(v) ? `<p class="cardClient">${esc(thumbDetailOf(v))}</p>` : ""}
           </div>
         </a>
       `).join("");
