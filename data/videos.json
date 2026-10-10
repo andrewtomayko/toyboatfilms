@@ -107,6 +107,43 @@
       "crop": "Top"
     },
     {
+      "title": "Odesza - In Return Tour",
+      "details": [
+        {
+          "label": "Client",
+          "value": "Odesza",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Digital Twigs",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2014",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/100283854",
+      "thumb": "/thumbnails/odesza-thumb.jpg",
+      "description": "Tour announcement film for Odesza’s 2014 In Return tour, made with Digital Twigs and featuring Lauryn Myers.",
+      "credits": [
+        {
+          "role": "Director of Photography",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Visual Effects",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Featuring",
+          "name": "Lauryn Myers"
+        }
+      ]
+    },
+    {
       "title": "Honda of Burlington",
       "details": [
         {
@@ -150,31 +187,6 @@
       "credits": [
         {
           "role": "DP/editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
-      "title": "Silverwood School",
-      "details": [
-        {
-          "label": "Client",
-          "value": "Silverwood School",
-          "thumb": false
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": true
-        }
-      ],
-      "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
-      "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
-      "crop": "Upper",
-      "description": "Silverwood School is an independent K-8 school in Poulsbo, Washington, where 85 students learn, play, and grow on a 17-acre campus in the woods. As the school geared up for its Annual Fund drive, they reached out to explore creating a video that would inspire their community to give.",
-      "credits": [
-        {
-          "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
       ]
@@ -305,6 +317,20 @@
       ]
     },
     {
+      "title": "Pool Cosby – “I Like You”",
+      "details": [
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/368661670",
+      "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
+      "description": "",
+      "credits": []
+    },
+    {
       "title": "Prounis",
       "details": [
         {
@@ -376,6 +402,59 @@
       ]
     },
     {
+      "title": "TrueCar L.E.D - Case Study",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TrueCar",
+          "thumb": true
+        },
+        {
+          "label": "Agency",
+          "value": "Tiny Rebellion",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2015",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/137718045",
+      "thumb": "/thumbnails/truecar-led-thumb.jpg",
+      "description": "Behind the scenes of TrueCar L.E.D., an interactive light installation directed by GMUNK for the 2015 Twilight Concert Series on the Santa Monica Pier. We captured the build and the live event as concertgoers’ text messages, photos and the music on stage drove a mirrored sculpture holding more than 60,000 LEDs, sending pulses of light across the pier.",
+      "credits": [
+        {
+          "role": "Director",
+          "name": "GMUNK"
+        },
+        {
+          "role": "Digital Production Company",
+          "name": "Tool of North America"
+        },
+        {
+          "role": "Post Production Company",
+          "name": "Digital Twigs"
+        },
+        {
+          "role": "Cinematographer, Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Production Design",
+          "name": "VT Pro Design"
+        },
+        {
+          "role": "Photographer",
+          "name": "Bradley G Munkowitz"
+        },
+        {
+          "role": "Composer, Audio Mix",
+          "name": "Keith Ruggiero (SoundsRed)"
+        }
+      ]
+    },
+    {
       "title": "Jane Diaz",
       "details": [
         {
@@ -410,6 +489,31 @@
       ]
     },
     {
+      "title": "Silverwood School",
+      "details": [
+        {
+          "label": "Client",
+          "value": "Silverwood School",
+          "thumb": false
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": true
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
+      "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
+      "crop": "Upper",
+      "description": "Silverwood School is an independent K-8 school in Poulsbo, Washington, where 85 students learn, play, and grow on a 17-acre campus in the woods. As the school geared up for its Annual Fund drive, they reached out to explore creating a video that would inspire their community to give.",
+      "credits": [
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
       "title": "Monica Rossi: Anaconda",
       "details": [
         {
@@ -432,6 +536,39 @@
       "thumb": "/thumbnails/twist-monica-rossi-anaconda.jpg",
       "crop": "Center",
       "description": "MILAN - For over thirty years, Monica Rossi has been designing and creating Anaconda jewelry - a collection of intricately hand-crafted jewelry spanning from Italian Baroque inspired to Victorian masterpieces to the most simple of geometric settings. The delicate, but strong, harmony found in her jewelry has a striking purity and balanced lightness. The 19 karat gold has a diffused, warm-toned color balancing the hand-selected stones with their natural imperfections and characteristics.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Nikolle Radi: The Platinum Alchemist",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2018",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=lny49-wYmd8",
+      "thumb": "/thumbnails/twist-nikolle-radi.jpg",
+      "description": "Raised around his father’s jewelry workshop in Croatia, New York designer Nikolle Radi brings an engineer’s precision to platinum. His intricate openwork pushes the metal into near-impossible patterns, balancing delicacy with structural strength.",
       "credits": [
         {
           "role": "Producer",
@@ -500,39 +637,6 @@
       "thumb": "/thumbnails/twist-dorette.jpg",
       "crop": "Center",
       "description": "Paris designer Catherine Lévy built Dorette from a playful curiosity for materials, shaped by design studies in Paris and years of travel through India. Her pieces pair saturated gemstones and organic shapes with the restraint of French provincial jewelry: layered, colorful and deeply personal.",
-      "credits": [
-        {
-          "role": "Producer",
-          "name": "Sasha Schneider"
-        },
-        {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
-      "title": "Nikolle Radi: The Platinum Alchemist",
-      "details": [
-        {
-          "label": "Client",
-          "value": "TWIST",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2018",
-          "thumb": false
-        }
-      ],
-      "url": "https://www.youtube.com/watch?v=lny49-wYmd8",
-      "thumb": "/thumbnails/twist-nikolle-radi.jpg",
-      "description": "Raised around his father’s jewelry workshop in Croatia, New York designer Nikolle Radi brings an engineer’s precision to platinum. His intricate openwork pushes the metal into near-impossible patterns, balancing delicacy with structural strength.",
       "credits": [
         {
           "role": "Producer",
@@ -779,110 +883,6 @@
         {
           "role": "Camera, Editor",
           "name": "Sora Blu"
-        }
-      ]
-    },
-    {
-      "title": "TrueCar L.E.D - Case Study",
-      "details": [
-        {
-          "label": "Client",
-          "value": "TrueCar",
-          "thumb": true
-        },
-        {
-          "label": "Agency",
-          "value": "Tiny Rebellion",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2015",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/137718045",
-      "thumb": "/thumbnails/truecar-led-thumb.jpg",
-      "description": "Behind the scenes of TrueCar L.E.D., an interactive light installation directed by GMUNK for the 2015 Twilight Concert Series on the Santa Monica Pier. We captured the build and the live event as concertgoers’ text messages, photos and the music on stage drove a mirrored sculpture holding more than 60,000 LEDs, sending pulses of light across the pier.",
-      "credits": [
-        {
-          "role": "Director",
-          "name": "GMUNK"
-        },
-        {
-          "role": "Digital Production Company",
-          "name": "Tool of North America"
-        },
-        {
-          "role": "Post Production Company",
-          "name": "Digital Twigs"
-        },
-        {
-          "role": "Cinematographer, Editor",
-          "name": "Andrew Tomayko"
-        },
-        {
-          "role": "Production Design",
-          "name": "VT Pro Design"
-        },
-        {
-          "role": "Photographer",
-          "name": "Bradley G Munkowitz"
-        },
-        {
-          "role": "Composer, Audio Mix",
-          "name": "Keith Ruggiero (SoundsRed)"
-        }
-      ]
-    },
-    {
-      "title": "Pool Cosby – “I Like You”",
-      "details": [
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/368661670",
-      "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
-      "description": "",
-      "credits": []
-    },
-    {
-      "title": "Odesza - In Return Tour",
-      "details": [
-        {
-          "label": "Client",
-          "value": "Odesza",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Digital Twigs",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2014",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/100283854",
-      "thumb": "/thumbnails/odesza-thumb.jpg",
-      "description": "Tour announcement film for Odesza’s 2014 In Return tour, made with Digital Twigs and featuring Lauryn Myers.",
-      "credits": [
-        {
-          "role": "Director of Photography",
-          "name": "Andrew Tomayko"
-        },
-        {
-          "role": "Visual Effects",
-          "name": "Ryan Wehner"
-        },
-        {
-          "role": "Featuring",
-          "name": "Lauryn Myers"
         }
       ]
     }
