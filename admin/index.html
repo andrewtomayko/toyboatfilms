@@ -48,7 +48,7 @@
           h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
           items.map((v, i) => {
             const credits = (v.credits || []).filter(c => c && (c.role || c.name));
-            const meta = (v.details || []).filter(d => d && d.label && String(d.value || "").trim());
+            const meta = (v.details || []).filter(d => d && String(d.value || "").trim());
             const client = meta.filter(d => d.thumb).map(d => d.value).join(" · ");
             return h("div", { className: "item", key: i },
               h("div", { className: "thumb" },
@@ -62,7 +62,7 @@
                 h("div", null,
                   h("h2", null, v.title || "Untitled"),
                   meta.length ? h("ul", { className: "meta" }, meta.map((d, j) =>
-                    h("li", { key: j }, h("span", { className: "label" }, d.label + ":"), d.value))) : null,
+                    h("li", { key: j }, d.label ? h("span", { className: "label" }, d.label + ":") : null, d.value))) : null,
                   v.description ? h("p", { className: "desc" }, v.description) : null
                 ),
                 credits.length ? h("div", null,
