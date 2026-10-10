@@ -1,6 +1,28 @@
 {
   "videos": [
     {
+      "url": "https://youtu.be/rCSuFcdtV54",
+      "title": " R2AK 2028: For the love of the game",
+      "description": "For over a decade, Race to Alaska has quietly collected a drawer full of complaints about fairness, most of them pointing to one thing: human-powered teams racing for glory while everyone else raced for $10,000. So we opened the drawer. This playful investigation follows the race organizers as they dig into the grievances and roll out a brand new prize structure. Did they solve the problem? Not exactly. But they did reorganize it, trading one set of frustrations for an entirely new one.",
+      "details": [
+        {
+          "thumb": true,
+          "value": "Race to Alaska"
+        }
+      ],
+      "thumb": "/thumbnails/r2ak-thumb-16-9.jpg",
+      "credits": [
+        {
+          "role": "DP/Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Director",
+          "name": "Jesse Wiegel"
+        }
+      ]
+    },
+    {
       "title": "Polly Wales - Fine Jewelry",
       "details": [
         {
@@ -165,9 +187,9 @@
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge ",
       "details": [
         {
-          "label": "Client",
+          "label": "",
           "value": "(Audience Choice Winner)",
-          "thumb": false
+          "thumb": true
         }
       ],
       "url": "https://www.youtube.com/watch?v=i2hEBU5ltA4",
