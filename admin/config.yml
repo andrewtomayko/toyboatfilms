@@ -115,3 +115,7 @@ collections:
           - { label: "Header button text", name: "headerCta", widget: "string", required: false, hint: "The button in the top-right corner. Also opens the contact form." }
           - { label: "Contact email", name: "email", widget: "string", required: false, hint: "Optional. Shown as a link in the footer." }
           - { label: "Instagram link", name: "instagram", widget: "string", required: false, hint: "Optional. Full link, e.g. https://instagram.com/toyboatfilms" }
+          - { label: "About: heading", name: "aboutHeading", widget: "string", required: false, hint: "Big line at the top of the About popup." }
+          - { label: "About: role line", name: "aboutRole", widget: "string", required: false, hint: "Small grey line under the heading, e.g. Director · Cinematographer · Sailor" }
+          - { label: "About: text", name: "aboutText", widget: "text", required: false, hint: "Leave a blank line between paragraphs." }
+          - { label: "About: photo", name: "aboutPhoto", widget: "image", required: false, choose_url: false, hint: "Horizontal photo, ideally 1600 px wide. Shown at the top of the About popup." }

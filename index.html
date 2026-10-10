@@ -125,6 +125,28 @@
     }
     .header-inner > :last-child{ justify-self:end; }
 
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:22px;
+    }
+    .headerLink{
+      padding:8px 0;
+      border:0;
+      border-bottom:1px solid transparent;
+      background:none;
+      color:var(--text);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+    .headerLink:hover{ border-bottom-color:var(--text); }
+    @media (max-width: 600px){
+      .header-actions .headerLink{ display:none; } /* phones: About lives under the intro and in the footer */
+    }
+
     .header-mark{
       display:block;
       line-height:0;
@@ -673,6 +695,99 @@
       .modal-content{ padding:36px 22px 28px; }
     }
 
+    /* ---------- ABOUT ---------- */
+    .introActions{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:14px 28px;
+    }
+    .textLink{
+      padding:6px 0;
+      border:0;
+      border-bottom:1px solid currentColor;
+      background:none;
+      color:var(--text);
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      opacity:.85;
+    }
+    .textLink:hover{ opacity:1; }
+
+    #aboutModal{ background:rgba(0,0,0,.6); } /* lighter than the contact form, so the site shows through */
+
+    .about-content{
+      max-width:860px;
+      padding:0;
+    }
+    .aboutPhoto{
+      display:block;
+      width:100%;
+      aspect-ratio:2 / 1;
+      max-height:44vh;
+      object-fit:cover;
+      object-position:50% 30%;
+      background:#1a1a1a;
+    }
+    .aboutBody{ padding:36px 44px 44px; }
+    .aboutBody h2{
+      margin:0 0 6px;
+      font-size:clamp(24px, 3vw, 32px);
+      letter-spacing:-.01em;
+    }
+    .aboutRole{
+      margin:0 0 22px;
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .aboutText{
+      margin:0 0 30px;
+      max-width:64ch;
+      font-size:17px;
+      line-height:1.7;
+      color:#d6d6d6;
+      white-space:pre-line;
+    }
+    .about-content .close{
+      top:10px;
+      right:10px;
+      background:rgba(0,0,0,.45);
+      border-radius:50%;
+      opacity:1;
+    }
+
+    .aboutOptions{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin:0 0 22px;
+      padding:6px 8px;
+      border:1px dashed #444;
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .aboutOptions button{
+      padding:6px 10px;
+      border:1px solid #444;
+      background:none;
+      color:#ccc;
+      cursor:pointer;
+      font-size:11px;
+    }
+    .aboutOptions button[aria-pressed="true"]{ background:#f2f2f2; color:#0b0b0b; border-color:#f2f2f2; }
+
+    @media (max-width: 800px){
+      .aboutBody{ padding:26px 22px 30px; }
+      .aboutText{ font-size:16px; }
+    }
+
     /* ---------- FOOTER ---------- */
     .site-footer{
       padding:56px var(--sidePadding);
@@ -719,7 +834,10 @@
         <a href="#top" class="header-mark" aria-label="Back to top">
           <img src="/Assets/logo-wave-white.png" alt="" width="439" height="171">
         </a>
-        <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
+        <div class="header-actions">
+          <button class="headerLink" type="button" data-about>About</button>
+          <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
+        </div>
       </div>
     </header>
 
@@ -742,7 +860,10 @@
       <h1 id="headline">We document characters, capture stories and explore worlds.</h1>
       <p id="description">Toy Boat is a full-service film production team. We set out to navigate the open waters of storytelling, capturing authentic narratives from unique perspectives. We explore the personalities and creative expressions that define a subject, believing that the best stories aren’t just crafted—they’re discovered.</p>
       <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
-      <button class="btn" id="openContact" type="button">PLAN YOUR PROJECT</button>
+      <div class="introActions">
+        <button class="btn" id="openContact" type="button">PLAN YOUR PROJECT</button>
+        <button class="textLink" type="button" data-about>Meet Andrew <span aria-hidden="true">→</span></button>
+      </div>
     </section>
 
     <!-- LOGOS -->
@@ -780,6 +901,7 @@
     <!-- FOOTER -->
     <footer class="site-footer">
       <nav class="footer-links" id="footerLinks" aria-label="Footer">
+        <a href="#about" data-about>About</a>
         <a href="#top">Back to top ↑</a>
       </nav>
       <div class="footer-bottom">
@@ -831,6 +953,30 @@
           <span aria-hidden="true">→</span>
         </button>
       </nav>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
+    <div class="modal-content about-content">
+      <button class="iconBtn close" id="closeAbout" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+      <img class="aboutPhoto" id="aboutPhoto" src="/Assets/about-andrew.jpg" alt="Andrew Tomayko behind the camera" loading="lazy">
+      <div class="aboutBody">
+        <div class="aboutOptions" id="aboutOptions" hidden>
+          Preview only · text option:
+          <button type="button" data-option="A">A</button>
+          <button type="button" data-option="B">B</button>
+          <button type="button" data-option="C">C</button>
+        </div>
+        <h2 id="aboutTitle">Hi, I’m Andrew.</h2>
+        <p class="aboutRole" id="aboutRole">Director · Cinematographer · Sailor</p>
+        <p class="aboutText" id="aboutText">Toy Boat is me, Andrew Tomayko. For more than 20 years I’ve made films both as part of amazing teams and as a one-man band, directing, shooting and editing commercials, documentaries, music videos and brand stories for clients like Samsung, Condé Nast Traveler and Rhett & Link.
+
+After two decades in Los Angeles, I traded the city for the water. Today I live aboard my sailboat in the Puget Sound. Sailing and filmmaking have a lot in common: you read the conditions, trust your instincts and stay open to where the wind takes you. That sense of adventure shapes everything I make. I go looking for real characters and honest moments, because the best stories aren’t just crafted — they’re discovered.</p>
+        <button class="btn" id="aboutCta" type="button">PLAN YOUR PROJECT</button>
+      </div>
     </div>
   </div>
 
@@ -1191,6 +1337,52 @@
       });
     }
 
+    /* ---------- ABOUT ---------- */
+    const aboutModal = document.getElementById("aboutModal");
+    let aboutReturnFocus = null;
+
+    function openAbout() {
+      aboutReturnFocus = document.activeElement;
+      aboutModal.hidden = false;
+      aboutModal.querySelector(".modal-content").scrollTop = 0;
+      lockPage(true);
+      document.getElementById("closeAbout").focus({ preventScroll: true, focusVisible: false });
+    }
+
+    function closeAbout() {
+      if (aboutModal.hidden) return;
+      aboutModal.hidden = true;
+      lockPage(false);
+      if (aboutReturnFocus) aboutReturnFocus.focus({ preventScroll: true });
+    }
+
+    function setupAbout() {
+      document.querySelectorAll("[data-about]").forEach(el => el.addEventListener("click", e => {
+        e.preventDefault();
+        openAbout();
+      }));
+      document.getElementById("closeAbout").onclick = closeAbout;
+      document.getElementById("aboutCta").onclick = () => { closeAbout(); openContact(); };
+      aboutModal.addEventListener("click", e => { if (e.target === aboutModal) closeAbout(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAbout(); });
+      if (location.hash === "#about") openAbout();
+      setupAboutOptions();
+    }
+
+    // Preview builds only: compare draft versions of the About text (remove once one is chosen)
+    const ABOUT_OPTIONS = {"A": "Toy Boat is me, Andrew Tomayko. For more than 20 years I’ve made films both as part of amazing teams and as a one-man band, directing, shooting and editing commercials, documentaries, music videos and brand stories for clients like Samsung, Condé Nast Traveler and Rhett & Link.\n\nAfter two decades in Los Angeles, I traded the city for the water. Today I live aboard my sailboat in the Puget Sound. Sailing and filmmaking have a lot in common: you read the conditions, trust your instincts and stay open to where the wind takes you. That sense of adventure shapes everything I make. I go looking for real characters and honest moments, because the best stories aren’t just crafted — they’re discovered.", "B": "Toy Boat is the studio of director and cinematographer Andrew Tomayko. Over more than 20 years, Andrew has worked on every kind of production, from large crews to lean, one-man-band shoots, crafting commercials, documentaries and music videos for brands, artists and organizations.\n\nAfter two decades in Los Angeles, he now lives aboard his sailboat in the Puget Sound, and a sailor’s patience and curiosity run through his work. Toy Boat brings that spirit to every project: navigating the open waters of storytelling to find authentic people, places and moments worth sharing.", "C": "Sailor. Filmmaker. A one-man band when it counts, a team player when it matters.\n\nI’m Andrew Tomayko, and Toy Boat is how I make films. I spent 20 years in Los Angeles shooting, directing and editing alongside some incredible crews. Now I live on my boat in the Puget Sound, and I approach every project the way I approach every passage: plan well, stay curious and be ready for the unexpected. That’s where the real stories are."};
+    function setupAboutOptions() {
+      if (/(^|\.)toyboatfilms\.com$/.test(location.hostname)) return;
+      const bar = document.getElementById("aboutOptions");
+      const pick = key => {
+        document.getElementById("aboutText").textContent = ABOUT_OPTIONS[key];
+        bar.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.option === key)));
+      };
+      bar.hidden = false;
+      bar.addEventListener("click", e => { const b = e.target.closest("button"); if (b) pick(b.dataset.option); });
+      pick("A");
+    }
+
     /* ---------- SITE TEXT ---------- */
     function applySite(site) {
       const set = (id, val) => { if (val) document.getElementById(id).textContent = val; };
@@ -1200,6 +1392,10 @@
       set("openContact", site.cta);
       set("openContactHeader", site.headerCta);
       document.getElementById("location").textContent = site.location || "";
+      set("aboutTitle", site.aboutHeading);
+      set("aboutRole", site.aboutRole);
+      if (site.aboutText && document.getElementById("aboutOptions").hidden) set("aboutText", site.aboutText);
+      if (site.aboutPhoto) document.getElementById("aboutPhoto").src = site.aboutPhoto;
 
       const links = document.getElementById("footerLinks");
       if (site.email) {
@@ -1222,6 +1418,7 @@
       maybeUseReelFallback();
       document.getElementById("year").textContent = new Date().getFullYear();
       setupContact();
+      setupAbout();
       setupPlayer();
 
       loadJSON("/data/site.json").then(applySite).catch(() => {});
