@@ -38,15 +38,19 @@
       ],
       "url": "https://vimeo.com/367326427",
       "thumb": "/thumbnails/polly-wales.jpg",
-      "description": "",
+      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
       "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        },
         {
           "role": "Producer",
           "name": "Sasha Schneider"
         },
         {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
+          "role": "Editor",
+          "name": "Sora Blu"
         }
       ]
     },
@@ -116,7 +120,7 @@
       ],
       "url": "https://youtu.be/ZYBbER5MR0k",
       "thumb": "/thumbnails/hob-thumb-16-9.jpg",
-      "description": "",
+      "description": "Instead of scripted testimonials, we asked the team at Honda of Burlington to read their own customers’ Google reviews out loud, on camera. The result is genuine, unpolished reactions from the people behind the dealership: real reviews, from real people.",
       "credits": [
         {
           "role": "Director of Photography/Editor",
@@ -140,7 +144,7 @@
       ],
       "url": "https://vimeo.com/1161824636",
       "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
-      "description": "",
+      "description": "For North Coast Credit Union, we filmed real people from the Bellingham community using online banking in their everyday lives. No actors, just neighbors showing how the credit union’s digital tools fit into their day.",
       "credits": [
         {
           "role": "DP/editor",
@@ -176,17 +180,27 @@
       "title": "Graphic Products - ToroMax",
       "details": [
         {
+          "label": "Client",
+          "value": "Graphic Products",
+          "thumb": false
+        },
+        {
           "label": "Agency",
           "value": "LocalEyes",
           "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
         }
       ],
       "url": "https://vimeo.com/543790754/c79f433258",
       "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg",
-      "description": "",
+      "description": "LocalEyes brought us on to direct and shoot this product film for Graphic Products, introducing the ToroMax printer and showing it at work in the warehouse and out on the job site.",
       "credits": [
         {
-          "role": "Director",
+          "role": "Director, Director of Photography",
           "name": "Andrew Tomayko"
         }
       ]
@@ -196,16 +210,16 @@
       "details": [
         {
           "label": "Agency",
-          "value": "Localeyes",
+          "value": "LocalEyes",
           "thumb": true
         }
       ],
       "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
       "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
-      "description": "",
+      "description": "UW running back Jonah Coleman brings the same discipline to his finances that he brings to the football field. Produced with LocalEyes for Seattle Credit Union, this spot shares Jonah’s story and why he chose a credit union that matches his drive for growth.",
       "credits": [
         {
-          "role": "director",
+          "role": "Director",
           "name": "Andrew Tomayko"
         }
       ]
@@ -255,11 +269,36 @@
     },
     {
       "title": "TWIST Curated Jewelry",
-      "details": [],
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
       "url": "https://vimeo.com/376715092",
       "thumb": "/thumbnails/twist-thumb.jpg",
-      "description": "",
-      "credits": []
+      "description": "TWIST is the direct result of the deep connection owners Paul Schneider and Lauren Eulau have with professional artists and designers. From their earlier lives as a potter and a weaver who sold their art for a living, they have built an ever-changing collection of finely curated designer jewelry and wearable art, grounded in close relationships and mutual respect with each artist.\n\nBased in Portland, Oregon, TWIST was recognized in 2018 when Paul Schneider received the Cindy Edelstein Award at COUTURE, honoring a long-standing dedication to artist and designer jewelry.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
     },
     {
       "title": "Prounis",
@@ -282,7 +321,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=ClWPMDjyWRY",
       "thumb": "/thumbnails/twist-prounis-16-9.jpg",
-      "description": "",
+      "description": "New York designer Jean Prounis draws on ancient forms and her own heritage, hand-making jewelry from recycled 22K gold and responsibly sourced stones. Her pieces are quiet, timeless and made to be passed down: modern heirlooms.",
       "credits": [
         {
           "role": "Producer",
@@ -318,12 +357,16 @@
       "description": "Raised in a family of artists and encouraged to follow her creative dreams, Lizzie Mandler pursued the creation of jewelry since the age of 16. After completing her studies in Florence, Italy she moved back to her native Los Angeles to launch her collection of finely hand-crafted jewelry in gold and diamonds. Inspired by the notion that jewelry is forever, her designs strive to surpass trends and seasons.",
       "credits": [
         {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        },
+        {
           "role": "Producer",
           "name": "Sasha Schneider"
         },
         {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
+          "role": "Editor",
+          "name": "Sora Blu"
         }
       ]
     },
@@ -414,7 +457,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
       "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
-      "description": "",
+      "description": "Copenhagen designer Sophie Bille Brahe pairs Scandinavian simplicity with pearls, diamonds and gold, shaping them into fluid, sculptural forms. Her jewelry is clean and poetic at once, a fresh take on fine jewelry.",
       "credits": [
         {
           "role": "Producer",
@@ -447,7 +490,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=lVdhZc5bYgA",
       "thumb": "/thumbnails/twist-dorette.jpg",
-      "description": "",
+      "description": "Paris designer Catherine Lévy built Dorette from a playful curiosity for materials, shaped by design studies in Paris and years of travel through India. Her pieces pair saturated gemstones and organic shapes with the restraint of French provincial jewelry: layered, colorful and deeply personal.",
       "credits": [
         {
           "role": "Producer",
@@ -480,7 +523,209 @@
       ],
       "url": "https://www.youtube.com/watch?v=lny49-wYmd8",
       "thumb": "/thumbnails/twist-nikolle-radi.jpg",
-      "description": "",
+      "description": "Raised around his father’s jewelry workshop in Croatia, New York designer Nikolle Radi brings an engineer’s precision to platinum. His intricate openwork pushes the metal into near-impossible patterns, balancing delicacy with structural strength.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Pippa Small",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/629394861",
+      "thumb": "/thumbnails/twist-pippa-small.jpg",
+      "description": "London designer Pippa Small works with exceptional gemstones, found objects and traditional techniques to make jewelry rooted in culture and the natural world. Her pieces carry a talismanic quality and celebrate the beauty of imperfection.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Jennie Kwon",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2020",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/394327096",
+      "thumb": "/thumbnails/twist-jennie-kwon.jpg",
+      "description": "Los Angeles designer Jennie Kwon left careers in classical music and corporate law to make jewelry. Her pieces are delicate but precise, built on fine proportion and subtle diamond settings, and made to be worn every day.",
+      "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Editor",
+          "name": "Sora Blu"
+        }
+      ]
+    },
+    {
+      "title": "Ellie Top",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/629422618",
+      "thumb": "/thumbnails/twist-ellie-top.jpg",
+      "description": "A portrait of jewelry designer Ellie Top, filmed for TWIST’s designer series.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Disa Allsopp",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/629413368",
+      "thumb": "/thumbnails/twist-disa-allsopp.jpg",
+      "description": "Originally from Barbados, London-based Disa Allsopp forges, reticulates and patinates 18K gold and silver into richly textured, hand-worked surfaces. Influences from the Caribbean and East Africa come through in bold compositions and saturated gemstones.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Sia Taylor",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/629392033",
+      "thumb": "/thumbnails/twist-sia-taylor.jpg",
+      "description": "Working from her studio in Somerset, England, Sia Taylor brings a sculptor’s eye to delicate gold jewelry inspired by seeds, leaves and grasses. Her work finds beauty in the smallest natural details.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Joseph Brooks",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/629376941",
+      "thumb": "/thumbnails/twist-joseph-brooks.jpg",
+      "description": "Shaped by Los Angeles’ music and creative culture, Joseph Brooks makes bold, hand-woven bracelets inspired by a lifelong love of gemstones and birdwatching around the world. His work has a devoted following among artists, musicians and collectors.",
       "credits": [
         {
           "role": "Producer",
@@ -527,19 +772,107 @@
     },
     {
       "title": "TrueCar L.E.D - Case Study",
-      "details": [],
+      "details": [
+        {
+          "label": "Client",
+          "value": "TrueCar",
+          "thumb": true
+        },
+        {
+          "label": "Agency",
+          "value": "Tiny Rebellion",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2015",
+          "thumb": false
+        }
+      ],
       "url": "https://vimeo.com/137718045",
       "thumb": "/thumbnails/truecar-led-thumb.jpg",
+      "description": "Behind the scenes of TrueCar L.E.D., an interactive light installation directed by GMUNK for the 2015 Twilight Concert Series on the Santa Monica Pier. We captured the build and the live event as concertgoers’ text messages, photos and the music on stage drove a mirrored sculpture holding more than 60,000 LEDs, sending pulses of light across the pier.",
+      "credits": [
+        {
+          "role": "Director",
+          "name": "GMUNK"
+        },
+        {
+          "role": "Digital Production Company",
+          "name": "Tool of North America"
+        },
+        {
+          "role": "Post Production Company",
+          "name": "Digital Twigs"
+        },
+        {
+          "role": "Cinematographer, Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Production Design",
+          "name": "VT Pro Design"
+        },
+        {
+          "role": "Photographer",
+          "name": "Bradley G Munkowitz"
+        },
+        {
+          "role": "Composer, Audio Mix",
+          "name": "Keith Ruggiero (SoundsRed)"
+        }
+      ]
+    },
+    {
+      "title": "Pool Cosby – “I Like You”",
+      "details": [
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/368661670",
+      "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
       "description": "",
       "credits": []
     },
     {
       "title": "Odesza - In Return Tour",
-      "details": [],
+      "details": [
+        {
+          "label": "Client",
+          "value": "Odesza",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Digital Twigs",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2014",
+          "thumb": false
+        }
+      ],
       "url": "https://vimeo.com/100283854",
       "thumb": "/thumbnails/odesza-thumb.jpg",
-      "description": "",
-      "credits": []
+      "description": "Tour announcement film for Odesza’s 2014 In Return tour, made with Digital Twigs and featuring Lauryn Myers.",
+      "credits": [
+        {
+          "role": "Director of Photography",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Visual Effects",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Featuring",
+          "name": "Lauryn Myers"
+        }
+      ]
     }
   ]
 }
