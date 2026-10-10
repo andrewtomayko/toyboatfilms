@@ -3,19 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TOY BOAT</title>
+
+  <!-- Netlify Identity invite / password-reset links land on the homepage; hand them to the editor -->
+  <script>
+    if (/(invite|recovery|confirmation|email_change)_token=|access_token=/.test(location.hash)) {
+      location.replace("/admin/" + location.hash);
+    }
+  </script>
+
+  <title>Toy Boat Films | Video Production in Poulsbo &amp; the Puget Sound</title>
+  <meta name="description" content="Toy Boat is a full-service film production team based in Poulsbo, Washington, capturing authentic stories for brands and organizations across the Puget Sound and beyond." />
+  <link rel="canonical" href="https://toyboatfilms.com/" />
+
+  <!-- Link previews (texts, social, Slack) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Toy Boat Films" />
+  <meta property="og:title" content="Toy Boat Films" />
+  <meta property="og:description" content="We document characters, capture stories and explore worlds. Full-service film production based in Poulsbo, WA." />
+  <meta property="og:url" content="https://toyboatfilms.com/" />
+  <meta property="og:image" content="https://toyboatfilms.com/Assets/reel-poster.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Favicon -->
-<link rel="icon" href="/assets/favicon/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
-<link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png">
-
-  <!-- GLightbox -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-
-  <!-- Netlify Identity (safe to keep; helps CMS auth flows) -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/Assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/Assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/Assets/favicon/apple-touch-icon.png">
 
   <style>
     :root{
@@ -23,99 +36,106 @@
       --text:#000000;
       --muted:#777777;
       --border:#eeeeee;
-
-      --columns:2;
-      --gap:32px;
       --sidePadding:32px;
       --introWidth:720px;
+
+      --playerBg:#0b0b0b;
+      --playerText:#f2f2f2;
+      --playerMuted:#9a9a9a;
+      --playerLine:#262626;
     }
 
     *{ box-sizing:border-box; }
 
+    html{ scroll-behavior:smooth; }
+    @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background:var(--bg);
       color:var(--text);
+      -webkit-font-smoothing:antialiased;
     }
+
+    button{ font:inherit; }
+
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+
+    :focus-visible{ outline:2px solid currentColor; outline-offset:3px; }
+
+    /* ---------- BUTTONS ---------- */
+    .btn{
+      background:none;
+      border:2px solid currentColor;
+      color:inherit;
+      padding:14px 24px;
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background .2s ease, color .2s ease;
+    }
+    .btn:hover{ background:var(--text); color:var(--bg); }
+    .btn-small{ padding:10px 16px; font-size:12px; letter-spacing:.08em; }
 
     /* ---------- HEADER ---------- */
     .site-header{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: var(--bg);
-      border-bottom: none; /* no 1px line */
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:var(--bg);
     }
 
     .header-inner{
-      padding:24px var(--sidePadding);
-      font-weight:600;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      user-select:none;
-    }
-
-    .header-flex{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:16px;
+      padding:20px var(--sidePadding);
     }
 
-    .header-cta{
-      background:none;
-      border:2px solid var(--text);
-      padding:10px 16px;
-      font-size:12px;
-      letter-spacing:0.08em;
+    #logo{
+      font-weight:700;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      cursor:pointer;
-      color:var(--text);
+      text-decoration:none;
+      color:inherit;
     }
 
     /* ---------- REEL (FULL BLEED) ---------- */
-    .reel{
-      width: 100vw;
-      margin-top:-1px; /* hides any tiny seam */
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      padding: 0;
-    }
-
     .reelEmbed{
-      position: relative;
-      width: 100%;
-      aspect-ratio: 21 / 9;
-      overflow: hidden;
-      background: #000;
-      line-height: 0;
+      position:relative;
+      width:100%;
+      aspect-ratio:21 / 9;
+      overflow:hidden;
+      background:#000;
     }
 
     .reelEmbed iframe{
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      pointer-events:none;
     }
 
     .reelFallback{
-      display: none;
-      width: 100%;
-      aspect-ratio: 21 / 9;
-      object-fit: cover;
-      background: #000;
-      display:block; /* default visible until JS decides */
+      display:none;
+      width:100%;
+      aspect-ratio:21 / 9;
+      object-fit:cover;
+      background:#000;
     }
-
-    .reelEmbed{ display:block; }
-    .reelFallback{ display:none; }
 
     @media (max-width: 800px){
       .reelEmbed{ display:none; }
-      .reelFallback{ display:block; }
+      .reelFallback{ display:block; aspect-ratio:16 / 9; }
     }
     @media (prefers-reduced-motion: reduce){
       .reelEmbed{ display:none; }
@@ -125,13 +145,14 @@
     /* ---------- INTRO ---------- */
     .intro{
       max-width:var(--introWidth);
-      padding:70px var(--sidePadding) 80px;
+      padding:80px var(--sidePadding) 88px;
     }
 
     .intro h1{
-      font-size:38px;
+      font-size:clamp(30px, 4vw, 42px);
       margin:0 0 24px;
-      line-height:1.15;
+      line-height:1.12;
+      letter-spacing:-.01em;
     }
 
     .intro p{
@@ -143,147 +164,320 @@
     .location{
       font-size:14px;
       color:var(--muted);
-      margin:0 0 32px;
-    }
-
-    .cta{
-      background:none;
-      border:2px solid var(--text);
-      color:var(--text);
-      padding:14px 24px;
-      font-size:13px;
-      letter-spacing:.1em;
-      cursor:pointer;
-      text-transform:uppercase;
+      margin:0 0 32px !important;
     }
 
     /* ---------- CLIENT LOGO STRIP (LOOP DESKTOP, SWIPE MOBILE) ---------- */
     .logoStrip{
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-      margin-bottom: 48px; /* space before videos */
-      padding: 22px 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: #fff;
-      overflow: hidden;
+      padding:22px 0;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      overflow:hidden;
     }
 
     .logoStripInner{
       display:flex;
-      gap:64px;
-      will-change: transform;
+      width:max-content;
     }
 
+    /* Each copy carries its own trailing gap so the loop has no jump */
     .logoTrack{
       display:flex;
       align-items:center;
       gap:64px;
-      animation: scrollLogos 60s linear infinite;
+      padding-right:64px;
+      animation:scrollLogos 60s linear infinite;
     }
 
-    .logoStrip:hover .logoTrack{ animation-play-state: paused; }
+    .logoStrip:hover .logoTrack{ animation-play-state:paused; }
 
     .logo{
-      height: 54px;
-      width: 190px;
+      height:54px;
+      width:190px;
       display:flex;
       align-items:center;
       justify-content:center;
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
 
     .logo img{
-      max-height: 100%;
-      max-width: 100%;
-      width:auto;
+      max-height:100%;
+      max-width:100%;
       display:block;
     }
 
     @keyframes scrollLogos{
-      from { transform: translateX(0); }
-      to   { transform: translateX(-100%); }
+      from{ transform:translateX(0); }
+      to  { transform:translateX(-100%); }
+    }
+
+    @media (max-width: 800px), (prefers-reduced-motion: reduce){
+      .logoStrip{
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+      }
+      .logoStrip::-webkit-scrollbar{ display:none; }
+      .logoStripInner{ padding:0 var(--sidePadding); }
+      .logoTrack{ animation:none; }
+      .logoTrack[aria-hidden="true"]{ display:none; }
     }
 
     @media (max-width: 800px){
-      .logoStrip{
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .logoStripInner{
-        width: max-content;
-        padding: 0 var(--sidePadding);
-      }
-      .logoTrack{ animation:none; }
-
-      .logo{
-        height: 28px;   /* smaller on mobile */
-        width: 120px;
-      }
-      .logoStripInner, .logoTrack{ gap: 40px; }
+      .logo{ height:28px; width:120px; }
+      .logoTrack{ gap:40px; padding-right:40px; }
     }
 
-    /* ---------- GRID ---------- */
-    main{
-      padding:0 var(--sidePadding) 80px;
-    }
-
+    /* ---------- WORK GRID (EDGE TO EDGE) ---------- */
     .grid{
       display:grid;
-      grid-template-columns:repeat(var(--columns),1fr);
-      gap:var(--gap);
+      grid-template-columns:repeat(2, 1fr);
+      gap:0;
+      background:#111;
     }
 
-    @media (max-width:800px){
+    @media (max-width: 800px){
       .grid{ grid-template-columns:1fr; }
-      .intro{ padding-top:72px; }
     }
 
     .card{
-      text-decoration:none;
-      color:inherit;
-      display:block;
-    }
-
-    .thumbWrap{
       position:relative;
-      overflow:hidden;
-    }
-
-    .thumb{
-      width:100%;
-      aspect-ratio:16/9;
-      object-fit:cover;
       display:block;
-      background:#222;
+      aspect-ratio:16 / 9;
+      overflow:hidden;
+      color:#fff;
+      text-decoration:none;
+      background:#1a1a1a;
     }
 
-    .play{
+    .card img{
       position:absolute;
       inset:0;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transition:transform .8s cubic-bezier(.2,.7,.2,1);
     }
 
-    .play span{
-      font-size:56px;
-      color:#fff;
-      text-shadow:0 10px 25px rgba(0,0,0,.6);
-      opacity:.9;
-      line-height:1;
+    .card .overlay{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:24px 32px;
+      text-align:center;
+      background:rgba(0,0,0,.55);
+      opacity:0;
+      transition:opacity .35s ease;
     }
 
-    .meta{ padding-top:4px; }
+    .card .overlay > *{
+      transform:translateY(8px);
+      transition:transform .45s cubic-bezier(.2,.7,.2,1);
+    }
 
-    .title{
+    .card .playIcon{
+      width:44px;
+      height:44px;
+      margin-bottom:6px;
+    }
+
+    .card .cardTitle{
       margin:0;
-      font-size:16px;
-      font-weight:600;
+      font-size:clamp(16px, 1.7vw, 24px);
+      font-weight:700;
+      letter-spacing:.08em;
+      line-height:1.25;
       text-transform:uppercase;
-      letter-spacing:0.06em;
-      line-height:1.35;
+      max-width:28ch;
+    }
+
+    .card .cardClient{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.75);
+    }
+
+    .card:hover .overlay,
+    .card:focus-visible .overlay,
+    .card.in-view .overlay{ opacity:1; }
+
+    .card:hover .overlay > *,
+    .card:focus-visible .overlay > *,
+    .card.in-view .overlay > *{ transform:none; }
+
+    .card:hover img,
+    .card:focus-visible img{ transform:scale(1.03); }
+
+    .card:focus-visible{ outline:3px solid #fff; outline-offset:-3px; }
+
+    @media (prefers-reduced-motion: reduce){
+      .card img, .card .overlay, .card .overlay > *{ transition:none; transform:none !important; }
+    }
+
+    /* ---------- VIDEO PLAYER POPUP ---------- */
+    .player{
+      position:fixed;
+      inset:0;
+      z-index:3000;
+      background:var(--playerBg);
+      color:var(--playerText);
+      overflow-y:auto;
+      overscroll-behavior:contain;
+      opacity:0;
+      transition:opacity .25s ease;
+    }
+    .player[hidden]{ display:none; }
+    .player.is-open{ opacity:1; }
+
+    .playerBar{
+      position:sticky;
+      top:0;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      height:64px;
+      padding:0 var(--sidePadding);
+      background:linear-gradient(var(--playerBg) 60%, transparent);
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--playerMuted);
+    }
+
+    .iconBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:44px;
+      height:44px;
+      padding:0;
+      border:0;
+      background:none;
+      color:var(--playerText);
+      cursor:pointer;
+      opacity:.8;
+      transition:opacity .2s ease;
+    }
+    .iconBtn:hover{ opacity:1; }
+    .iconBtn svg{ width:26px; height:26px; }
+
+    .playerStage{
+      /* Largest 16:9 frame that still fits under the bar */
+      --frameW:min(1600px, 94vw, calc((100svh - 128px) * 16 / 9));
+      width:var(--frameW);
+      margin:0 auto;
+    }
+
+    .playerFrame{
+      position:relative;
+      aspect-ratio:16 / 9;
+      background:#000;
+    }
+
+    .playerFrame iframe{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+    .playerNav{
+      position:fixed;
+      top:50%;
+      transform:translateY(-50%);
+      z-index:2;
+    }
+    .playerNav.prev{ left:max(4px, calc((100vw - var(--frameW, 94vw)) / 2 - 56px)); }
+    .playerNav.next{ right:max(4px, calc((100vw - var(--frameW, 94vw)) / 2 - 56px)); }
+
+    .playerInfo{
+      display:grid;
+      grid-template-columns:minmax(0, 3fr) minmax(0, 2fr);
+      gap:48px;
+      padding:36px 0 96px;
+    }
+    .playerInfo.no-credits{ grid-template-columns:minmax(0, 1fr); }
+
+    .playerTitle{
+      margin:0 0 8px;
+      font-size:clamp(20px, 2.2vw, 28px);
+      font-weight:700;
+      letter-spacing:.06em;
+      line-height:1.25;
+      text-transform:uppercase;
+    }
+
+    .playerMeta{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--playerMuted);
+    }
+
+    .playerDesc{
+      margin:24px 0 0;
+      max-width:62ch;
+      font-size:16px;
+      line-height:1.7;
+      color:#d6d6d6;
+      white-space:pre-line;
+    }
+
+    .credits{
+      margin:0;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      column-gap:24px;
+      row-gap:10px;
+      align-content:start;
+      font-size:14px;
+      line-height:1.45;
+    }
+    .credits dt{
+      color:var(--playerMuted);
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-size:12px;
+      padding-top:2px;
+    }
+    .credits dd{ margin:0; }
+    .creditsHeading{
+      margin:0 0 16px;
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--playerMuted);
+      font-weight:400;
+      padding-bottom:12px;
+      border-bottom:1px solid var(--playerLine);
+    }
+
+    @media (max-width: 800px){
+      .playerStage{ --frameW:100vw; }
+      .playerNav{ position:static; transform:none; }
+      .playerMobileNav{
+        display:flex;
+        justify-content:space-between;
+        padding:8px 12px 0;
+      }
+      .playerInfo{
+        grid-template-columns:1fr;
+        gap:36px;
+        padding:20px var(--sidePadding) 72px;
+      }
+    }
+    @media (min-width: 801px){
+      .playerMobileNav{ display:contents; }
     }
 
     /* ---------- CONTACT MODAL ---------- */
@@ -291,12 +485,13 @@
       position:fixed;
       inset:0;
       background:rgba(0,0,0,.6);
-      display:none;
+      display:flex;
       align-items:center;
       justify-content:center;
       z-index:2000;
       padding:18px;
     }
+    .modal[hidden]{ display:none; }
 
     .modal-content{
       background:var(--bg);
@@ -304,189 +499,231 @@
       padding:42px;
       width:100%;
       max-width:640px;
+      max-height:100%;
+      overflow-y:auto;
       position:relative;
-      border-radius:0;
     }
 
     .modal-content h2{
-      margin:0 0 18px;
-      font-size:20px;
+      margin:0 0 20px;
+      font-size:22px;
       line-height:1.25;
     }
 
     .modal-content input,
     .modal-content textarea{
+      display:block;
       width:100%;
       margin-bottom:14px;
       padding:12px;
-      border:1px solid var(--border);
+      border:1px solid #d9d9d9;
       background:#fff;
       color:#000;
-      font-size:14px;
+      font:inherit;
+      font-size:16px; /* stops iOS zooming on focus */
       border-radius:0;
     }
+    .modal-content input:focus,
+    .modal-content textarea:focus{ outline:none; border-color:#000; }
 
     .modal-content textarea{
       min-height:120px;
       resize:vertical;
     }
 
-    .modal-content button[type="submit"]{
-      border:2px solid var(--text);
-      background:none;
-      color:var(--text);
-      padding:12px 18px;
-      font-size:13px;
-      letter-spacing:.1em;
-      cursor:pointer;
-      text-transform:uppercase;
-    }
-
-    .close{
+    .modal .close{
       position:absolute;
-      top:10px;
-      right:12px;
-      background:none;
-      border:none;
-      font-size:28px;
-      cursor:pointer;
+      top:8px;
+      right:8px;
       color:var(--text);
-      line-height:1;
     }
 
-    #formSuccess{
-      display:none;
-      margin-top:16px;
+    .formStatus{
+      margin:16px 0 0;
       font-size:14px;
       color:var(--muted);
+    }
+    .formStatus.error{ color:#b00020; }
+
+    @media (max-width: 800px){
+      .modal-content{ padding:36px 22px 28px; }
     }
 
     /* ---------- FOOTER ---------- */
     .site-footer{
-      border-top: 1px solid var(--border);
-      padding: 48px var(--sidePadding);
-      text-align: center;
+      padding:56px var(--sidePadding);
+      text-align:center;
     }
 
-    .back-to-top{
-      display: inline-block;
-      margin-bottom: 18px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
+    .footer-links{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px 28px;
+      margin-bottom:22px;
     }
-    .back-to-top:hover{ border-bottom-color: var(--text); }
+    .footer-links a{
+      font-size:12px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--text);
+      text-decoration:none;
+      border-bottom:1px solid transparent;
+    }
+    .footer-links a:hover{ border-bottom-color:var(--text); }
 
     .footer-bottom{
-      font-size: 12px;
-      color: var(--muted);
+      font-size:12px;
+      color:var(--muted);
     }
 
     @media (max-width: 800px){
-      .site-footer{ padding: 36px var(--sidePadding); }
+      :root{ --sidePadding:20px; }
+      .site-footer{ padding:40px var(--sidePadding); }
     }
   </style>
 </head>
 
 <body>
-  <div id="top"></div>
+  <div id="page">
+    <div id="top"></div>
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner header-flex">
-      <div id="logo">TOY BOAT</div>
-      <button class="header-cta" id="openContactHeader">BOOK A CALL</button>
+    <!-- HEADER -->
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="#top" id="logo">TOY BOAT</a>
+        <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
+      </div>
+    </header>
+
+    <!-- REEL -->
+    <section class="reel" aria-label="Showreel">
+      <div class="reelEmbed">
+        <iframe
+          title="Toy Boat showreel"
+          src="https://player.vimeo.com/video/1162374282?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&dnt=1"
+          allow="autoplay; fullscreen; picture-in-picture"
+          tabindex="-1">
+        </iframe>
+      </div>
+      <img class="reelFallback" src="/Assets/reel-poster.jpg" alt="A sailboat on Puget Sound">
+    </section>
+
+    <!-- INTRO -->
+    <section class="intro">
+      <h1 id="headline">We document characters, capture stories and explore worlds.</h1>
+      <p id="description">Toy Boat is a full-service film production team. We set out to navigate the open waters of storytelling, capturing authentic narratives from unique perspectives. We explore the personalities and creative expressions that define a subject, believing that the best stories aren’t just crafted—they’re discovered.</p>
+      <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
+      <button class="btn" id="openContact" type="button">PLAN YOUR PROJECT</button>
+    </section>
+
+    <!-- LOGOS -->
+    <section class="logoStrip" aria-label="Clients">
+      <div class="logoStripInner">
+        <div class="logoTrack">
+          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt="Bluesky" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/allstate.svg" alt="Allstate" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/samsung.svg" alt="Samsung" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/intel.svg" alt="Intel" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="IDEO" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy"></div>
+        </div>
+        <div class="logoTrack" aria-hidden="true">
+          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/allstate.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/samsung.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/SCU.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/intel.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="" loading="lazy"></div>
+          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <main>
+      <h2 class="sr-only">Work</h2>
+      <section class="grid" id="videoGrid" aria-label="Work"></section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <nav class="footer-links" id="footerLinks" aria-label="Footer">
+        <a href="#top">Back to top ↑</a>
+      </nav>
+      <div class="footer-bottom">
+        © <span id="year"></span> Toy Boat Films · Puget Sound · Available Worldwide
+      </div>
+    </footer>
+  </div>
+
+  <!-- VIDEO PLAYER -->
+  <div class="player" id="player" role="dialog" aria-modal="true" aria-labelledby="playerTitle" hidden>
+    <div class="playerBar">
+      <span id="playerCount"></span>
+      <button class="iconBtn" id="playerClose" type="button" aria-label="Close video">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
     </div>
-  </header>
 
-  <!-- REEL -->
-  <section class="reel" aria-label="Showreel">
-    <div class="reelEmbed">
-      <iframe
-        src="https://player.vimeo.com/video/1162374282?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
+    <div class="playerStage">
+      <div class="playerFrame" id="playerFrame"></div>
 
-    <!-- Fallback image -->
-    <img class="reelFallback" src="/assets/reel-poster.jpg" alt="Showreel still">
-  </section>
-
-  <!-- INTRO -->
-  <section class="intro">
-    <h1 id="headline">Videos that connect</h1>
-    <p id="description">Toy Boat is a full-service film production team, capturing authentic narratives from unique perspectives.</p>
-    <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
-    <button class="cta" id="openContact">PLAN YOUR PROJECT</button>
-  </section>
-
-  <!-- LOGOS -->
-  <section class="logoStrip" aria-label="Client logos">
-    <div class="logoStripInner">
-      <div class="logoTrack">
-        <div class="logo"><img src="/assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/bluesky.svg" alt="Bluesky" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/allstate.svg" alt="Allstate" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/samsung.svg" alt="Samsung" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/intel.svg" alt="Intel" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/IDEO.svg" alt="IDEO" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy"></div>
+      <div class="playerMobileNav">
+        <button class="iconBtn playerNav prev" id="playerPrev" type="button" aria-label="Previous video">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4l-8 8 8 8"/></svg>
+        </button>
+        <button class="iconBtn playerNav next" id="playerNext" type="button" aria-label="Next video">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 4l8 8-8 8"/></svg>
+        </button>
       </div>
 
-      <div class="logoTrack" aria-hidden="true">
-        <div class="logo"><img src="/assets/logos/conde-nast-traveler.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/bluesky.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/allstate.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/samsung.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/SCU.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/intel.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/IDEO.svg" alt="" loading="lazy"></div>
-        <div class="logo"><img src="/assets/logos/NCCU.svg" alt="" loading="lazy"></div>
+      <div class="playerInfo" id="playerInfo">
+        <div>
+          <h2 class="playerTitle" id="playerTitle"></h2>
+          <p class="playerMeta" id="playerMeta"></p>
+          <p class="playerDesc" id="playerDesc"></p>
+        </div>
+        <div id="playerCreditsWrap">
+          <h3 class="creditsHeading">Credits</h3>
+          <dl class="credits" id="playerCredits"></dl>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- GRID -->
-  <main>
-    <section class="grid" id="videoGrid"></section>
-  </main>
-
-  <!-- CONTACT MODAL -->
-  <div class="modal" id="contactModal" aria-hidden="true">
-    <div class="modal-content">
-      <button class="close" id="closeContact" aria-label="Close">×</button>
-      <h2>Schedule a call to plan your project!</h2>
-
-      <form id="contactForm">
-        <input type="text" name="name" placeholder="Name" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="tel" name="phone" placeholder="Phone (optional)" />
-        <textarea name="message" placeholder="Tell us about your project" required></textarea>
-        <button type="submit">SEND</button>
-      </form>
-
-      <p id="formSuccess">Thanks — I’ll be in touch shortly.</p>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <a href="#top" class="back-to-top">Back to top ↑</a>
-    <div class="footer-bottom">
-      © <span id="year"></span> Toy Boat Films · Puget Sound · Available Worldwide
-    </div>
-  </footer>
+  <!-- CONTACT MODAL -->
+  <div class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactTitle" hidden>
+    <div class="modal-content">
+      <button class="iconBtn close" id="closeContact" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+      <h2 id="contactTitle">Schedule a call to plan your project!</h2>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+      <form id="contactForm">
+        <label class="sr-only" for="f-name">Name</label>
+        <input id="f-name" type="text" name="name" placeholder="Name" autocomplete="name" required />
+        <label class="sr-only" for="f-email">Email</label>
+        <input id="f-email" type="email" name="email" placeholder="Email" autocomplete="email" required />
+        <label class="sr-only" for="f-phone">Phone</label>
+        <input id="f-phone" type="tel" name="phone" placeholder="Phone (optional)" autocomplete="tel" />
+        <label class="sr-only" for="f-message">Tell us about your project</label>
+        <textarea id="f-message" name="message" placeholder="Tell us about your project" required></textarea>
+        <button class="btn" type="submit">SEND</button>
+      </form>
+
+      <p class="formStatus" id="formStatus" role="status"></p>
+    </div>
+  </div>
 
   <script>
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xbdknpvr";
+
+    const page = document.getElementById("page");
+    let videos = [];
 
     async function loadJSON(path) {
       const res = await fetch(path, { cache: "no-store" });
@@ -494,133 +731,333 @@
       return res.json();
     }
 
-    function renderVideos(videos) {
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+    }
+
+    function slugify(s) {
+      return String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "")
+        .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    }
+
+    /* ---------- VIDEO LINKS ----------
+       Accepts any YouTube or Vimeo link (including private Vimeo links with a hash),
+       plus the older { type, id } format. */
+    function parseVideo(v) {
+      let raw = String(v.url || v.id || "").trim();
+      if (!raw) return null;
+
+      if (!/^https?:\/\//.test(raw)) {
+        if (v.type === "youtube") return { kind: "youtube", id: raw };
+        if (/^\d+$/.test(raw)) return { kind: "vimeo", id: raw };
+        raw = "https://" + raw;
+      }
+
+      let u;
+      try { u = new URL(raw); } catch { return null; }
+      const host = u.hostname.replace(/^www\.|^m\./, "");
+      const parts = u.pathname.split("/").filter(Boolean);
+
+      if (host === "youtu.be") return { kind: "youtube", id: parts[0] };
+      if (host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")) {
+        const id = u.searchParams.get("v") ||
+          (["embed", "shorts", "live", "v"].includes(parts[0]) ? parts[1] : null);
+        return id ? { kind: "youtube", id } : null;
+      }
+      if (host.endsWith("vimeo.com")) {
+        const nums = parts.filter(p => /^\d+$/.test(p));
+        if (!nums.length) return null;
+        const id = nums[0];
+        const after = parts[parts.indexOf(id) + 1];
+        const hash = u.searchParams.get("h") || (after && /^[0-9a-f]{6,}$/i.test(after) ? after : null);
+        return { kind: "vimeo", id, hash };
+      }
+      return null;
+    }
+
+    function embedURL(p) {
+      if (p.kind === "youtube") {
+        return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(p.id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      }
+      const h = p.hash ? `h=${encodeURIComponent(p.hash)}&` : "";
+      return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${h}autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
+    }
+
+    /* ---------- THUMBNAILS ----------
+       On Netlify, thumbnails are resized on the fly so phones don't download full-size images. */
+    const USE_IMAGE_CDN = /(^|\.)toyboatfilms\.com$|\.netlify\.app$/.test(location.hostname);
+
+    function thumbAttrs(path) {
+      if (!path) return "";
+      if (!USE_IMAGE_CDN || !path.startsWith("/")) return `src="${esc(path)}"`;
+      const cdn = w => `/.netlify/images?url=${encodeURIComponent(path)}&w=${w}&q=78`;
+      const srcset = [640, 960, 1280, 1920].map(w => `${cdn(w)} ${w}w`).join(", ");
+      return `src="${cdn(1280)}" srcset="${srcset}" sizes="(max-width: 800px) 100vw, 50vw" data-original="${esc(path)}"`;
+    }
+
+    /* ---------- GRID ---------- */
+    function renderVideos() {
       const grid = document.getElementById("videoGrid");
 
-      grid.innerHTML = videos.map(v => {
-        const href = (v.type === "youtube")
-          ? `https://www.youtube.com/watch?v=${v.id}`
-          : `https://vimeo.com/${v.id}`;
+      grid.innerHTML = videos.map((v, i) => `
+        <a class="card" href="#video/${esc(v.slug)}" data-index="${i}">
+          <img ${thumbAttrs(v.thumb)} alt="" loading="${i < 2 ? "eager" : "lazy"}" decoding="async">
+          <div class="overlay">
+            <svg class="playIcon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="22" cy="22" r="21"/><path d="M18 15l11 7-11 7z" fill="currentColor" stroke="none"/>
+            </svg>
+            <p class="cardTitle">${esc(v.title)}</p>
+            ${v.client ? `<p class="cardClient">${esc(v.client)}</p>` : ""}
+          </div>
+        </a>
+      `).join("");
 
-        return `
-          <a class="card glightbox"
-             href="${href}"
-             data-gallery="videos"
-             data-type="video">
-            <div class="thumbWrap">
-              <img class="thumb" src="${v.thumb || ""}" alt="">
-              <div class="play"><span>▶</span></div>
-            </div>
-            <div class="meta">
-              <p class="title">${v.title || ""}</p>
-            </div>
-          </a>
-        `;
-      }).join("");
-
-      GLightbox({
-        selector: ".glightbox",
-        zoomable: false
+      // If the resized image ever fails, fall back to the original file
+      grid.querySelectorAll("img[data-original]").forEach(img => {
+        img.addEventListener("error", () => {
+          img.removeAttribute("srcset");
+          img.src = img.dataset.original;
+        }, { once: true });
       });
-    }
 
-    function setupContactModal() {
-      const modal = document.getElementById("contactModal");
-      const openBtn = document.getElementById("openContact");
-      const headerBtn = document.getElementById("openContactHeader");
-      const closeBtn = document.getElementById("closeContact");
-
-      function openModal() {
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden", "false");
-      }
-      function closeModal() {
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
-      }
-
-      if (openBtn) openBtn.onclick = openModal;
-      if (headerBtn) headerBtn.onclick = openModal;
-      if (closeBtn) closeBtn.onclick = closeModal;
-
-      modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
-      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-    }
-
-    function setupFormspree() {
-      const form = document.getElementById("contactForm");
-      const success = document.getElementById("formSuccess");
-      const modal = document.getElementById("contactModal");
-
-      form.addEventListener("submit", async (e) => {
+      grid.addEventListener("click", e => {
+        const card = e.target.closest(".card");
+        if (!card || e.metaKey || e.ctrlKey || e.shiftKey) return;
         e.preventDefault();
-        const payload = Object.fromEntries(new FormData(form).entries());
+        openPlayer(Number(card.dataset.index), card);
+      });
+
+      setupTouchReveal(grid);
+    }
+
+    /* Phones can't hover: show each title as its thumbnail crosses the middle of the screen */
+    function setupTouchReveal(grid) {
+      if (!window.matchMedia("(hover: none)").matches || !("IntersectionObserver" in window)) return;
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => en.target.classList.toggle("in-view", en.isIntersecting));
+      }, { rootMargin: "-45% 0px -45% 0px" });
+      grid.querySelectorAll(".card").forEach(c => io.observe(c));
+    }
+
+    /* ---------- PLAYER ---------- */
+    const player = document.getElementById("player");
+    const frame = document.getElementById("playerFrame");
+    let current = -1;
+    let returnFocus = null;
+
+    function lockPage(lock) {
+      page.inert = lock;
+      document.documentElement.style.overflow = lock ? "hidden" : "";
+    }
+
+    function showVideo(i) {
+      const v = videos[i];
+      if (!v) return;
+      current = i;
+
+      const p = parseVideo(v);
+      frame.innerHTML = p
+        ? `<iframe src="${esc(embedURL(p))}" title="${esc(v.title)}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>`
+        : "";
+
+      document.getElementById("playerCount").textContent =
+        `${String(i + 1).padStart(2, "0")} / ${String(videos.length).padStart(2, "0")}`;
+      document.getElementById("playerTitle").textContent = v.title || "";
+
+      const meta = [v.client, v.year].filter(Boolean).join(" · ");
+      const metaEl = document.getElementById("playerMeta");
+      metaEl.textContent = meta;
+      metaEl.hidden = !meta;
+
+      const descEl = document.getElementById("playerDesc");
+      descEl.textContent = v.description || "";
+      descEl.hidden = !v.description;
+
+      const credits = (v.credits || []).filter(c => c && (c.role || c.name));
+      document.getElementById("playerCredits").innerHTML =
+        credits.map(c => `<dt>${esc(c.role)}</dt><dd>${esc(c.name)}</dd>`).join("");
+      document.getElementById("playerCreditsWrap").hidden = !credits.length;
+      document.getElementById("playerInfo").classList.toggle("no-credits", !credits.length);
+
+      player.scrollTop = 0;
+    }
+
+    function openPlayer(i, fromEl) {
+      returnFocus = fromEl || document.activeElement;
+      history.pushState({ tbVideo: true }, "", "#video/" + videos[i].slug);
+      syncFromHash();
+    }
+
+    function closePlayer() {
+      if (history.state && history.state.tbVideo) {
+        history.back();
+      } else {
+        history.replaceState(null, "", location.pathname + location.search);
+        syncFromHash();
+      }
+    }
+
+    function step(dir) {
+      const i = (current + dir + videos.length) % videos.length;
+      history.replaceState({ tbVideo: true }, "", "#video/" + videos[i].slug);
+      showVideo(i);
+    }
+
+    // The address bar is the source of truth, so links to a specific video can be shared
+    function syncFromHash() {
+      const m = location.hash.match(/^#video\/(.+)$/);
+      const i = m ? videos.findIndex(v => v.slug === decodeURIComponent(m[1])) : -1;
+
+      if (i >= 0) {
+        const wasOpen = !player.hidden;
+        showVideo(i);
+        if (!wasOpen) {
+          player.hidden = false;
+          lockPage(true);
+          requestAnimationFrame(() => player.classList.add("is-open"));
+          document.getElementById("playerClose").focus();
+        }
+      } else if (!player.hidden) {
+        player.classList.remove("is-open");
+        player.hidden = true;
+        frame.innerHTML = ""; // stops playback
+        current = -1;
+        lockPage(false);
+        if (returnFocus) returnFocus.focus({ preventScroll: true });
+      }
+    }
+
+    function setupPlayer() {
+      document.getElementById("playerClose").onclick = closePlayer;
+      document.getElementById("playerPrev").onclick = () => step(-1);
+      document.getElementById("playerNext").onclick = () => step(1);
+
+      document.addEventListener("keydown", e => {
+        if (player.hidden) return;
+        if (e.key === "Escape") closePlayer();
+        else if (e.key === "ArrowLeft") step(-1);
+        else if (e.key === "ArrowRight") step(1);
+      });
+
+      window.addEventListener("popstate", syncFromHash);
+    }
+
+    /* ---------- CONTACT ---------- */
+    const contactModal = document.getElementById("contactModal");
+    let contactReturnFocus = null;
+
+    function openContact() {
+      contactReturnFocus = document.activeElement;
+      contactModal.hidden = false;
+      lockPage(true);
+      document.getElementById("f-name").focus();
+    }
+
+    function closeContact() {
+      if (contactModal.hidden) return;
+      contactModal.hidden = true;
+      lockPage(false);
+      if (contactReturnFocus) contactReturnFocus.focus({ preventScroll: true });
+    }
+
+    function setupContact() {
+      document.getElementById("openContact").onclick = openContact;
+      document.getElementById("openContactHeader").onclick = openContact;
+      document.getElementById("closeContact").onclick = closeContact;
+      contactModal.addEventListener("click", e => { if (e.target === contactModal) closeContact(); });
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeContact(); });
+
+      const form = document.getElementById("contactForm");
+      const status = document.getElementById("formStatus");
+      const submit = form.querySelector('button[type="submit"]');
+
+      form.addEventListener("submit", async e => {
+        e.preventDefault();
+        status.className = "formStatus";
+        status.textContent = "";
+        submit.disabled = true;
+        submit.textContent = "SENDING…";
 
         try {
           const res = await fetch(FORMSPREE_ENDPOINT, {
             method: "POST",
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
           });
 
           if (res.ok) {
-            form.style.transition = "opacity 0.4s ease";
-            form.style.opacity = "0";
-
+            form.reset();
+            form.hidden = true;
+            status.textContent = "Thanks — I’ll be in touch shortly.";
             setTimeout(() => {
-              form.reset();
-              form.style.display = "none";
-              success.style.display = "block";
-            }, 400);
-
-            setTimeout(() => {
-              modal.style.display = "none";
-              modal.setAttribute("aria-hidden", "true");
+              closeContact();
+              form.hidden = false;
+              status.textContent = "";
             }, 2500);
-
-            return;
+          } else {
+            const data = await res.json().catch(() => ({}));
+            status.className = "formStatus error";
+            status.textContent = data.error || "Something went wrong. Please try again.";
           }
-
-          const data = await res.json().catch(() => ({}));
-          alert(data.error || "Something went wrong. Please try again.");
-        } catch (err) {
-          alert("Network error. Please try again.");
+        } catch {
+          status.className = "formStatus error";
+          status.textContent = "Network error. Please check your connection and try again.";
+        } finally {
+          submit.disabled = false;
+          submit.textContent = "SEND";
         }
       });
     }
 
-    function maybeUseReelFallback() {
-      const embed = document.querySelector(".reelEmbed");
-      const img = document.querySelector(".reelFallback");
-      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      if (!embed || !img || !conn) return;
+    /* ---------- SITE TEXT ---------- */
+    function applySite(site) {
+      const set = (id, val) => { if (val) document.getElementById(id).textContent = val; };
+      set("logo", site.logo);
+      set("headline", site.headline);
+      set("description", site.description);
+      set("openContact", site.cta);
+      set("openContactHeader", site.headerCta);
+      document.getElementById("location").textContent = site.location || "";
 
-      if (conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType)) {
-        embed.style.display = "none";
-        img.style.display = "block";
+      const links = document.getElementById("footerLinks");
+      if (site.email) {
+        links.insertAdjacentHTML("afterbegin", `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>`);
+      }
+      if (site.instagram) {
+        links.insertAdjacentHTML("beforeend", `<a href="${esc(site.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+      }
+    }
+
+    function maybeUseReelFallback() {
+      const conn = navigator.connection;
+      if (conn && (conn.saveData || ["slow-2g", "2g"].includes(conn.effectiveType))) {
+        document.querySelector(".reelEmbed").style.display = "none";
+        document.querySelector(".reelFallback").style.display = "block";
       }
     }
 
     (async () => {
       maybeUseReelFallback();
+      document.getElementById("year").textContent = new Date().getFullYear();
+      setupContact();
+      setupPlayer();
+
+      loadJSON("/data/site.json").then(applySite).catch(() => {});
 
       try {
-        const site = await loadJSON("/data/site.json");
-        if (site.logo) document.getElementById("logo").textContent = site.logo;
-        if (site.headline) document.getElementById("headline").textContent = site.headline;
-        if (site.description) document.getElementById("description").textContent = site.description;
-        document.getElementById("location").textContent = site.location || "";
-        if (site.cta) document.getElementById("openContact").textContent = site.cta;
-      } catch(e) {}
-
-      setupContactModal();
-      setupFormspree();
-
-      const videoData = await loadJSON("/data/videos.json");
-      renderVideos(videoData.videos || []);
-
-      const y = document.getElementById("year");
-      if (y) y.textContent = new Date().getFullYear();
+        const data = await loadJSON("/data/videos.json");
+        const seen = new Set();
+        videos = (data.videos || []).filter(v => v && (v.url || v.id)).map((v, i) => {
+          let slug = slugify(v.title) || "video-" + (i + 1);
+          while (seen.has(slug)) slug += "-" + (i + 1);
+          seen.add(slug);
+          return { ...v, slug };
+        });
+        renderVideos();
+        syncFromHash(); // open a shared #video/... link
+      } catch (e) {
+        console.error(e);
+      }
     })();
   </script>
 </body>

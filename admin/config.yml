@@ -2,49 +2,91 @@ backend:
   name: git-gateway
   branch: main
 
+site_url: https://toyboatfilms.com
+display_url: https://toyboatfilms.com
+logo_url: /Assets/favicon/apple-touch-icon.png
+
 media_folder: "thumbnails"
 public_folder: "/thumbnails"
 
 collections:
   - name: "content"
-    label: "Content"
+    label: "Website"
+    editor:
+      preview: true
     files:
       - name: "videos"
         label: "Videos"
+        description: "Your portfolio grid. Drag videos to reorder them; the site shows them in this order, left to right, top to bottom."
         file: "data/videos.json"
         format: "json"
         fields:
           - label: "Videos"
             name: "videos"
+            label_singular: "video"
             widget: "list"
+            collapsed: true
+            add_to_top: true
+            summary: "{{fields.title}}"
             fields:
-              - { label: "Title", name: "title", widget: "string", required: false }
-              - { label: "Type", name: "type", widget: "select", options: ["youtube", "vimeo"] }
-              - { label: "Video ID", name: "id", widget: "string" }
-              - { label: "Thumbnail", name: "thumb", widget: "image" }
-              - { label: "Tag", name: "tag", widget: "string", required: false }
+              - label: "Title"
+                name: "title"
+                widget: "string"
+                hint: "Shown on the thumbnail when someone hovers over it, and above the description in the popup."
+
+              - label: "Client"
+                name: "client"
+                widget: "string"
+                required: false
+                hint: "Optional. Shown in smaller text under the title."
+
+              - label: "Year"
+                name: "year"
+                widget: "string"
+                required: false
+                hint: "Optional, e.g. 2026."
+
+              - label: "Video link"
+                name: "url"
+                widget: "string"
+                pattern: ['(youtube\.com|youtu\.be|vimeo\.com)', "Paste a YouTube or Vimeo link"]
+                hint: "Paste the link straight from YouTube or Vimeo. Private Vimeo links work too (they look like vimeo.com/123456789/abc123)."
+
+              - label: "Thumbnail"
+                name: "thumb"
+                widget: "image"
+                choose_url: false
+                hint: "16:9 JPG, ideally 1920×1080 and under 500 KB. Export from Photoshop with File › Export › Export As… › JPG, quality around 80%."
+
+              - label: "Description"
+                name: "description"
+                widget: "text"
+                required: false
+                hint: "Optional. A few sentences about the project, shown under the video in the popup. Leave empty to hide."
+
+              - label: "Credits"
+                name: "credits"
+                widget: "list"
+                required: false
+                label_singular: "credit"
+                collapsed: false
+                summary: "{{fields.role}}: {{fields.name}}"
+                hint: "Optional. One line per role, e.g. Director: Andrew Tomayko. Leave empty to hide the credits section."
+                fields:
+                  - { label: "Role", name: "role", widget: "string" }
+                  - { label: "Name", name: "name", widget: "string" }
 
       - name: "site"
-        label: "Site Content"
+        label: "Homepage text & contact"
+        description: "The words at the top of the homepage, the buttons, and the links in the footer."
         file: "data/site.json"
         format: "json"
         fields:
-          - { label: "Logo Text", name: "logo", widget: "string" }
-          - { label: "Headline", name: "headline", widget: "string" }
-          - { label: "Description", name: "description", widget: "text" }
-          - { label: "Location Line", name: "location", widget: "string", required: false }
-          - { label: "CTA Button Text", name: "cta", widget: "string" }
-
-      - name: "theme"
-        label: "Site Styles"
-        file: "data/theme.json"
-        format: "json"
-        fields:
-          - { label: "Background Color", name: "bg", widget: "string", default: "#ffffff" }
-          - { label: "Text Color", name: "text", widget: "string", default: "#000000" }
-          - { label: "Muted Text Color", name: "muted", widget: "string", default: "#777777" }
-          - { label: "Header Border Color", name: "border", widget: "string", default: "#eeeeee" }
-          - { label: "Grid Columns (desktop)", name: "columns", widget: "number", default: 2, value_type: "int", min: 1, max: 4 }
-          - { label: "Grid Gap (px)", name: "gap", widget: "number", default: 32, value_type: "int", min: 8, max: 80 }
-          - { label: "Page Side Padding (px)", name: "sidePadding", widget: "number", default: 32, value_type: "int", min: 12, max: 80 }
-          - { label: "Intro Max Width (px)", name: "introWidth", widget: "number", default: 720, value_type: "int", min: 420, max: 1000 }
+          - { label: "Logo text", name: "logo", widget: "string", hint: "Top-left corner of every page." }
+          - { label: "Headline", name: "headline", widget: "string", hint: "The large sentence under the reel." }
+          - { label: "Intro paragraph", name: "description", widget: "text" }
+          - { label: "Location line", name: "location", widget: "string", required: false, hint: "Small grey text under the intro." }
+          - { label: "Main button text", name: "cta", widget: "string", hint: "The button under the intro that opens the contact form." }
+          - { label: "Header button text", name: "headerCta", widget: "string", required: false, hint: "The button in the top-right corner. Also opens the contact form." }
+          - { label: "Contact email", name: "email", widget: "string", required: false, hint: "Optional. Shown as a link in the footer." }
+          - { label: "Instagram link", name: "instagram", widget: "string", required: false, hint: "Optional. Full link, e.g. https://instagram.com/toyboatfilms" }
