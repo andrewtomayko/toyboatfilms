@@ -417,8 +417,16 @@
     }
 
     .playerMeta{
-      margin:0;
-      font-size:13px;
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      font-size:15px;
+      line-height:1.5;
+    }
+    .playerMeta li + li{ margin-top:4px; }
+    .playerMeta .label{
+      margin-right:6px;
+      font-size:12px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--playerMuted);
@@ -684,7 +692,7 @@
       <div class="playerInfo" id="playerInfo">
         <div>
           <h2 class="playerTitle" id="playerTitle"></h2>
-          <p class="playerMeta" id="playerMeta"></p>
+          <ul class="playerMeta" id="playerMeta"></ul>
           <p class="playerDesc" id="playerDesc"></p>
         </div>
         <div id="playerCreditsWrap">
@@ -783,6 +791,20 @@
       return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${h}autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
     }
 
+    /* Popup detail lines (Client, Agency, Prod. Company, Year) in the order set in the editor.
+       Older entries kept these as separate fields. */
+    function detailsOf(v) {
+      const list = Array.isArray(v.details) && v.details.length
+        ? v.details
+        : [["Client", v.client], ["Agency", v.agency], ["Year", v.year]].map(([label, value]) => ({ label, value }));
+      return list.filter(d => d && d.label && String(d.value ?? "").trim());
+    }
+
+    function clientOf(v) {
+      const d = detailsOf(v).find(d => d.label === "Client");
+      return d ? d.value : "";
+    }
+
     /* ---------- THUMBNAILS ----------
        On Netlify, thumbnails are resized on the fly so phones don't download full-size images. */
     const USE_IMAGE_CDN = /(^|\.)toyboatfilms\.com$|\.netlify\.app$/.test(location.hostname);
@@ -807,7 +829,7 @@
               <circle cx="22" cy="22" r="21"/><path d="M18 15l11 7-11 7z" fill="currentColor" stroke="none"/>
             </svg>
             <p class="cardTitle">${esc(v.title)}</p>
-            ${v.client ? `<p class="cardClient">${esc(v.client)}</p>` : ""}
+            ${clientOf(v) ? `<p class="cardClient">${esc(clientOf(v))}</p>` : ""}
           </div>
         </a>
       `).join("");
@@ -864,10 +886,11 @@
         `${String(i + 1).padStart(2, "0")} / ${String(videos.length).padStart(2, "0")}`;
       document.getElementById("playerTitle").textContent = v.title || "";
 
-      const meta = [v.client, v.year].filter(Boolean).join(" · ");
+      const meta = detailsOf(v);
       const metaEl = document.getElementById("playerMeta");
-      metaEl.textContent = meta;
-      metaEl.hidden = !meta;
+      metaEl.innerHTML = meta.map(d =>
+        `<li><span class="label">${esc(d.label)}:</span>${esc(d.value)}</li>`).join("");
+      metaEl.hidden = !meta.length;
 
       const descEl = document.getElementById("playerDesc");
       descEl.textContent = v.description || "";
@@ -915,7 +938,8 @@
           player.hidden = false;
           lockPage(true);
           requestAnimationFrame(() => player.classList.add("is-open"));
-          document.getElementById("playerClose").focus();
+          // Keyboard users still land on Close; mouse users don't get a focus box
+          document.getElementById("playerClose").focus({ preventScroll: true, focusVisible: false });
         }
       } else if (!player.hidden) {
         player.classList.remove("is-open");

@@ -28,7 +28,9 @@
       .info{ display:grid; grid-template-columns:3fr 2fr; gap:32px; padding-top:20px; }
       .info.solo{ grid-template-columns:1fr; }
       h2{ margin:0 0 6px; font-size:20px; letter-spacing:.06em; text-transform:uppercase; }
-      .meta{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
+      .meta{ margin:12px 0 0; padding:0; list-style:none; font-size:14px; line-height:1.5; }
+      .meta li + li{ margin-top:3px; }
+      .meta .label{ margin-right:6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
       .desc{ margin:16px 0 0; font-size:15px; line-height:1.7; color:#d6d6d6; white-space:pre-line; }
       h3{ margin:0 0 12px; padding-bottom:10px; border-bottom:1px solid #262626; font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
       dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 20px; font-size:14px; }
@@ -46,19 +48,21 @@
           h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
           items.map((v, i) => {
             const credits = (v.credits || []).filter(c => c && (c.role || c.name));
-            const meta = [v.client, v.year].filter(Boolean).join(" · ");
+            const meta = (v.details || []).filter(d => d && d.label && String(d.value || "").trim());
+            const client = (meta.find(d => d.label === "Client") || {}).value;
             return h("div", { className: "item", key: i },
               h("div", { className: "thumb" },
                 v.thumb ? h("img", { src: asset(v.thumb) }) : h("div", { className: "empty" }, "No thumbnail yet"),
                 h("div", { className: "ov" },
                   h("p", { className: "t" }, v.title || "Untitled"),
-                  v.client ? h("p", { className: "c" }, v.client) : null
+                  client ? h("p", { className: "c" }, client) : null
                 )
               ),
               h("div", { className: "info" + (credits.length ? "" : " solo") },
                 h("div", null,
                   h("h2", null, v.title || "Untitled"),
-                  meta ? h("p", { className: "meta" }, meta) : null,
+                  meta.length ? h("ul", { className: "meta" }, meta.map((d, j) =>
+                    h("li", { key: j }, h("span", { className: "label" }, d.label + ":"), d.value))) : null,
                   v.description ? h("p", { className: "desc" }, v.description) : null
                 ),
                 credits.length ? h("div", null,
