@@ -285,6 +285,45 @@
       .grid{ grid-template-columns:1fr; }
     }
 
+    /* ---------- LAYOUT COMPARISON (preview builds only; remove once a layout is chosen) ---------- */
+    body.layout-wide .card{ aspect-ratio:2.4 / 1; }
+
+    @media (min-width: 801px){
+      body.layout-three .grid{ grid-template-columns:repeat(3, 1fr); }
+      body.layout-three .card .cardTitle{ font-size:clamp(14px, 1.15vw, 20px); }
+      body.layout-three .card .playIcon{ width:36px; height:36px; }
+    }
+
+    .layoutSwitch{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      z-index:1500;
+      display:flex;
+      gap:4px;
+      padding:4px;
+      background:rgba(20,20,20,.92);
+      border:1px solid #333;
+      border-radius:999px;
+      box-shadow:0 8px 30px rgba(0,0,0,.5);
+      font-size:12px;
+      letter-spacing:.06em;
+    }
+    .layoutSwitch button{
+      padding:9px 14px;
+      border:0;
+      border-radius:999px;
+      background:none;
+      color:#bbb;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .layoutSwitch button[aria-pressed="true"]{ background:#f2f2f2; color:#0b0b0b; }
+    @media (max-width: 420px){
+      .layoutSwitch button{ padding:8px 10px; font-size:11px; }
+    }
+
     .card{
       position:relative;
       display:block;
@@ -835,6 +874,13 @@
     </div>
   </div>
 
+  <!-- LAYOUT COMPARISON (preview builds only) -->
+  <div class="layoutSwitch" id="layoutSwitch" role="group" aria-label="Compare grid layouts" hidden>
+    <button type="button" data-layout="classic">2 · 16:9</button>
+    <button type="button" data-layout="wide">2 · 2.40:1</button>
+    <button type="button" data-layout="three">3 · 16:9</button>
+  </div>
+
   <script>
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xbdknpvr";
 
@@ -1189,7 +1235,29 @@
       }
     }
 
+    // Layout comparison: only on preview/local builds, chosen with ?layout=classic|wide|three
+    function setupLayoutSwitch() {
+      if (/(^|\.)toyboatfilms\.com$/.test(location.hostname)) return;
+      const bar = document.getElementById("layoutSwitch");
+      const apply = name => {
+        document.body.classList.remove("layout-wide", "layout-three");
+        if (name !== "classic") document.body.classList.add("layout-" + name);
+        bar.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.layout === name)));
+        const url = new URL(location.href);
+        url.searchParams.set("layout", name);
+        history.replaceState(history.state, "", url);
+      };
+      bar.hidden = false;
+      bar.addEventListener("click", e => {
+        const b = e.target.closest("button");
+        if (b) apply(b.dataset.layout);
+      });
+      const start = new URL(location.href).searchParams.get("layout");
+      apply(["classic", "wide", "three"].includes(start) ? start : "wide");
+    }
+
     (async () => {
+      setupLayoutSwitch();
       maybeUseReelFallback();
       document.getElementById("year").textContent = new Date().getFullYear();
       setupContact();
