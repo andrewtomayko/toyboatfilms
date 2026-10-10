@@ -262,6 +262,237 @@
       "credits": []
     },
     {
+      "title": "Prounis",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=ClWPMDjyWRY",
+      "thumb": "/thumbnails/twist-prounis.jpg",
+      "description": "",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Lizzie Mandler",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2020",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=881dcLszaPI",
+      "thumb": "/thumbnails/twist-lizzie-mandler.jpg",
+      "description": "Raised in a family of artists and encouraged to follow her creative dreams, Lizzie Mandler pursued the creation of jewelry since the age of 16. After completing her studies in Florence, Italy she moved back to her native Los Angeles to launch her collection of finely hand-crafted jewelry in gold and diamonds. Inspired by the notion that jewelry is forever, her designs strive to surpass trends and seasons.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Jane Diaz",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=HTvu49124Vk",
+      "thumb": "/thumbnails/twist-jane-diaz.jpg",
+      "description": "New York City native Jane Diaz has been collaborating with Nepalese metalsmiths for over fifteen years to create her ultra-wearable, affordable and craft-influenced jewelry collection. Her world travels and background studying cultural anthropology have inspired her to make sure traditional Nepalese fabrication techniques are incorporated into each piece of jewelry. The bold forms, intricate detail and solid metals are balanced by her worldly aesthetic vision.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Monica Rossi: Anaconda",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=jur4VypwKd8",
+      "thumb": "/thumbnails/twist-monica-rossi-anaconda.jpg",
+      "description": "MILAN - For over thirty years, Monica Rossi has been designing and creating Anaconda jewelry - a collection of intricately hand-crafted jewelry spanning from Italian Baroque inspired to Victorian masterpieces to the most simple of geometric settings. The delicate, but strong, harmony found in her jewelry has a striking purity and balanced lightness. The 19 karat gold has a diffused, warm-toned color balancing the hand-selected stones with their natural imperfections and characteristics.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Sophie Bille Brahe",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
+      "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
+      "description": "",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Dorette",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=lVdhZc5bYgA",
+      "thumb": "/thumbnails/twist-dorette.jpg",
+      "description": "",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Nikolle Radi: The Platinum Alchemist",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2018",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=lny49-wYmd8",
+      "thumb": "/thumbnails/twist-nikolle-radi.jpg",
+      "description": "",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
       "title": "White Aspen Glamping",
       "details": [
         {
