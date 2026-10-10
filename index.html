@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0b" />
 
   <!-- Netlify Identity invite / password-reset links land on the homepage; hand them to the editor -->
   <script>
@@ -32,10 +33,11 @@
 
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#000000;
-      --muted:#777777;
-      --border:#eeeeee;
+      color-scheme:dark;
+      --bg:#0b0b0b;
+      --text:#f2f2f2;
+      --muted:#9a9a9a;
+      --border:#262626;
       --sidePadding:32px;
       --introWidth:720px;
 
@@ -204,6 +206,9 @@
       max-height:100%;
       max-width:100%;
       display:block;
+      /* Logos come in mixed colors; show them all in white on the dark page */
+      filter:brightness(0) invert(1);
+      opacity:.85;
     }
 
     @keyframes scrollLogos{
@@ -492,7 +497,7 @@
     .modal{
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.6);
+      background:rgba(0,0,0,.75);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -502,7 +507,8 @@
     .modal[hidden]{ display:none; }
 
     .modal-content{
-      background:var(--bg);
+      background:#111;
+      border:1px solid var(--border);
       color:var(--text);
       padding:42px;
       width:100%;
@@ -524,15 +530,16 @@
       width:100%;
       margin-bottom:14px;
       padding:12px;
-      border:1px solid #d9d9d9;
-      background:#fff;
-      color:#000;
+      border:1px solid #333;
+      background:#161616;
+      color:var(--text);
       font:inherit;
       font-size:16px; /* stops iOS zooming on focus */
       border-radius:0;
     }
     .modal-content input:focus,
-    .modal-content textarea:focus{ outline:none; border-color:#000; }
+    .modal-content textarea:focus{ outline:none; border-color:var(--text); }
+    .modal-content ::placeholder{ color:#8a8a8a; }
 
     .modal-content textarea{
       min-height:120px;
@@ -551,7 +558,7 @@
       font-size:14px;
       color:var(--muted);
     }
-    .formStatus.error{ color:#b00020; }
+    .formStatus.error{ color:#ff7b7b; }
 
     @media (max-width: 800px){
       .modal-content{ padding:36px 22px 28px; }
