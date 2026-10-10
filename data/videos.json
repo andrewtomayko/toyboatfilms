@@ -107,6 +107,39 @@
       "crop": "Top"
     },
     {
+      "title": "TWIST Curated Jewelry",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/376715092",
+      "thumb": "/thumbnails/twist-thumb.jpg",
+      "description": "TWIST is the direct result of the deep connection owners Paul Schneider and Lauren Eulau have with professional artists and designers. From their earlier lives as a potter and a weaver who sold their art for a living, they have built an ever-changing collection of finely curated designer jewelry and wearable art, grounded in close relationships and mutual respect with each artist.\n\nBased in Portland, Oregon, TWIST was recognized in 2018 when Paul Schneider received the Cindy Edelstein Award at COUTURE, honoring a long-standing dedication to artist and designer jewelry.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
       "title": "Odesza - In Return Tour",
       "details": [
         {
@@ -144,54 +177,6 @@
       ]
     },
     {
-      "title": "Honda of Burlington",
-      "details": [
-        {
-          "label": "Agency",
-          "value": "Apex Media",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        }
-      ],
-      "url": "https://youtu.be/ZYBbER5MR0k",
-      "thumb": "/thumbnails/hob-thumb-16-9.jpg",
-      "description": "Instead of scripted testimonials, we asked the team at Honda of Burlington to read their own customers’ Google reviews out loud, on camera. The result is genuine, unpolished reactions from the people behind the dealership: real reviews, from real people.",
-      "credits": [
-        {
-          "role": "Director of Photography/Editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
-      "title": "North Coast Credit Union",
-      "details": [
-        {
-          "label": "Agency",
-          "value": "Apex Media",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/1161824636",
-      "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
-      "description": "For North Coast Credit Union, we filmed real people from the Bellingham community using online banking in their everyday lives. No actors, just neighbors showing how the credit union’s digital tools fit into their day.",
-      "credits": [
-        {
-          "role": "DP/editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
       "title": "Graphic Products - ToroMax",
       "details": [
         {
@@ -216,26 +201,6 @@
       "credits": [
         {
           "role": "Director, Director of Photography",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
-      "title": "Seattle Credit Union with Jonah Coleman",
-      "details": [
-        {
-          "label": "Agency",
-          "value": "LocalEyes",
-          "thumb": true
-        }
-      ],
-      "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
-      "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
-      "crop": "Top",
-      "description": "UW running back Jonah Coleman brings the same discipline to his finances that he brings to the football field. Produced with LocalEyes for Seattle Credit Union, this spot shares Jonah’s story and why he chose a credit union that matches his drive for growth.",
-      "credits": [
-        {
-          "role": "Director",
           "name": "Andrew Tomayko"
         }
       ]
@@ -280,39 +245,6 @@
         {
           "role": "Music",
           "name": "Odesza – \"Always This Late\""
-        }
-      ]
-    },
-    {
-      "title": "TWIST Curated Jewelry",
-      "details": [
-        {
-          "label": "Client",
-          "value": "TWIST",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/376715092",
-      "thumb": "/thumbnails/twist-thumb.jpg",
-      "description": "TWIST is the direct result of the deep connection owners Paul Schneider and Lauren Eulau have with professional artists and designers. From their earlier lives as a potter and a weaver who sold their art for a living, they have built an ever-changing collection of finely curated designer jewelry and wearable art, grounded in close relationships and mutual respect with each artist.\n\nBased in Portland, Oregon, TWIST was recognized in 2018 when Paul Schneider received the Cindy Edelstein Award at COUTURE, honoring a long-standing dedication to artist and designer jewelry.",
-      "credits": [
-        {
-          "role": "Producer",
-          "name": "Sasha Schneider"
-        },
-        {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
         }
       ]
     },
@@ -398,6 +330,26 @@
         {
           "role": "Editor",
           "name": "Sora Blu"
+        }
+      ]
+    },
+    {
+      "title": "Seattle Credit Union with Jonah Coleman",
+      "details": [
+        {
+          "label": "Agency",
+          "value": "LocalEyes",
+          "thumb": true
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
+      "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
+      "crop": "Top",
+      "description": "UW running back Jonah Coleman brings the same discipline to his finances that he brings to the football field. Produced with LocalEyes for Seattle Credit Union, this spot shares Jonah’s story and why he chose a credit union that matches his drive for growth.",
+      "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
         }
       ]
     },
@@ -644,6 +596,54 @@
         },
         {
           "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Honda of Burlington",
+      "details": [
+        {
+          "label": "Agency",
+          "value": "Apex Media",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        }
+      ],
+      "url": "https://youtu.be/ZYBbER5MR0k",
+      "thumb": "/thumbnails/hob-thumb-16-9.jpg",
+      "description": "Instead of scripted testimonials, we asked the team at Honda of Burlington to read their own customers’ Google reviews out loud, on camera. The result is genuine, unpolished reactions from the people behind the dealership: real reviews, from real people.",
+      "credits": [
+        {
+          "role": "Director of Photography/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "North Coast Credit Union",
+      "details": [
+        {
+          "label": "Agency",
+          "value": "Apex Media",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/1161824636",
+      "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
+      "description": "For North Coast Credit Union, we filmed real people from the Bellingham community using online banking in their everyday lives. No actors, just neighbors showing how the credit union’s digital tools fit into their day.",
+      "credits": [
+        {
+          "role": "DP/editor",
           "name": "Andrew Tomayko"
         }
       ]
