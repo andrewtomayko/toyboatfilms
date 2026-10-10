@@ -44,7 +44,20 @@
       render() {
         const list = this.props.entry.getIn(["data", "videos"]);
         const items = list ? list.toJS() : [];
-        const asset = p => (p ? this.props.getAsset(p).toString() : "");
+        // Images uploaded in this session come from Decap; ones it hasn't loaded (e.g. added outside
+        // the editor) come back empty, so fall back to the published copy on the site.
+        const live = p => (p && p.startsWith("/") ? window.location.origin + p : p);
+        const asset = p => {
+          if (!p) return "";
+          const a = String(this.props.getAsset(p) || "");
+          return a && a !== "undefined" ? a : live(p);
+        };
+        const fallBack = (e, p) => {
+          const img = e.target;
+          if (img.dataset.fellBack) return;
+          img.dataset.fellBack = "1";
+          img.src = live(p);
+        };
 
         return h("div", { className: "wrap" },
           h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
@@ -55,7 +68,7 @@
             return h("div", { className: "item" + (v.hidden ? " hidden" : ""), key: i },
               v.hidden ? h("span", { className: "badge" }, "Hidden on live site") : null,
               h("div", { className: "thumb" },
-                v.thumb ? h("img", { src: asset(v.thumb), style: { objectPosition: "50% " + ({ Top: 0, Upper: 25, Center: 50, Lower: 75, Bottom: 100 }[v.crop] ?? 50) + "%" } }) : h("div", { className: "empty" }, "No thumbnail yet"),
+                v.thumb ? h("img", { src: asset(v.thumb), onError: e => fallBack(e, v.thumb), style: { objectPosition: "50% " + ({ Top: 0, Upper: 25, Center: 50, Lower: 75, Bottom: 100 }[v.crop] ?? 50) + "%" } }) : h("div", { className: "empty" }, "No thumbnail yet"),
                 h("div", { className: "ov" },
                   h("p", { className: "t" }, v.title || "Untitled"),
                   client ? h("p", { className: "c" }, client) : null
