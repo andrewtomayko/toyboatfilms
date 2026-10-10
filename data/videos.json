@@ -177,7 +177,7 @@
       ]
     },
     {
-      "title": "The Mythical Show – Behind the Scenes",
+      "title": "The Mythical Show – BB=TS",
       "details": [
         {
           "label": "Client",
@@ -311,7 +311,7 @@
       ]
     },
     {
-      "title": "Condé Nast Traveler – Wanderlist",
+      "title": "Wanderlist",
       "details": [
         {
           "label": "Client",
@@ -354,41 +354,8 @@
           "role": "Director of Photography",
           "name": "Andrew Tomayko"
         }
-      ]
-    },
-    {
-      "title": "Sophie Bille Brahe",
-      "details": [
-        {
-          "label": "Client",
-          "value": "TWIST",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
       ],
-      "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
-      "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
-      "crop": "Upper",
-      "description": "Copenhagen designer Sophie Bille Brahe pairs Scandinavian simplicity with pearls, diamonds and gold, shaping them into fluid, sculptural forms. Her jewelry is clean and poetic at once, a fresh take on fine jewelry.",
-      "credits": [
-        {
-          "role": "Producer",
-          "name": "Sasha Schneider"
-        },
-        {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
+      "client": "Condé Nast Traveler"
     },
     {
       "title": "Sea Change: By the Wind",
@@ -521,6 +488,40 @@
         {
           "role": "Music",
           "name": "Odesza – \"Always This Late\""
+        }
+      ]
+    },
+    {
+      "title": "Sophie Bille Brahe",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
+      "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
+      "crop": "Upper",
+      "description": "Copenhagen designer Sophie Bille Brahe pairs Scandinavian simplicity with pearls, diamonds and gold, shaping them into fluid, sculptural forms. Her jewelry is clean and poetic at once, a fresh take on fine jewelry.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
         }
       ]
     },
