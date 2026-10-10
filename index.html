@@ -1144,7 +1144,8 @@
       try {
         const data = await loadJSON("/data/videos.json");
         const seen = new Set();
-        videos = (data.videos || []).filter(v => v && (v.url || v.id)).map((v, i) => {
+        // Videos ticked "Hide on live site" in the editor stay in the data but aren't shown
+        videos = (data.videos || []).filter(v => v && (v.url || v.id) && !v.hidden).map((v, i) => {
           let slug = slugify(v.title) || "video-" + (i + 1);
           while (seen.has(slug)) slug += "-" + (i + 1);
           seen.add(slug);

@@ -17,6 +17,8 @@
       .wrap{ padding:24px; }
       .note{ font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#9a9a9a; margin:0 0 24px; }
       .item{ margin:0 0 56px; }
+      .item.hidden{ opacity:.35; }
+      .badge{ display:inline-block; margin:0 0 10px; padding:4px 8px; border:1px solid #9a9a9a; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#d6d6d6; }
       .thumb{ position:relative; aspect-ratio:16/9; background:#1a1a1a; overflow:hidden; }
       .thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
       .thumb .ov{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
@@ -50,7 +52,8 @@
             const credits = (v.credits || []).filter(c => c && (c.role || c.name));
             const meta = (v.details || []).filter(d => d && String(d.value || "").trim());
             const client = meta.filter(d => d.thumb).map(d => d.value).join(" · ");
-            return h("div", { className: "item", key: i },
+            return h("div", { className: "item" + (v.hidden ? " hidden" : ""), key: i },
+              v.hidden ? h("span", { className: "badge" }, "Hidden on live site") : null,
               h("div", { className: "thumb" },
                 v.thumb ? h("img", { src: asset(v.thumb) }) : h("div", { className: "empty" }, "No thumbnail yet"),
                 h("div", { className: "ov" },

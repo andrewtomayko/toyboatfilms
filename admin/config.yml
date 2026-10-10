@@ -27,8 +27,15 @@ collections:
             widget: "list"
             collapsed: true
             add_to_top: true
-            summary: "{{fields.title}}"
+            summary: "{{fields.title}}{{fields.hidden | ternary('  ·  HIDDEN', '')}}"
             fields:
+              - label: "Hide on live site"
+                name: "hidden"
+                widget: "boolean"
+                default: false
+                required: false
+                hint: "Tick to take this video off the website without deleting it. Untick to show it again."
+
               - label: "Title"
                 name: "title"
                 widget: "string"
