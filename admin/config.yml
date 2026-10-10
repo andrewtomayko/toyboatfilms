@@ -75,6 +75,14 @@ collections:
                 choose_url: false
                 hint: "16:9 JPG, ideally 1920×1080 and under 500 KB. Export from Photoshop with File › Export › Export As… › JPG, quality around 80%."
 
+              - label: "Thumbnail crop"
+                name: "crop"
+                widget: "select"
+                required: false
+                default: "Center"
+                options: ["Top", "Upper", "Center", "Lower", "Bottom"]
+                hint: "The site shows thumbnails in a wide 2.40:1 frame, which trims the top and bottom of a 16:9 image. Pick which part stays in view; the preview on the right shows the result."
+
               - label: "Description"
                 name: "description"
                 widget: "text"
