@@ -103,7 +103,8 @@
           "role": "Son",
           "name": "Avi Brigman"
         }
-      ]
+      ],
+      "crop": "Top"
     },
     {
       "title": "Honda of Burlington",
@@ -169,7 +170,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
       "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
-      "crop": "Top",
+      "crop": "Upper",
       "description": "Silverwood School is an independent K-8 school in Poulsbo, Washington, where 85 students learn, play, and grow on a 17-acre campus in the woods. As the school geared up for its Annual Fund drive, they reached out to explore creating a video that would inspire their community to give.",
       "credits": [
         {
@@ -357,7 +358,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=881dcLszaPI",
       "thumb": "/thumbnails/twist-lizzie-mandler.jpg",
-      "crop": "Upper",
+      "crop": "Top",
       "description": "Raised in a family of artists and encouraged to follow her creative dreams, Lizzie Mandler pursued the creation of jewelry since the age of 16. After completing her studies in Florence, Italy she moved back to her native Los Angeles to launch her collection of finely hand-crafted jewelry in gold and diamonds. Inspired by the notion that jewelry is forever, her designs strive to surpass trends and seasons.",
       "credits": [
         {
@@ -429,7 +430,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=jur4VypwKd8",
       "thumb": "/thumbnails/twist-monica-rossi-anaconda.jpg",
-      "crop": "Top",
+      "crop": "Center",
       "description": "MILAN - For over thirty years, Monica Rossi has been designing and creating Anaconda jewelry - a collection of intricately hand-crafted jewelry spanning from Italian Baroque inspired to Victorian masterpieces to the most simple of geometric settings. The delicate, but strong, harmony found in her jewelry has a striking purity and balanced lightness. The 19 karat gold has a diffused, warm-toned color balancing the hand-selected stones with their natural imperfections and characteristics.",
       "credits": [
         {
@@ -497,7 +498,7 @@
       ],
       "url": "https://www.youtube.com/watch?v=lVdhZc5bYgA",
       "thumb": "/thumbnails/twist-dorette.jpg",
-      "crop": "Upper",
+      "crop": "Center",
       "description": "Paris designer Catherine Lévy built Dorette from a playful curiosity for materials, shaped by design studies in Paris and years of travel through India. Her pieces pair saturated gemstones and organic shapes with the restraint of French provincial jewelry: layered, colorful and deeply personal.",
       "credits": [
         {
@@ -678,7 +679,8 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ]
+      ],
+      "crop": "Lower"
     },
     {
       "title": "Sia Taylor",
@@ -734,7 +736,7 @@
       ],
       "url": "https://vimeo.com/629376941",
       "thumb": "/thumbnails/twist-joseph-brooks.jpg",
-      "crop": "Top",
+      "crop": "Center",
       "description": "Shaped by Los Angeles’ music and creative culture, Joseph Brooks makes bold, hand-woven bracelets inspired by a lifelong love of gemstones and birdwatching around the world. His work has a devoted following among artists, musicians and collectors.",
       "credits": [
         {
