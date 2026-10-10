@@ -127,6 +127,17 @@
       pointer-events:none;
     }
 
+    /* Embedded players don't declare a color scheme; matching it keeps the browser from
+       painting them white while they load. They also fade in once loaded. */
+    .reelEmbed iframe,
+    .playerFrame iframe{
+      color-scheme:normal;
+      opacity:0;
+      transition:opacity .4s ease;
+    }
+    .reelEmbed iframe.loaded,
+    .playerFrame iframe.loaded{ opacity:1; }
+
     .reelFallback{
       display:none;
       width:100%;
@@ -616,6 +627,7 @@
       <div class="reelEmbed">
         <iframe
           title="Toy Boat showreel"
+          onload="this.classList.add('loaded')"
           src="https://player.vimeo.com/video/1162374282?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&dnt=1"
           allow="autoplay; fullscreen; picture-in-picture"
           tabindex="-1">
@@ -882,7 +894,7 @@
 
       const p = parseVideo(v);
       frame.innerHTML = p
-        ? `<iframe src="${esc(embedURL(p))}" title="${esc(v.title)}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>`
+        ? `<iframe src="${esc(embedURL(p))}" title="${esc(v.title)}" onload="this.classList.add('loaded')" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>`
         : "";
 
       document.getElementById("playerCount").textContent =
