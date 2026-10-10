@@ -46,7 +46,8 @@ collections:
                   - label: "Label"
                     name: "label"
                     widget: "string"
-                    hint: "Anything you like, e.g. Client, Agency, Prod. Company, Year."
+                    required: false
+                    hint: "Anything you like, e.g. Client, Agency, Prod. Company, Year. Leave empty to show just the value."
                   - { label: "Value", name: "value", widget: "string" }
                   - label: "Show under thumbnail"
                     name: "thumb"

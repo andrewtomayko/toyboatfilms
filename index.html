@@ -791,9 +791,9 @@
       return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${h}autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
     }
 
-    // Popup detail lines (any label, e.g. Client, Agency) in the order set in the editor
+    // Popup detail lines in the order set in the editor; the label is optional
     function detailsOf(v) {
-      return (v.details || []).filter(d => d && d.label && String(d.value ?? "").trim());
+      return (v.details || []).filter(d => d && String(d.value ?? "").trim());
     }
 
     // Details ticked "Show under thumbnail" in the editor
@@ -885,7 +885,7 @@
       const meta = detailsOf(v);
       const metaEl = document.getElementById("playerMeta");
       metaEl.innerHTML = meta.map(d =>
-        `<li><span class="label">${esc(d.label)}:</span>${esc(d.value)}</li>`).join("");
+        `<li>${d.label ? `<span class="label">${esc(d.label)}:</span>` : ""}${esc(d.value)}</li>`).join("");
       metaEl.hidden = !meta.length;
 
       const descEl = document.getElementById("playerDesc");
