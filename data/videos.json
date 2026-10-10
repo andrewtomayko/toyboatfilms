@@ -1,47 +1,99 @@
 {
   "videos": [
     {
-      "title": "Honda of Burlington",
+      "title": "Polly Wales - Fine Jewelry",
       "details": [
         {
           "label": "Client",
+          "value": "TWIST"
+        }
+      ],
+      "url": "https://vimeo.com/367326427",
+      "thumb": "/thumbnails/polly-wales.jpg",
+      "description": "",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Honda of Burlington",
+      "details": [
+        {
+          "label": "Agency",
           "value": "Apex Media"
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat"
         }
       ],
       "url": "https://www.youtube.com/watch?v=ZYBbER5MR0k",
       "thumb": "/thumbnails/hob-thumb-16-9.jpg",
       "description": "",
-      "credits": []
+      "credits": [
+        {
+          "role": "Director of Photography/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
     },
     {
       "title": "North Coast Credit Union - Online Banking",
-      "details": [],
+      "details": [
+        {
+          "label": "Agency",
+          "value": "Apex Media"
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat"
+        }
+      ],
       "url": "https://vimeo.com/1161824636",
       "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
       "description": "",
-      "credits": []
+      "credits": [
+        {
+          "role": "DP/editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
     },
     {
       "title": "Silverwood School Promo Video",
-      "details": [],
+      "details": [
+        {
+          "label": "Client",
+          "value": "Silverwood School"
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat"
+        }
+      ],
       "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
       "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
-      "description": "",
-      "credits": []
+      "description": "Silverwood School is an independent K-8 school in Poulsbo, Washington, where 85 students learn, play, and grow on a 17-acre campus in the woods. As the school geared up for its Annual Fund drive, they reached out to explore creating a video that would inspire their community to give.",
+      "credits": [
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ],
+      "thumbDetail": "Prod. Company"
     },
     {
       "title": "Graphic Products - ToroMax Product Video",
       "details": [],
       "url": "https://vimeo.com/543790754/c79f433258",
       "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg",
-      "description": "",
-      "credits": []
-    },
-    {
-      "title": "Polly Wales - Fine Jewelry",
-      "details": [],
-      "url": "https://vimeo.com/367326427",
-      "thumb": "/thumbnails/polly-wales.jpg",
       "description": "",
       "credits": []
     },
