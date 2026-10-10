@@ -262,12 +262,37 @@
       "credits": []
     },
     {
-      "title": "Stout Tent ",
-      "details": [],
+      "title": "White Aspen Glamping",
+      "details": [
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Client",
+          "value": "Stout Tent",
+          "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
       "url": "https://www.youtube.com/watch?v=625pZM5jVJg",
       "thumb": "/thumbnails/stout-tent-6x9.jpg",
-      "description": "",
-      "credits": []
+      "description": "For Stout Tent’s customer story series, we headed to Leavenworth, Washington to meet Brandy and her dad, Mike, who run a glamping getaway built around Stout tents. Rather than just film the setup, we stayed the night in one of their tents and got the full experience as guests. Spending that time with them gave the film an honest, firsthand feel for the business they’ve built together and the place they’ve made for others to enjoy.",
+      "credits": [
+        {
+          "role": "Director",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Camera, Editor",
+          "name": "Sora Blu"
+        }
+      ]
     },
     {
       "title": "TrueCar L.E.D - Case Study",
