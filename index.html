@@ -285,10 +285,11 @@
       .grid{ grid-template-columns:1fr; }
     }
 
+
     .card{
       position:relative;
       display:block;
-      aspect-ratio:16 / 9;
+      aspect-ratio:2.4 / 1; /* widescreen; each thumbnail's crop is set in the editor */
       overflow:hidden;
       color:#fff;
       text-decoration:none;
@@ -909,6 +910,12 @@
       return detailsOf(v).filter(d => d.thumb).map(d => d.value).join(" · ");
     }
 
+    // Which part of the 16:9 thumbnail shows in the widescreen tile ("Thumbnail crop" in the editor)
+    const CROPS = { "Top": 0, "Upper": 25, "Center": 50, "Lower": 75, "Bottom": 100 };
+    function cropOf(v) {
+      return CROPS[v.crop] ?? 50;
+    }
+
     /* ---------- THUMBNAILS ----------
        On Netlify, thumbnails are resized on the fly so phones don't download full-size images. */
     const USE_IMAGE_CDN = /(^|\.)toyboatfilms\.com$|\.netlify\.app$/.test(location.hostname);
@@ -927,7 +934,7 @@
 
       grid.innerHTML = videos.map((v, i) => `
         <a class="card" href="#video/${esc(v.slug)}" data-index="${i}">
-          <img ${thumbAttrs(v.thumb)} alt="" loading="${i < 2 ? "eager" : "lazy"}" decoding="async">
+          <img ${thumbAttrs(v.thumb)} alt="" loading="${i < 2 ? "eager" : "lazy"}" decoding="async" style="object-position:50% ${cropOf(v)}%">
           <div class="overlay">
             <svg class="playIcon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
               <circle cx="22" cy="22" r="21"/><path d="M18 15l11 7-11 7z" fill="currentColor" stroke="none"/>
