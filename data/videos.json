@@ -5,11 +5,13 @@
       "details": [
         {
           "label": "Client",
-          "value": "TWIST"
+          "value": "TWIST",
+          "thumb": true
         },
         {
           "label": "Prod. Company",
-          "value": "Toy Boat"
+          "value": "Toy Boat",
+          "thumb": false
         }
       ],
       "url": "https://vimeo.com/367326427",
@@ -31,11 +33,13 @@
       "details": [
         {
           "label": "Agency",
-          "value": "Apex Media"
+          "value": "Apex Media",
+          "thumb": false
         },
         {
           "label": "Prod. Company",
-          "value": "Toy Boat"
+          "value": "Toy Boat",
+          "thumb": false
         }
       ],
       "url": "https://www.youtube.com/watch?v=ZYBbER5MR0k",
@@ -53,11 +57,13 @@
       "details": [
         {
           "label": "Agency",
-          "value": "Apex Media"
+          "value": "Apex Media",
+          "thumb": false
         },
         {
           "label": "Prod. Company",
-          "value": "Toy Boat"
+          "value": "Toy Boat",
+          "thumb": false
         }
       ],
       "url": "https://vimeo.com/1161824636",
@@ -75,11 +81,13 @@
       "details": [
         {
           "label": "Client",
-          "value": "Silverwood School"
+          "value": "Silverwood School",
+          "thumb": false
         },
         {
           "label": "Prod. Company",
-          "value": "Toy Boat"
+          "value": "Toy Boat",
+          "thumb": true
         }
       ],
       "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
@@ -90,15 +98,15 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ],
-      "thumbDetail": "Prod. Company"
+      ]
     },
     {
       "title": "Graphic Products - ToroMax Product Video",
       "details": [
         {
           "label": "Agency",
-          "value": "LocalEyes"
+          "value": "LocalEyes",
+          "thumb": true
         }
       ],
       "url": "https://vimeo.com/543790754/c79f433258",
@@ -109,15 +117,15 @@
           "role": "Director",
           "name": "Andrew Tomayko"
         }
-      ],
-      "thumbDetail": "Agency"
+      ]
     },
     {
       "title": "Seattle Credit Union with Jonah Coleman - Banking for All",
       "details": [
         {
           "label": "Agency",
-          "value": "Localeyes"
+          "value": "Localeyes",
+          "thumb": true
         }
       ],
       "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
@@ -128,15 +136,15 @@
           "role": "director",
           "name": "Andrew Tomayko"
         }
-      ],
-      "thumbDetail": "Agency"
+      ]
     },
     {
       "title": "MILAMORE FINE JEWELRY",
       "details": [
         {
           "label": "Client",
-          "value": "TWIST"
+          "value": "TWIST",
+          "thumb": true
         }
       ],
       "url": "https://vimeo.com/1023607953",
@@ -151,15 +159,15 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ],
-      "thumbDetail": "Client"
+      ]
     },
     {
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge ",
       "details": [
         {
           "label": "Client",
-          "value": "(Audience Choice Winner)"
+          "value": "(Audience Choice Winner)",
+          "thumb": false
         }
       ],
       "url": "https://www.youtube.com/watch?v=i2hEBU5ltA4",
@@ -178,8 +186,7 @@
           "role": "Son",
           "name": "Avi Brigman"
         }
-      ],
-      "thumbDetail": "Prod. Company"
+      ]
     },
     {
       "title": "Samsung Galaxy S6 - Behind the Scenes",

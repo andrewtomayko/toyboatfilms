@@ -49,8 +49,7 @@
           items.map((v, i) => {
             const credits = (v.credits || []).filter(c => c && (c.role || c.name));
             const meta = (v.details || []).filter(d => d && d.label && String(d.value || "").trim());
-            const thumbLabel = v.thumbDetail || "Client";
-            const client = thumbLabel === "Nothing" ? "" : (meta.find(d => d.label === thumbLabel) || {}).value;
+            const client = meta.filter(d => d.thumb).map(d => d.value).join(" · ");
             return h("div", { className: "item", key: i },
               h("div", { className: "thumb" },
                 v.thumb ? h("img", { src: asset(v.thumb) }) : h("div", { className: "empty" }, "No thumbnail yet"),
