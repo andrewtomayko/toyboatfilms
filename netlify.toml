@@ -1,0 +1,21 @@
+# Send every other address for the site to the real domain, so search engines see one site.
+
+# Netlify's default address
+[[redirects]]
+  from = "https://toyboat.netlify.app/*"
+  to = "https://toyboatfilms.com/:splat"
+  status = 301
+  force = true
+
+# Old company domain (takes effect once northgrown.com is added as a domain alias in Netlify)
+[[redirects]]
+  from = "https://northgrown.com/*"
+  to = "https://toyboatfilms.com/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.northgrown.com/*"
+  to = "https://toyboatfilms.com/"
+  status = 301
+  force = true
