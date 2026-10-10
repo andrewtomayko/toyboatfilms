@@ -212,11 +212,46 @@
     },
     {
       "title": "Samsung Galaxy S6 - Behind the Scenes",
-      "details": [],
+      "details": [
+        {
+          "label": "Prod. Company",
+          "value": "Digital Twigs",
+          "thumb": true
+        }
+      ],
       "url": "https://vimeo.com/132672631",
       "thumb": "/thumbnails/samsung-thumb.jpg",
-      "description": "",
-      "credits": []
+      "description": "Behind the scenes look at director GMUNK's practical in-camera techniques used to showcase the Samsung Galaxy S6 Edge.\n\n\"The process for this clip was highly technical, as it was mostly executed using motion-controlled cinematography along with macro lenses using very short focus distances. We had to tightly synchronize these two major elements with an array of Laser Projectors. Add in the backlit LED screens shining through the acrylic lettering and you have a set full of expensive gear and a lot of moving parts.\"",
+      "credits": [
+        {
+          "role": "Production Company",
+          "name": "Digital Twigs"
+        },
+        {
+          "role": "Director, Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Camera, Time Lapse",
+          "name": "Mike Pasley"
+        },
+        {
+          "role": "Assistant Editor",
+          "name": "Andrew Gant"
+        },
+        {
+          "role": "Motion Design",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Colorist",
+          "name": "Raffi Vesco"
+        },
+        {
+          "role": "Music",
+          "name": "Odesza – \"Always This Late\""
+        }
+      ]
     },
     {
       "title": "TWIST Curated Jewelry - Retail Video",
