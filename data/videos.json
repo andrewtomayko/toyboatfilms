@@ -357,75 +357,36 @@
       ]
     },
     {
-      "title": "Big News Events – Behind the Scenes",
+      "title": "Sophie Bille Brahe",
       "details": [
         {
           "label": "Client",
-          "value": "Baozou",
+          "value": "TWIST",
           "thumb": true
         },
         {
           "label": "Prod. Company",
-          "value": "Digital Twigs",
+          "value": "Toy Boat",
           "thumb": false
         },
         {
           "label": "Year",
-          "value": "2015",
+          "value": "2019",
           "thumb": false
         }
       ],
-      "url": "https://vimeo.com/137180938",
-      "thumb": "/thumbnails/big-news-events-bts.jpg",
-      "description": "Behind the scenes of our show intro for Baozou’s Big News Events. The set was sculpted and painted by hand, complete with custom pinball playfield artwork, then shot practically in the studio and brought to life with character animation.",
+      "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
+      "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
+      "crop": "Upper",
+      "description": "Copenhagen designer Sophie Bille Brahe pairs Scandinavian simplicity with pearls, diamonds and gold, shaping them into fluid, sculptural forms. Her jewelry is clean and poetic at once, a fresh take on fine jewelry.",
       "credits": [
         {
-          "role": "Executive Producer",
-          "name": "Mark Cramer"
+          "role": "Producer",
+          "name": "Sasha Schneider"
         },
         {
-          "role": "Creative Director, Animator",
-          "name": "Ryan Wehner"
-        },
-        {
-          "role": "Creative Director, Production Designer",
-          "name": "Mike Pasley"
-        },
-        {
-          "role": "Director of Photography",
+          "role": "Director/Editor",
           "name": "Andrew Tomayko"
-        },
-        {
-          "role": "Production Manager, Art Department Lead",
-          "name": "Natalie Lewis"
-        },
-        {
-          "role": "Storyboards",
-          "name": "Will Weigand"
-        },
-        {
-          "role": "Character Animator",
-          "name": "Régis Camargo"
-        },
-        {
-          "role": "Set Painter, Sculptor",
-          "name": "Rachel Mark"
-        },
-        {
-          "role": "Pinball Playfield Artwork",
-          "name": "Serk Feliz"
-        },
-        {
-          "role": "Art Department Assistant",
-          "name": "Charlie Makary"
-        },
-        {
-          "role": "Sound Design, Mix",
-          "name": "White Noise Lab"
-        },
-        {
-          "role": "Behind the Scenes",
-          "name": "Michael Larson"
         }
       ]
     },
@@ -443,6 +404,53 @@
       "crop": "Top",
       "description": "Sea change (noun): a profound transformation brought about by the sea.\n\nOn December 31st, 2015, two friends, a little dog and I set out to sail from Florida to the Amazon River. It took a little over a year and nine countries to reach our goal, exploring the rivers, jungles and remote islands of the Caribbean along the way. Traveling under sail let us connect deeply with the people and places we met; we took our time and became part of the landscape instead of just observing it. Sea Change combined our passions for adventure and filmmaking into a short video series that blurs the line between documentary and narrative, bringing the viewer aboard to experience life at sea as we knew it.",
       "credits": []
+    },
+    {
+      "title": "Pool Cosby – “I Like You”",
+      "details": [
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/368661670",
+      "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
+      "description": "",
+      "credits": []
+    },
+    {
+      "title": "Prounis",
+      "details": [
+        {
+          "label": "Client",
+          "value": "TWIST",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2021",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=ClWPMDjyWRY",
+      "thumb": "/thumbnails/twist-prounis-16-9.jpg",
+      "description": "New York designer Jean Prounis draws on ancient forms and her own heritage, hand-making jewelry from recycled 22K gold and responsibly sourced stones. Her pieces are quiet, timeless and made to be passed down: modern heirlooms.",
+      "credits": [
+        {
+          "role": "Producer",
+          "name": "Sasha Schneider"
+        },
+        {
+          "role": "Director/Editor",
+          "name": "Andrew Tomayko"
+        }
+      ]
     },
     {
       "title": "Graphic Products - ToroMax",
@@ -517,49 +525,75 @@
       ]
     },
     {
-      "title": "Pool Cosby – “I Like You”",
-      "details": [
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/368661670",
-      "thumb": "/thumbnails/pool-cosby-i-like-you.jpg",
-      "description": "",
-      "credits": []
-    },
-    {
-      "title": "Prounis",
+      "title": "Big News Events – Behind the Scenes",
       "details": [
         {
           "label": "Client",
-          "value": "TWIST",
+          "value": "Baozou",
           "thumb": true
         },
         {
           "label": "Prod. Company",
-          "value": "Toy Boat",
+          "value": "Digital Twigs",
           "thumb": false
         },
         {
           "label": "Year",
-          "value": "2021",
+          "value": "2015",
           "thumb": false
         }
       ],
-      "url": "https://www.youtube.com/watch?v=ClWPMDjyWRY",
-      "thumb": "/thumbnails/twist-prounis-16-9.jpg",
-      "description": "New York designer Jean Prounis draws on ancient forms and her own heritage, hand-making jewelry from recycled 22K gold and responsibly sourced stones. Her pieces are quiet, timeless and made to be passed down: modern heirlooms.",
+      "url": "https://vimeo.com/137180938",
+      "thumb": "/thumbnails/big-news-events-bts.jpg",
+      "description": "Behind the scenes of our show intro for Baozou’s Big News Events. The set was sculpted and painted by hand, complete with custom pinball playfield artwork, then shot practically in the studio and brought to life with character animation.",
       "credits": [
         {
-          "role": "Producer",
-          "name": "Sasha Schneider"
+          "role": "Executive Producer",
+          "name": "Mark Cramer"
         },
         {
-          "role": "Director/Editor",
+          "role": "Creative Director, Animator",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Creative Director, Production Designer",
+          "name": "Mike Pasley"
+        },
+        {
+          "role": "Director of Photography",
           "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Production Manager, Art Department Lead",
+          "name": "Natalie Lewis"
+        },
+        {
+          "role": "Storyboards",
+          "name": "Will Weigand"
+        },
+        {
+          "role": "Character Animator",
+          "name": "Régis Camargo"
+        },
+        {
+          "role": "Set Painter, Sculptor",
+          "name": "Rachel Mark"
+        },
+        {
+          "role": "Pinball Playfield Artwork",
+          "name": "Serk Feliz"
+        },
+        {
+          "role": "Art Department Assistant",
+          "name": "Charlie Makary"
+        },
+        {
+          "role": "Sound Design, Mix",
+          "name": "White Noise Lab"
+        },
+        {
+          "role": "Behind the Scenes",
+          "name": "Michael Larson"
         }
       ]
     },
@@ -789,40 +823,6 @@
       "url": "https://www.youtube.com/watch?v=lny49-wYmd8",
       "thumb": "/thumbnails/twist-nikolle-radi.jpg",
       "description": "Raised around his father’s jewelry workshop in Croatia, New York designer Nikolle Radi brings an engineer’s precision to platinum. His intricate openwork pushes the metal into near-impossible patterns, balancing delicacy with structural strength.",
-      "credits": [
-        {
-          "role": "Producer",
-          "name": "Sasha Schneider"
-        },
-        {
-          "role": "Director/Editor",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
-      "title": "Sophie Bille Brahe",
-      "details": [
-        {
-          "label": "Client",
-          "value": "TWIST",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
-      ],
-      "url": "https://www.youtube.com/watch?v=hpIDA2eVwjw",
-      "thumb": "/thumbnails/twist-sophie-bille-brahe.jpg",
-      "crop": "Upper",
-      "description": "Copenhagen designer Sophie Bille Brahe pairs Scandinavian simplicity with pearls, diamonds and gold, shaping them into fluid, sculptural forms. Her jewelry is clean and poetic at once, a fresh take on fine jewelry.",
       "credits": [
         {
           "role": "Producer",
