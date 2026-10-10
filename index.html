@@ -417,8 +417,16 @@
     }
 
     .playerMeta{
-      margin:0;
-      font-size:13px;
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      font-size:15px;
+      line-height:1.5;
+    }
+    .playerMeta li + li{ margin-top:4px; }
+    .playerMeta .label{
+      margin-right:6px;
+      font-size:12px;
       letter-spacing:.14em;
       text-transform:uppercase;
       color:var(--playerMuted);
@@ -684,7 +692,7 @@
       <div class="playerInfo" id="playerInfo">
         <div>
           <h2 class="playerTitle" id="playerTitle"></h2>
-          <p class="playerMeta" id="playerMeta"></p>
+          <ul class="playerMeta" id="playerMeta"></ul>
           <p class="playerDesc" id="playerDesc"></p>
         </div>
         <div id="playerCreditsWrap">
@@ -864,10 +872,11 @@
         `${String(i + 1).padStart(2, "0")} / ${String(videos.length).padStart(2, "0")}`;
       document.getElementById("playerTitle").textContent = v.title || "";
 
-      const meta = [v.client, v.year].filter(Boolean).join(" · ");
+      const meta = [["Client", v.client], ["Agency", v.agency], ["Year", v.year]].filter(([, val]) => val);
       const metaEl = document.getElementById("playerMeta");
-      metaEl.textContent = meta;
-      metaEl.hidden = !meta;
+      metaEl.innerHTML = meta.map(([label, val]) =>
+        `<li><span class="label">${label}:</span>${esc(val)}</li>`).join("");
+      metaEl.hidden = !meta.length;
 
       const descEl = document.getElementById("playerDesc");
       descEl.textContent = v.description || "";

@@ -38,7 +38,13 @@ collections:
                 name: "client"
                 widget: "string"
                 required: false
-                hint: "Optional. Shown in smaller text under the title."
+                hint: "Optional. Shown under the title on the thumbnail, and as “Client:” in the popup."
+
+              - label: "Agency"
+                name: "agency"
+                widget: "string"
+                required: false
+                hint: "Optional. Shown as “Agency:” in the popup, for projects made through an agency."
 
               - label: "Year"
                 name: "year"
