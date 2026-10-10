@@ -2,8 +2,12 @@
   "videos": [
     {
       "title": "Honda of Burlington",
-      "client": "Apex Media",
-      "year": "",
+      "details": [
+        {
+          "label": "Client",
+          "value": "Apex Media"
+        }
+      ],
       "url": "https://www.youtube.com/watch?v=ZYBbER5MR0k",
       "thumb": "/thumbnails/hob-thumb-16-9.jpg",
       "description": "",
@@ -11,8 +15,7 @@
     },
     {
       "title": "North Coast Credit Union - Online Banking",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/1161824636",
       "thumb": "/thumbnails/nccu-thumb-16-9.jpg",
       "description": "",
@@ -20,8 +23,7 @@
     },
     {
       "title": "Silverwood School Promo Video",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://www.youtube.com/watch?v=VYHBzXdmlmA",
       "thumb": "/thumbnails/silverwood-school-thumb-16-9.jpg",
       "description": "",
@@ -29,8 +31,7 @@
     },
     {
       "title": "Graphic Products - ToroMax Product Video",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/543790754/c79f433258",
       "thumb": "/thumbnails/graphic-products-toromax-thumb-16-9.jpg",
       "description": "",
@@ -38,8 +39,7 @@
     },
     {
       "title": "Polly Wales - Fine Jewelry",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/367326427",
       "thumb": "/thumbnails/polly-wales.jpg",
       "description": "",
@@ -47,8 +47,7 @@
     },
     {
       "title": "Seattle Credit Union with Jonah Coleman - Banking for All",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://www.youtube.com/watch?v=y2IbomNJZ9c",
       "thumb": "/thumbnails/seattle-credit-union-thumb-16-9.jpg",
       "description": "",
@@ -56,8 +55,7 @@
     },
     {
       "title": "MILAMORE FINE JEWELRY",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/1023607953",
       "thumb": "/thumbnails/milamore-frames_2.1.7.jpg",
       "description": "",
@@ -65,8 +63,7 @@
     },
     {
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge (Audience Choice Winner)",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://www.youtube.com/watch?v=i2hEBU5ltA4",
       "thumb": "/thumbnails/vinatta-thumb-16-9-2.jpg",
       "description": "",
@@ -74,8 +71,7 @@
     },
     {
       "title": "Samsung Galaxy S6 - Behind the Scenes",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/132672631",
       "thumb": "/thumbnails/samsung-thumb.jpg",
       "description": "",
@@ -83,8 +79,7 @@
     },
     {
       "title": "TWIST Curated Jewelry - Retail Video",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/376715092",
       "thumb": "/thumbnails/twist-thumb.jpg",
       "description": "",
@@ -92,8 +87,7 @@
     },
     {
       "title": "Stout Tent - Testimonial",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://www.youtube.com/watch?v=625pZM5jVJg",
       "thumb": "/thumbnails/stout-tent-6x9.jpg",
       "description": "",
@@ -101,8 +95,7 @@
     },
     {
       "title": "TrueCar L.E.D - Case Study",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/137718045",
       "thumb": "/thumbnails/truecar-led-thumb.jpg",
       "description": "",
@@ -110,8 +103,7 @@
     },
     {
       "title": "Odesza - In Return Tour Announcement Video",
-      "client": "",
-      "year": "",
+      "details": [],
       "url": "https://vimeo.com/100283854",
       "thumb": "/thumbnails/odesza-thumb.jpg",
       "description": "",

@@ -34,23 +34,21 @@ collections:
                 widget: "string"
                 hint: "Shown on the thumbnail when someone hovers over it, and above the description in the popup."
 
-              - label: "Client"
-                name: "client"
-                widget: "string"
+              - label: "Details"
+                name: "details"
+                widget: "list"
                 required: false
-                hint: "Optional. Shown under the title on the thumbnail, and as “Client:” in the popup."
-
-              - label: "Agency"
-                name: "agency"
-                widget: "string"
-                required: false
-                hint: "Optional. Shown as “Agency:” in the popup, for projects made through an agency."
-
-              - label: "Year"
-                name: "year"
-                widget: "string"
-                required: false
-                hint: "Optional, e.g. 2026."
+                label_singular: "detail"
+                collapsed: false
+                summary: "{{fields.label}}: {{fields.value}}"
+                hint: "Optional. Add only the lines you need and drag them into the order you want. They appear under the title in the popup; the Client also appears on the thumbnail."
+                fields:
+                  - label: "Label"
+                    name: "label"
+                    widget: "select"
+                    options: ["Client", "Agency", "Prod. Company", "Year"]
+                    default: "Client"
+                  - { label: "Value", name: "value", widget: "string" }
 
               - label: "Video link"
                 name: "url"
