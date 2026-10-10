@@ -288,7 +288,7 @@
       text-align:center;
       background:rgba(0,0,0,.55);
       opacity:0;
-      transition:opacity .35s ease;
+      transition:opacity .15s ease; /* quick fade out, so titles hand off cleanly while scrolling */
     }
 
     .card .overlay > *{
@@ -320,16 +320,20 @@
       color:rgba(255,255,255,.75);
     }
 
-    .card:hover .overlay,
     .card:focus-visible .overlay,
-    .card.in-view .overlay{ opacity:1; }
+    .card.in-view .overlay{ opacity:1; transition-duration:.35s; }
 
-    .card:hover .overlay > *,
     .card:focus-visible .overlay > *,
     .card.in-view .overlay > *{ transform:none; }
 
-    .card:hover img,
     .card:focus-visible img{ transform:scale(1.03); }
+
+    /* Real hover only: phones fake :hover on the last thumbnail touched, which sticks */
+    @media (hover: hover){
+      .card:hover .overlay{ opacity:1; transition-duration:.35s; }
+      .card:hover .overlay > *{ transform:none; }
+      .card:hover img{ transform:scale(1.03); }
+    }
 
     .card:focus-visible{ outline:3px solid #fff; outline-offset:-3px; }
 
@@ -920,13 +924,33 @@
       setupTouchReveal(grid);
     }
 
-    /* Phones can't hover: show each title as its thumbnail crosses the middle of the screen */
+    /* Phones can't hover: show the title of the one thumbnail crossing the middle of the screen */
     function setupTouchReveal(grid) {
-      if (!window.matchMedia("(hover: none)").matches || !("IntersectionObserver" in window)) return;
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(en => en.target.classList.toggle("in-view", en.isIntersecting));
-      }, { rootMargin: "-45% 0px -45% 0px" });
-      grid.querySelectorAll(".card").forEach(c => io.observe(c));
+      if (!window.matchMedia("(hover: none)").matches) return;
+      const cards = [...grid.querySelectorAll(".card")];
+      let active = null;
+      let queued = false;
+
+      function update() {
+        queued = false;
+        const mid = window.innerHeight / 2;
+        const next = cards.find(c => {
+          const r = c.getBoundingClientRect();
+          return r.top <= mid && r.bottom > mid;
+        }) || null;
+        if (next === active) return;
+        if (active) active.classList.remove("in-view");
+        if (next) next.classList.add("in-view");
+        active = next;
+      }
+
+      function queue() {
+        if (!queued) { queued = true; requestAnimationFrame(update); }
+      }
+
+      window.addEventListener("scroll", queue, { passive: true });
+      window.addEventListener("resize", queue);
+      update();
     }
 
     /* ---------- PLAYER ---------- */
