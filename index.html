@@ -791,21 +791,14 @@
       return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${h}autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
     }
 
-    /* Popup detail lines (Client, Agency, Prod. Company, Year) in the order set in the editor.
-       Older entries kept these as separate fields. */
+    // Popup detail lines (any label, e.g. Client, Agency) in the order set in the editor
     function detailsOf(v) {
-      const list = Array.isArray(v.details) && v.details.length
-        ? v.details
-        : [["Client", v.client], ["Agency", v.agency], ["Year", v.year]].map(([label, value]) => ({ label, value }));
-      return list.filter(d => d && d.label && String(d.value ?? "").trim());
+      return (v.details || []).filter(d => d && d.label && String(d.value ?? "").trim());
     }
 
-    // The detail chosen in the editor's "Show under thumbnail title" (Client unless set)
+    // Details ticked "Show under thumbnail" in the editor
     function thumbDetailOf(v) {
-      const label = v.thumbDetail || "Client";
-      if (label === "Nothing") return "";
-      const d = detailsOf(v).find(d => d.label === label);
-      return d ? d.value : "";
+      return detailsOf(v).filter(d => d.thumb).map(d => d.value).join(" · ");
     }
 
     /* ---------- THUMBNAILS ----------

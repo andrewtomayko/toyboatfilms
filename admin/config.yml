@@ -45,18 +45,15 @@ collections:
                 fields:
                   - label: "Label"
                     name: "label"
-                    widget: "select"
-                    options: ["Client", "Agency", "Prod. Company", "Year"]
-                    default: "Client"
+                    widget: "string"
+                    hint: "Anything you like, e.g. Client, Agency, Prod. Company, Year."
                   - { label: "Value", name: "value", widget: "string" }
-
-              - label: "Show under thumbnail title"
-                name: "thumbDetail"
-                widget: "select"
-                required: false
-                default: "Client"
-                options: ["Client", "Agency", "Prod. Company", "Year", "Nothing"]
-                hint: "Which detail appears in small text under the title when someone hovers over the thumbnail. If that detail is empty, nothing shows."
+                  - label: "Show under thumbnail"
+                    name: "thumb"
+                    widget: "boolean"
+                    default: false
+                    required: false
+                    hint: "Shows this value in small text under the title when someone hovers over the thumbnail."
 
               - label: "Video link"
                 name: "url"
