@@ -333,7 +333,7 @@
       "details": [
         {
           "label": "Year",
-          "value": "2017",
+          "value": "2016",
           "thumb": false
         }
       ],
@@ -341,7 +341,20 @@
       "thumb": "/thumbnails/sea-change-on-deck.jpg",
       "crop": 50,
       "description": "Sea change (noun): a profound transformation brought about by the sea.\n\nOn December 31st, 2015, two friends, a little dog and I set out to sail from Florida to the Amazon River. It took a little over a year and nine countries to reach our goal, exploring the rivers, jungles and remote islands of the Caribbean along the way. Traveling under sail let us connect deeply with the people and places we met; we took our time and became part of the landscape instead of just observing it. Sea Change combined our passions for adventure and filmmaking into a short video series that blurs the line between documentary and narrative, bringing the viewer aboard to experience life at sea as we knew it.",
-      "credits": [],
+      "credits": [
+        {
+          "role": "Camera, Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Camera",
+          "name": "Brandon Savory"
+        },
+        {
+          "role": "Camera",
+          "name": "Scott Gallyon"
+        }
+      ],
       "tags": [
         "documentary",
         "film"
