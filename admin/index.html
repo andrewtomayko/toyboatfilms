@@ -1,117 +1,782 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="robots" content="noindex" />
-  <title>Toy Boat · Site Editor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Toy Boat · Website editor</title>
   <link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any">
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    /* Same dark palette and type as the site, invoices and stats */
+    :root{
+      color-scheme:dark;
+      --bg:#0b0b0b; --surface:#141414; --surface-2:#1b1b1b; --line:#262626; --line-2:#333;
+      --text:#f2f2f2; --muted:#9a9a9a; --danger:#ff7b7b; --ok:#8fd19e; --warn:#f0c674;
+    }
+    *{ box-sizing:border-box; }
+    [hidden]{ display:none !important; }
+    html,body{ height:100%; }
+    body{ margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+    button,input,textarea,select{ font:inherit; color:inherit; }
+    :focus-visible{ outline:2px solid var(--text); outline-offset:2px; }
+
+    .btn{ display:inline-block; text-decoration:none; background:none; border:1px solid var(--line-2); border-radius:6px; padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
+    .btn:hover{ border-color:var(--text); }
+    .btn.primary{ background:var(--text); color:var(--bg); border-color:var(--text); }
+    .btn.primary:disabled{ opacity:.35; cursor:default; }
+    .btn.small{ padding:5px 10px; font-size:12px; }
+    .btn.ghost{ border-color:transparent; color:var(--muted); }
+    .btn.ghost:hover{ color:var(--text); border-color:var(--line-2); }
+    .btn.danger{ color:var(--danger); }
+    .btn.danger.armed{ background:var(--danger); color:#111; border-color:var(--danger); }
+    .icon-btn{ background:none; border:0; color:var(--muted); cursor:pointer; padding:4px 6px; border-radius:4px; font-size:14px; line-height:1; }
+    .icon-btn:hover{ color:var(--text); background:var(--surface-2); }
+    .icon-btn:disabled{ opacity:.25; cursor:default; background:none; }
+
+    /* ---------- top bar ---------- */
+    .topbar{ position:sticky; top:0; z-index:20; background:var(--bg); border-bottom:1px solid var(--line); }
+    .topbar-inner{ display:flex; align-items:center; gap:16px; padding:12px 20px; flex-wrap:wrap; }
+    .brand{ font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:15px; white-space:nowrap; }
+    .brand span{ color:var(--muted); font-weight:500; margin-left:10px; letter-spacing:.14em; font-size:12px; }
+    .office-nav{ display:flex; gap:2px; padding:3px; border:1px solid var(--line); border-radius:999px; }
+    .office-nav a{ color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; }
+    .office-nav a:hover{ color:var(--text); }
+    .office-nav a[aria-current="page"]{ background:var(--text); color:var(--bg); }
+    .top-actions{ margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .status{ font-size:13px; color:var(--muted); }
+    .status.dirty{ color:var(--warn); }
+    .status.ok{ color:var(--ok); }
+    .status.error{ color:var(--danger); }
+    .testmode{ background:#2a2410; color:#f0d58c; font-size:13px; padding:8px 20px; border-bottom:1px solid #3d3415; }
+
+    .tabs{ display:flex; gap:4px; padding:0 20px; border-bottom:1px solid var(--line); }
+    .tabs button{ background:none; border:0; border-bottom:2px solid transparent; padding:12px 6px; margin-right:14px; color:var(--muted); font-weight:600; cursor:pointer; }
+    .tabs button[aria-selected="true"]{ color:var(--text); border-bottom-color:var(--text); }
+
+    /* ---------- login ---------- */
+    .login{ max-width:440px; margin:14vh auto 0; text-align:center; border:1px solid var(--line); background:var(--surface); padding:36px 28px; }
+    .login h1{ margin:0 0 8px; font-size:26px; }
+    .login p{ margin:0 0 22px; color:var(--muted); }
+
+    /* ---------- videos ---------- */
+    .workspace{ display:grid; grid-template-columns:minmax(0,1fr) 500px; min-height:calc(100vh - 110px); }
+    .grid-col{ padding:18px 20px 60px; min-width:0; }
+    .grid-tools{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+    .grid-tools .hint{ color:var(--muted); font-size:13px; margin-right:auto; }
+    .addbox{ display:flex; gap:8px; margin-bottom:14px; }
+    .addbox input{ flex:1; }
+
+    /* Cards copy the site's grid exactly: 2.40:1, two across, title + "on thumbnail" detail on hover */
+    .vgrid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0; background:#111; }
+    .vcard{ position:relative; aspect-ratio:2.4 / 1; overflow:hidden; background:#1a1a1a; cursor:pointer; color:#fff; user-select:none; }
+    .vcard img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .vcard .overlay{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:16px 24px; text-align:center; background:rgba(0,0,0,.55); opacity:0; transition:opacity .2s ease; }
+    .vcard:hover .overlay, .vcard.selected .overlay{ opacity:1; }
+    .vcard .ctitle{ margin:0; font-size:clamp(13px,1.3vw,20px); font-weight:700; letter-spacing:.08em; text-transform:uppercase; line-height:1.25; }
+    .vcard .cclient{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.75); }
+    .vcard.selected{ outline:3px solid #fff; outline-offset:-3px; z-index:1; }
+    .vcard.is-hidden img{ opacity:.25; }
+    .vcard .badges{ position:absolute; top:8px; left:8px; display:flex; gap:6px; z-index:2; }
+    .badge{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 7px; border-radius:3px; background:rgba(0,0,0,.75); border:1px solid #555; }
+    .badge.warn{ border-color:var(--warn); color:var(--warn); }
+    .vcard .num{ position:absolute; top:8px; right:10px; font-size:11px; color:rgba(255,255,255,.7); text-shadow:0 1px 3px #000; z-index:2; }
+    .vcard.drag-before::before, .vcard.drag-after::after{ content:""; position:absolute; top:0; bottom:0; width:4px; background:#fff; z-index:3; }
+    .vcard.drag-before::before{ left:0; }
+    .vcard.drag-after::after{ right:0; }
+    .vcard.dragging{ opacity:.4; }
+
+    /* ---------- side panel ---------- */
+    .panel{ border-left:1px solid var(--line); background:var(--surface); padding:18px 20px 80px; overflow-y:auto; max-height:calc(100vh - 110px); position:sticky; top:110px; }
+    .panel-empty{ color:var(--muted); padding:40px 6px; text-align:center; }
+    .panel h3{ margin:22px 0 10px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; display:flex; align-items:center; justify-content:space-between; }
+    .panel h3:first-of-type{ margin-top:6px; }
+    .field{ display:grid; gap:5px; margin-bottom:12px; }
+    .field > span{ font-size:12px; color:var(--muted); }
+    input[type="text"], input[type="url"], input[type="email"], input:not([type]), textarea{ width:100%; padding:9px 11px; background:#0f0f0f; border:1px solid var(--line-2); border-radius:6px; }
+    input:focus, textarea:focus{ outline:none; border-color:var(--text); }
+    textarea{ resize:vertical; min-height:96px; }
+
+    .cropper{ position:relative; aspect-ratio:2.4 / 1; overflow:hidden; background:#000; border-radius:4px; cursor:ns-resize; touch-action:none; }
+    .cropper img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .cropper .crop-hint{ position:absolute; left:8px; bottom:8px; font-size:11px; background:rgba(0,0,0,.7); padding:3px 7px; border-radius:3px; color:#ddd; }
+    .cropper.empty{ display:grid; place-items:center; color:var(--muted); cursor:default; font-size:13px; }
+    .crop-actions{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; align-items:center; }
+    .crop-actions .sub{ color:var(--muted); font-size:12px; margin-left:auto; }
+
+    .rows{ display:grid; gap:6px; }
+    .row{ display:grid; gap:6px; align-items:center; }
+    .row.detail{ grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) auto auto; }
+    .row.credit{ grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; }
+    .row input{ padding:7px 9px; font-size:14px; }
+    .row .tools{ display:flex; gap:0; }
+    .onthumb{ display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); white-space:nowrap; cursor:pointer; }
+    .onthumb input{ accent-color:#f2f2f2; width:15px; height:15px; }
+    .add-row{ background:none; border:1px dashed var(--line-2); border-radius:6px; color:var(--muted); padding:7px; width:100%; cursor:pointer; font-size:13px; margin-top:6px; }
+    .add-row:hover{ color:var(--text); border-color:var(--text); }
+    .toggle{ display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; }
+    .toggle input{ accent-color:#f2f2f2; width:18px; height:18px; }
+    .panel-foot{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; padding-top:16px; border-top:1px solid var(--line); }
+    .panel-foot .spacer{ flex:1; }
+
+    /* ---------- homepage ---------- */
+    .homepage{ max-width:720px; padding:24px 20px 80px; }
+    .homepage .note{ color:var(--muted); font-size:13px; margin:0 0 20px; }
+
+    /* ---------- site preview ---------- */
+    .preview{ position:fixed; inset:0; z-index:50; background:rgba(0,0,0,.85); display:flex; flex-direction:column; }
+    .preview-bar{ display:flex; align-items:center; gap:10px; padding:10px 16px; background:var(--bg); border-bottom:1px solid var(--line); }
+    .preview-bar .label{ font-size:13px; color:var(--muted); margin-right:auto; }
+    .preview-stage{ flex:1; display:flex; justify-content:center; overflow:auto; padding:16px; }
+    .preview-stage iframe{ width:100%; height:100%; border:1px solid var(--line); background:#0b0b0b; border-radius:6px; transition:width .2s ease; }
+    .preview-stage.phone iframe{ width:390px; }
+
+    .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:#1f1f1f; border:1px solid var(--line-2); padding:10px 16px; border-radius:8px; font-size:14px; z-index:60; box-shadow:0 8px 30px rgba(0,0,0,.5); }
+
+    @media (max-width: 1100px){
+      .workspace{ grid-template-columns:1fr; }
+      .panel{ position:static; max-height:none; border-left:0; border-top:1px solid var(--line); }
+    }
+    @media (max-width: 700px){
+      .vgrid{ grid-template-columns:1fr; }
+      .topbar-inner{ padding:10px 14px; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Office switcher: the dashboard, invoices and stats share one login -->
-  <style>
-    .office-switch{ position:fixed; top:9px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; gap:2px; padding:4px;
-      background:#1b1b1b; border-radius:999px; box-shadow:0 6px 24px rgba(0,0,0,.25);
-      font:600 12px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; letter-spacing:.04em; }
-    .office-switch a{ color:#cfcfcf; text-decoration:none; padding:8px 12px; border-radius:999px; }
-    .office-switch a:hover{ color:#fff; background:#2a2a2a; }
-    .office-switch a[aria-current="page"]{ background:#f2f2f2; color:#111; }
-    /* Narrow windows: Decap's header has no free middle, so the switcher moves to the bottom corner */
-    @media (max-width: 900px){ .office-switch{ top:auto; bottom:14px; left:14px; transform:none; } }
-  </style>
-  <nav class="office-switch" aria-label="Back office">
-    <a href="/admin/" aria-current="page">Website</a>
-    <a href="/invoices/">Invoices</a>
-    <a href="/stats/">Stats</a>
-  </nav>
-  <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Toy Boat<span>Website</span></div>
+      <nav class="office-nav" aria-label="Back office">
+        <a href="/admin/" aria-current="page">Website</a><a href="/invoices/">Invoices</a><a href="/stats/">Stats</a>
+      </nav>
+      <div class="top-actions" id="topActions" hidden>
+        <span class="status" id="status" role="status"></span>
+        <button class="btn" id="previewBtn" type="button">Site preview</button>
+        <button class="btn ghost" id="discardBtn" type="button" disabled>Discard changes</button>
+        <button class="btn primary" id="publishBtn" type="button" disabled>Publish</button>
+        <a class="btn ghost small" href="/admin/classic/" title="The previous editor, kept as a backup for now">Classic editor</a>
+        <button class="btn ghost small" id="logoutBtn" type="button">Log out</button>
+      </div>
+    </div>
+    <div class="testmode" id="testMode" hidden>Test mode: changes save to a test copy of your content, not your live site.</div>
+    <div class="tabs" id="tabs" role="tablist" hidden>
+      <button type="button" role="tab" data-tab="videos" aria-selected="true">Videos <span id="videoCount"></span></button>
+      <button type="button" role="tab" data-tab="homepage" aria-selected="false">Homepage text</button>
+    </div>
+  </header>
+
+  <section class="login" id="loginView" hidden>
+    <h1>Website editor</h1>
+    <p>Log in with your Toy Boat account to edit your videos and homepage.</p>
+    <button class="btn primary" id="loginBtn" type="button">Log in</button>
+  </section>
+
+  <p class="panel-empty" id="loadingView">Loading…</p>
+
+  <!-- VIDEOS -->
+  <section class="workspace" id="videosView" hidden>
+    <div class="grid-col">
+      <div class="grid-tools">
+        <span class="hint">Drag thumbnails to reorder · click one to edit · this is exactly how the grid looks on your site</span>
+        <button class="btn primary" id="addBtn" type="button">Add video</button>
+      </div>
+      <form class="addbox" id="addBox" hidden>
+        <input id="addUrl" type="url" placeholder="Paste a YouTube or Vimeo link" aria-label="YouTube or Vimeo link" required>
+        <button class="btn primary" type="submit" id="addGo">Add</button>
+        <button class="btn ghost" type="button" id="addCancel">Cancel</button>
+      </form>
+      <div class="vgrid" id="vgrid"></div>
+    </div>
+    <aside class="panel" id="panel"></aside>
+  </section>
+
+  <!-- HOMEPAGE -->
+  <section class="homepage" id="homepageView" hidden>
+    <p class="note">The words at the top of your homepage, the buttons, and the links in the footer.</p>
+    <form id="siteForm" autocomplete="off">
+      <label class="field"><span>Logo text (top-left corner)</span><input data-site="logo"></label>
+      <label class="field"><span>Headline (the large sentence under the reel)</span><input data-site="headline"></label>
+      <label class="field"><span>Intro paragraph</span><textarea data-site="description" rows="5"></textarea></label>
+      <label class="field"><span>Location line (small grey text under the intro)</span><input data-site="location"></label>
+      <label class="field"><span>Main button text</span><input data-site="cta"></label>
+      <label class="field"><span>Header button text</span><input data-site="headerCta"></label>
+      <label class="field"><span>Contact email (shown in the footer)</span><input type="email" data-site="email"></label>
+      <label class="field"><span>Instagram link (shown in the footer)</span><input type="url" data-site="instagram" placeholder="https://instagram.com/…"></label>
+    </form>
+  </section>
+
+  <!-- SITE PREVIEW -->
+  <div class="preview" id="preview" hidden>
+    <div class="preview-bar">
+      <span class="label">Site preview · your unsaved changes on the real site</span>
+      <button class="btn small" type="button" data-width="desktop" aria-pressed="true">Desktop</button>
+      <button class="btn small" type="button" data-width="phone" aria-pressed="false">Phone</button>
+      <button class="btn small primary" type="button" id="previewClose">Close</button>
+    </div>
+    <div class="preview-stage" id="previewStage"><iframe id="previewFrame" title="Site preview"></iframe></div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
   <script>
-    /* Live preview: shows each video the way it appears in the popup on the site */
-    CMS.registerPreviewStyle(`
-      body{ margin:0; background:#0b0b0b; color:#f2f2f2; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
-      .wrap{ padding:24px; }
-      .note{ font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#9a9a9a; margin:0 0 24px; }
-      .item{ margin:0 0 56px; }
-      .item.hidden{ opacity:.35; }
-      .badge{ display:inline-block; margin:0 0 10px; padding:4px 8px; border:1px solid #9a9a9a; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#d6d6d6; }
-      .thumb{ position:relative; aspect-ratio:2.4/1; background:#1a1a1a; overflow:hidden; }
-      .thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-      .thumb .ov{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-                  background:rgba(0,0,0,.55); text-align:center; padding:16px; opacity:0; transition:opacity .3s; }
-      .thumb:hover .ov{ opacity:1; }
-      .ov .t{ margin:0; font-size:20px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
-      .ov .c{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.75); }
-      .empty{ display:flex; align-items:center; justify-content:center; height:100%; color:#666; font-size:13px; }
-      .info{ display:grid; grid-template-columns:3fr 2fr; gap:32px; padding-top:20px; }
-      .info.solo{ grid-template-columns:1fr; }
-      h2{ margin:0 0 6px; font-size:20px; letter-spacing:.06em; text-transform:uppercase; }
-      .meta{ margin:12px 0 0; padding:0; list-style:none; font-size:14px; line-height:1.5; }
-      .meta li + li{ margin-top:3px; }
-      .meta .label{ margin-right:6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
-      .desc{ margin:16px 0 0; font-size:15px; line-height:1.7; color:#d6d6d6; white-space:pre-line; }
-      h3{ margin:0 0 12px; padding-bottom:10px; border-bottom:1px solid #262626; font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
-      dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 20px; font-size:14px; }
-      dt{ color:#9a9a9a; text-transform:uppercase; letter-spacing:.1em; font-size:11px; padding-top:2px; }
-      dd{ margin:0; }
-    `, { raw: true });
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const identity = window.netlifyIdentity;
+    const LIVE = /(^|\.)toyboatfilms\.com$/.test(location.hostname);
+    const BRANCH = LIVE ? "main" : "editor-test"; // previews and local copies never touch the live content
+    const GIT = "/.netlify/git/github/contents/";
+    const CROPS = { Top: 0, Upper: 25, Center: 50, Lower: 75, Bottom: 100 };
 
-    const VideosPreview = createClass({
-      render() {
-        const list = this.props.entry.getIn(["data", "videos"]);
-        const items = list ? list.toJS() : [];
-        // Images uploaded in this session come from Decap; ones it hasn't loaded (e.g. added outside
-        // the editor) come back empty, so fall back to the published copy on the site.
-        const live = p => (p && p.startsWith("/") ? window.location.origin + p : p);
-        const asset = p => {
-          if (!p) return "";
-          const a = String(this.props.getAsset(p) || "");
-          return a && a !== "undefined" ? a : live(p);
-        };
-        const fallBack = (e, p) => {
-          const img = e.target;
-          if (img.dataset.fellBack) return;
-          img.dataset.fellBack = "1";
-          img.src = live(p);
-        };
+    let videos = [], site = {};
+    let loaded = { videos: "", site: "" };   // last published JSON, to know what changed
+    let shas = { videos: null, site: null };  // GitHub versions, to catch edits made elsewhere
+    const pendingImages = new Map();          // "/thumbnails/x.jpg" -> data URL, uploaded on Publish
+    const remoteImages = new Map();           // thumbnails fetched through GitHub when not on the site yet
+    let selected = -1;
 
-        return h("div", { className: "wrap" },
-          h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
-          items.map((v, i) => {
-            const credits = (v.credits || []).filter(c => c && (c.role || c.name));
-            const meta = (v.details || []).filter(d => d && String(d.value || "").trim());
-            const client = meta.filter(d => d.thumb).map(d => d.value).join(" · ");
-            return h("div", { className: "item" + (v.hidden ? " hidden" : ""), key: i },
-              v.hidden ? h("span", { className: "badge" }, "Hidden on live site") : null,
-              h("div", { className: "thumb" },
-                v.thumb ? h("img", { src: asset(v.thumb), onError: e => fallBack(e, v.thumb), style: { objectPosition: "50% " + ({ Top: 0, Upper: 25, Center: 50, Lower: 75, Bottom: 100 }[v.crop] ?? 50) + "%" } }) : h("div", { className: "empty" }, "No thumbnail yet"),
-                h("div", { className: "ov" },
-                  h("p", { className: "t" }, v.title || "Untitled"),
-                  client ? h("p", { className: "c" }, client) : null
-                )
-              ),
-              h("div", { className: "info" + (credits.length ? "" : " solo") },
-                h("div", null,
-                  h("h2", null, v.title || "Untitled"),
-                  meta.length ? h("ul", { className: "meta" }, meta.map((d, j) =>
-                    h("li", { key: j }, d.label ? h("span", { className: "label" }, d.label + ":") : null, d.value))) : null,
-                  v.description ? h("p", { className: "desc" }, v.description) : null
-                ),
-                credits.length ? h("div", null,
-                  h("h3", null, "Credits"),
-                  h("dl", null, credits.flatMap((c, j) => [
-                    h("dt", { key: "r" + j }, c.role),
-                    h("dd", { key: "n" + j }, c.name)
-                  ]))
-                ) : null
-              )
-            );
-          })
-        );
+    // ---------- helpers ----------
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const slugify = (s) => String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const clone = (o) => JSON.parse(JSON.stringify(o));
+    const cropOf = (v) => { const n = Number(v.crop); return v.crop !== "" && v.crop != null && Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : (CROPS[v.crop] ?? 50); };
+    const thumbText = (v) => (v.details || []).filter((d) => d && d.thumb && String(d.value || "").trim()).map((d) => d.value).join(" · ");
+    const toB64 = (str) => { const b = new TextEncoder().encode(str); let s = ""; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(s); };
+    const fromB64 = (b64) => new TextDecoder().decode(Uint8Array.from(atob(String(b64).replace(/\n/g, "")), (c) => c.charCodeAt(0)));
+    const serialize = (o) => JSON.stringify(o, null, 2) + "\n";
+
+    function toast(text, ms = 3500) {
+      $("toast").textContent = text; $("toast").hidden = false;
+      clearTimeout(toast.t); toast.t = setTimeout(() => { $("toast").hidden = true; }, ms);
+    }
+
+    async function token() {
+      const user = identity && identity.currentUser();
+      if (!user) throw new Error("You are logged out. Log in again.");
+      return user.jwt();
+    }
+
+    // Demo mode for testing on a local copy (localhost/admin/?demo): reads the local files, saves nothing.
+    const DEMO = location.hostname === "localhost" && new URLSearchParams(location.search).has("demo");
+
+    async function gitGet(path) {
+      if (DEMO) {
+        const res = await fetch("/" + path, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Couldn’t read ${path} (${res.status})`);
+        const buf = new Uint8Array(await res.arrayBuffer()); let bin = "";
+        for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+        return { content: btoa(bin), sha: "demo" };
+      }
+      const res = await fetch(`${GIT}${path}?ref=${BRANCH}`, { headers: { Authorization: "Bearer " + (await token()) }, cache: "no-store" });
+      if (!res.ok) throw new Error(`Couldn’t read ${path} (${res.status})`);
+      return res.json();
+    }
+
+    async function gitPut(path, base64, sha, message) {
+      if (DEMO) { console.info("[demo] would save", path, "-", message); return "demo"; }
+      const res = await fetch(GIT + path, {
+        method: "PUT",
+        headers: { Authorization: "Bearer " + (await token()), "Content-Type": "application/json" },
+        body: JSON.stringify({ message, content: base64, branch: BRANCH, ...(sha ? { sha } : {}) }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw Object.assign(new Error(data.message || `Saving ${path} failed (${res.status})`), { status: res.status });
+      return data.content && data.content.sha;
+    }
+
+    // ---------- state ----------
+    const dirtyVideos = () => serialize({ videos }) !== loaded.videos;
+    const dirtySite = () => serialize(site) !== loaded.site;
+    const isDirty = () => dirtyVideos() || dirtySite();
+
+    function setStatus(text, kind = "") {
+      $("status").textContent = text;
+      $("status").className = "status " + kind;
+    }
+
+    function changed() {
+      const dirty = isDirty();
+      $("publishBtn").disabled = !dirty;
+      $("discardBtn").disabled = !dirty;
+      setStatus(dirty ? "Unsaved changes" : "All changes published", dirty ? "dirty" : "");
+      $("videoCount").textContent = `(${videos.length})`;
+      schedulePreview();
+    }
+
+    // ---------- images ----------
+    function thumbSrc(path) {
+      if (!path) return "";
+      return pendingImages.get(path) || remoteImages.get(path) || path;
+    }
+
+    // A thumbnail published moments ago (or saved to the test copy) may not be on the site yet: fetch it from GitHub.
+    async function rescueImage(img, path) {
+      if (!path || !path.startsWith("/") || remoteImages.has(path) || img.dataset.rescued) return;
+      img.dataset.rescued = "1";
+      try {
+        const file = await gitGet(path.slice(1));
+        const type = path.endsWith(".png") ? "image/png" : path.endsWith(".webp") ? "image/webp" : "image/jpeg";
+        remoteImages.set(path, `data:${type};base64,${String(file.content).replace(/\n/g, "")}`);
+        document.querySelectorAll(`img[data-path="${CSS.escape(path)}"]`).forEach((el) => { el.src = remoteImages.get(path); });
+      } catch { /* leave it broken; the card still works */ }
+    }
+    document.addEventListener("error", (e) => {
+      const img = e.target;
+      if (img.tagName === "IMG" && img.dataset.path) rescueImage(img, img.dataset.path);
+    }, true);
+
+    // Any image -> JPEG at most 1920 px wide (keeps the repo and the site fast)
+    function toJpeg(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const k = Math.min(1, 1920 / img.width);
+          const c = document.createElement("canvas");
+          c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "#000"; ctx.fillRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL("image/jpeg", 0.82));
+        };
+        img.onerror = () => reject(new Error("That file couldn’t be read as an image."));
+        img.src = src;
+      });
+    }
+
+    function newThumbPath(v) {
+      return `/thumbnails/${slugify(v.title) || "video"}-${Date.now().toString(36)}.jpg`;
+    }
+
+    async function setThumb(v, dataUrl) {
+      const jpeg = await toJpeg(dataUrl);
+      const path = newThumbPath(v);
+      pendingImages.set(path, jpeg);
+      v.thumb = path;
+      v.crop = 50;
+    }
+
+    // ---------- grid ----------
+    function cardHTML(v, i) {
+      const badges = [
+        v.hidden ? '<span class="badge">Hidden</span>' : "",
+        !String(v.url || "").trim() ? '<span class="badge warn">No video link</span>' : "",
+        !v.thumb ? '<span class="badge warn">No thumbnail</span>' : "",
+      ].join("");
+      const sub = thumbText(v);
+      return `
+        ${v.thumb ? `<img data-path="${esc(v.thumb)}" src="${esc(thumbSrc(v.thumb))}" alt="" style="object-position:50% ${cropOf(v)}%">` : ""}
+        <div class="badges">${badges}</div>
+        <span class="num">${i + 1}</span>
+        <div class="overlay">
+          <p class="ctitle">${esc(v.title || "Untitled")}</p>
+          ${sub ? `<p class="cclient">${esc(sub)}</p>` : ""}
+        </div>`;
+    }
+
+    function renderGrid() {
+      $("vgrid").innerHTML = videos.map((v, i) => `
+        <div class="vcard${i === selected ? " selected" : ""}${v.hidden ? " is-hidden" : ""}" draggable="true" data-i="${i}" tabindex="0"
+             aria-label="${esc(v.title || "Untitled")}">${cardHTML(v, i)}</div>`).join("");
+    }
+
+    function refreshCard(i) {
+      const el = $("vgrid").querySelector(`.vcard[data-i="${i}"]`);
+      if (!el) return renderGrid();
+      const v = videos[i];
+      el.className = `vcard${i === selected ? " selected" : ""}${v.hidden ? " is-hidden" : ""}`;
+      el.innerHTML = cardHTML(v, i);
+    }
+
+    function select(i) {
+      selected = i;
+      renderGrid();
+      renderPanel();
+    }
+
+    $("vgrid").addEventListener("click", (e) => {
+      const card = e.target.closest(".vcard");
+      if (card) select(+card.dataset.i);
+    });
+    $("vgrid").addEventListener("keydown", (e) => {
+      const card = e.target.closest(".vcard");
+      if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); select(+card.dataset.i); }
+    });
+
+    // Drag to reorder: drop on the left or right half of a card to land before or after it
+    let dragFrom = -1;
+    $("vgrid").addEventListener("dragstart", (e) => {
+      const card = e.target.closest(".vcard");
+      if (!card) return;
+      dragFrom = +card.dataset.i;
+      card.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", String(dragFrom));
+    });
+    const clearDropMarks = () => $("vgrid").querySelectorAll(".drag-before,.drag-after").forEach((el) => el.classList.remove("drag-before", "drag-after"));
+    $("vgrid").addEventListener("dragover", (e) => {
+      const card = e.target.closest(".vcard");
+      if (!card || dragFrom < 0) return;
+      e.preventDefault();
+      clearDropMarks();
+      const r = card.getBoundingClientRect();
+      card.classList.add(e.clientX < r.left + r.width / 2 ? "drag-before" : "drag-after");
+    });
+    $("vgrid").addEventListener("dragleave", (e) => { if (!e.relatedTarget || !$("vgrid").contains(e.relatedTarget)) clearDropMarks(); });
+    $("vgrid").addEventListener("drop", (e) => {
+      const card = e.target.closest(".vcard");
+      if (!card || dragFrom < 0) return;
+      e.preventDefault();
+      const r = card.getBoundingClientRect();
+      let to = +card.dataset.i + (e.clientX < r.left + r.width / 2 ? 0 : 1);
+      move(dragFrom, to > dragFrom ? to - 1 : to);
+    });
+    $("vgrid").addEventListener("dragend", () => { dragFrom = -1; clearDropMarks(); $("vgrid").querySelectorAll(".dragging").forEach((el) => el.classList.remove("dragging")); });
+
+    function move(from, to) {
+      to = Math.max(0, Math.min(videos.length - 1, to));
+      if (from === to || from < 0) return;
+      const [v] = videos.splice(from, 1);
+      videos.splice(to, 0, v);
+      if (selected === from) selected = to;
+      else if (from < selected && to >= selected) selected--;
+      else if (from > selected && to <= selected) selected++;
+      renderGrid(); renderPanel(); changed();
+    }
+
+    // ---------- side panel ----------
+    function renderPanel() {
+      const v = videos[selected];
+      if (!v) {
+        $("panel").innerHTML = `<div class="panel-empty">Click a thumbnail to edit it,<br>or <b>Add video</b> to paste a new link.</div>`;
+        return;
+      }
+      const details = (v.details || []);
+      const credits = (v.credits || []);
+      $("panel").innerHTML = `
+        <h3>Thumbnail</h3>
+        ${v.thumb
+          ? `<div class="cropper" id="cropper"><img data-path="${esc(v.thumb)}" src="${esc(thumbSrc(v.thumb))}" alt="" style="object-position:50% ${cropOf(v)}%"><span class="crop-hint">Drag up or down to choose what shows</span></div>`
+          : `<div class="cropper empty">No thumbnail yet</div>`}
+        <div class="crop-actions">
+          <label class="btn small">Upload image<input type="file" id="thumbFile" accept="image/*" hidden></label>
+          <button class="btn small ghost" type="button" id="thumbFromVideo">Use the video’s thumbnail</button>
+          <span class="sub">${v.thumb ? `Crop ${Math.round(cropOf(v))}%` : ""}</span>
+        </div>
+
+        <h3>Video</h3>
+        <label class="field"><span>Title (shown on the thumbnail and in the popup)</span><input data-f="title" value="${esc(v.title)}"></label>
+        <label class="field"><span>YouTube or Vimeo link</span><input data-f="url" type="url" value="${esc(v.url)}" placeholder="https://vimeo.com/…"></label>
+
+        <h3>Details <span>Under the title in the popup</span></h3>
+        <div class="rows">
+          ${details.map((d, j) => `
+            <div class="row detail">
+              <input data-d="${j}" data-k="label" value="${esc(d.label)}" placeholder="Label (optional)" aria-label="Detail label">
+              <input data-d="${j}" data-k="value" value="${esc(d.value)}" placeholder="Value" aria-label="Detail value">
+              <label class="onthumb" title="Also show under the title on the thumbnail"><input type="checkbox" data-d="${j}" data-k="thumb" ${d.thumb ? "checked" : ""}>On thumbnail</label>
+              <div class="tools">
+                <button class="icon-btn" type="button" data-move-d="${j}" data-dir="-1" ${j === 0 ? "disabled" : ""} aria-label="Move up">↑</button>
+                <button class="icon-btn" type="button" data-move-d="${j}" data-dir="1" ${j === details.length - 1 ? "disabled" : ""} aria-label="Move down">↓</button>
+                <button class="icon-btn" type="button" data-del-d="${j}" aria-label="Remove">✕</button>
+              </div>
+            </div>`).join("")}
+        </div>
+        <button class="add-row" type="button" id="addDetail">+ Add detail (Client, Agency, Year…)</button>
+
+        <h3>Description</h3>
+        <textarea data-f="description" rows="6" placeholder="A few sentences about the project">${esc(v.description)}</textarea>
+
+        <h3>Credits</h3>
+        <div class="rows">
+          ${credits.map((c, j) => `
+            <div class="row credit">
+              <input data-c="${j}" data-k="role" value="${esc(c.role)}" placeholder="Role" aria-label="Credit role">
+              <input data-c="${j}" data-k="name" value="${esc(c.name)}" placeholder="Name" aria-label="Credit name">
+              <div class="tools">
+                <button class="icon-btn" type="button" data-move-c="${j}" data-dir="-1" ${j === 0 ? "disabled" : ""} aria-label="Move up">↑</button>
+                <button class="icon-btn" type="button" data-move-c="${j}" data-dir="1" ${j === credits.length - 1 ? "disabled" : ""} aria-label="Move down">↓</button>
+                <button class="icon-btn" type="button" data-del-c="${j}" aria-label="Remove">✕</button>
+              </div>
+            </div>`).join("")}
+        </div>
+        <button class="add-row" type="button" id="addCredit">+ Add credit</button>
+
+        <div class="panel-foot">
+          <label class="toggle"><input type="checkbox" id="hiddenToggle" ${v.hidden ? "checked" : ""}>Hide on live site</label>
+          <span class="spacer"></span>
+          <button class="btn small ghost" type="button" id="moveTop" ${selected === 0 ? "disabled" : ""}>Move to top</button>
+          <button class="btn small" type="button" id="dupBtn">Duplicate</button>
+          <button class="btn small danger" type="button" id="delBtn">Delete</button>
+        </div>`;
+      wireCropper(v);
+    }
+
+    // Typing updates the card immediately; structural changes re-render the panel
+    $("panel").addEventListener("input", (e) => {
+      const v = videos[selected]; if (!v) return;
+      const el = e.target;
+      if (el.dataset.f) v[el.dataset.f] = el.value;
+      else if (el.dataset.d != null) v.details[+el.dataset.d][el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+      else if (el.dataset.c != null) v.credits[+el.dataset.c][el.dataset.k] = el.value;
+      else if (el.id === "hiddenToggle") v.hidden = el.checked || undefined;
+      else return;
+      if (v.hidden === undefined) delete v.hidden;
+      refreshCard(selected); changed();
+    });
+    $("panel").addEventListener("change", async (e) => {
+      if (e.target.id !== "thumbFile") return;
+      const file = e.target.files[0]; if (!file) return;
+      try {
+        const reader = new FileReader();
+        const data = await new Promise((res, rej) => { reader.onload = () => res(reader.result); reader.onerror = rej; reader.readAsDataURL(file); });
+        await setThumb(videos[selected], data);
+        refreshCard(selected); renderPanel(); changed();
+      } catch (err) { toast(err.message); }
+    });
+
+    function armThenRun(btn, label, run) {
+      if (!btn.classList.contains("armed")) {
+        btn.classList.add("armed"); const was = btn.textContent; btn.textContent = label;
+        setTimeout(() => { if (btn.isConnected) { btn.classList.remove("armed"); btn.textContent = was; } }, 3500);
+        return;
+      }
+      run();
+    }
+
+    $("panel").addEventListener("click", async (e) => {
+      const v = videos[selected]; if (!v) return;
+      const t = e.target.closest("button"); if (!t) return;
+      const swap = (list, j, dir) => { const k = j + dir; if (k < 0 || k >= list.length) return; [list[j], list[k]] = [list[k], list[j]]; };
+      if (t.id === "addDetail") (v.details ||= []).push({ label: "", value: "", thumb: false });
+      else if (t.id === "addCredit") (v.credits ||= []).push({ role: "", name: "" });
+      else if (t.dataset.delD != null) v.details.splice(+t.dataset.delD, 1);
+      else if (t.dataset.delC != null) v.credits.splice(+t.dataset.delC, 1);
+      else if (t.dataset.moveD != null) swap(v.details, +t.dataset.moveD, +t.dataset.dir);
+      else if (t.dataset.moveC != null) swap(v.credits, +t.dataset.moveC, +t.dataset.dir);
+      else if (t.id === "moveTop") return move(selected, 0);
+      else if (t.id === "dupBtn") {
+        const copy = clone(v); copy.title = (copy.title || "Untitled") + " (copy)"; copy.hidden = true;
+        videos.splice(selected + 1, 0, copy); selected++;
+        renderGrid(); renderPanel(); changed(); toast("Duplicated. The copy is hidden until you untick “Hide on live site”.");
+        return;
+      } else if (t.id === "delBtn") {
+        return armThenRun(t, "Click again to delete", () => {
+          videos.splice(selected, 1); selected = Math.min(selected, videos.length - 1);
+          renderGrid(); renderPanel(); changed();
+        });
+      } else if (t.id === "thumbFromVideo") {
+        if (!String(v.url || "").trim()) return toast("Add the video link first.");
+        t.disabled = true; t.textContent = "Fetching…";
+        try {
+          const info = await videoInfo(v.url);
+          if (!info.thumbnail) throw new Error("That video doesn’t have a thumbnail to use.");
+          await setThumb(v, info.thumbnail);
+          refreshCard(selected); renderPanel(); changed();
+        } catch (err) { toast(err.message); t.disabled = false; t.textContent = "Use the video’s thumbnail"; }
+        return;
+      } else return;
+      const focusAdd = t.id === "addDetail" || t.id === "addCredit";
+      refreshCard(selected); renderPanel(); changed();
+      if (focusAdd) {
+        const inputs = $("panel").querySelectorAll(t.id === "addDetail" ? "[data-d][data-k='label']" : "[data-c][data-k='role']");
+        inputs[inputs.length - 1]?.focus();
       }
     });
 
-    CMS.registerPreviewTemplate("videos", VideosPreview);
+    // Drag the image up or down inside the 2.40:1 frame to set the crop
+    function wireCropper(v) {
+      const box = $("cropper"); if (!box) return;
+      const img = box.querySelector("img");
+      let startY = 0, startCrop = 0, dragging = false;
+      box.addEventListener("pointerdown", (e) => {
+        dragging = true; startY = e.clientY; startCrop = cropOf(v);
+        box.setPointerCapture(e.pointerId);
+      });
+      box.addEventListener("pointermove", (e) => {
+        if (!dragging) return;
+        // Dragging the picture down reveals more of its top, like moving a print under a mat
+        const hidden = Math.max(1, box.clientWidth * (img.naturalHeight / Math.max(1, img.naturalWidth)) - box.clientHeight);
+        const next = Math.min(100, Math.max(0, startCrop - ((e.clientY - startY) / hidden) * 100));
+        v.crop = Math.round(next);
+        img.style.objectPosition = `50% ${v.crop}%`;
+        $("panel").querySelector(".crop-actions .sub").textContent = `Crop ${v.crop}%`;
+        refreshCard(selected);
+      });
+      const end = () => { if (dragging) { dragging = false; changed(); } };
+      box.addEventListener("pointerup", end);
+      box.addEventListener("pointercancel", end);
+      box.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+        e.preventDefault();
+        v.crop = Math.min(100, Math.max(0, Math.round(cropOf(v) + (e.key === "ArrowUp" ? -5 : 5))));
+        img.style.objectPosition = `50% ${v.crop}%`; refreshCard(selected); changed();
+      });
+      box.tabIndex = 0;
+      box.setAttribute("aria-label", "Thumbnail crop: drag, or use the up and down arrow keys");
+    }
+
+    // ---------- add a video from a link ----------
+    async function videoInfo(url) {
+      const res = await fetch(`/.netlify/functions/video-info?url=${encodeURIComponent(url)}`, { headers: { Authorization: "Bearer " + (await token()) } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Couldn’t look up that link.");
+      return data;
+    }
+
+    $("addBtn").addEventListener("click", () => { $("addBox").hidden = false; $("addUrl").value = ""; $("addUrl").focus(); });
+    $("addCancel").addEventListener("click", () => { $("addBox").hidden = true; });
+    $("addBox").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const url = $("addUrl").value.trim();
+      $("addGo").disabled = true; $("addGo").textContent = "Looking it up…";
+      try {
+        const info = await videoInfo(url);
+        const v = {
+          title: info.title || "", details: info.year ? [{ label: "Year", value: info.year, thumb: false }] : [],
+          url, thumb: "", crop: 50, description: info.description || "", credits: [],
+        };
+        if (info.thumbnail) await setThumb(v, info.thumbnail);
+        videos.unshift(v); selected = 0;
+        $("addBox").hidden = true;
+        renderGrid(); renderPanel(); changed();
+        toast("Added to the top. Check the details, then Publish.");
+      } catch (err) { toast(err.message, 5000); }
+      finally { $("addGo").disabled = false; $("addGo").textContent = "Add"; }
+    });
+
+    // ---------- homepage ----------
+    function renderSite() {
+      document.querySelectorAll("[data-site]").forEach((el) => { el.value = site[el.dataset.site] ?? ""; });
+    }
+    $("siteForm").addEventListener("input", (e) => {
+      const k = e.target.dataset.site; if (!k) return;
+      site[k] = e.target.value; changed();
+    });
+
+    // ---------- tabs ----------
+    $("tabs").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-tab]"); if (!b) return;
+      document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
+      $("videosView").hidden = b.dataset.tab !== "videos";
+      $("homepageView").hidden = b.dataset.tab !== "homepage";
+    });
+
+    // ---------- site preview: the real homepage, fed the unsaved draft ----------
+    function draftForPreview() {
+      return {
+        type: "tb-draft",
+        site: clone(site),
+        videos: videos.map((v) => ({ ...clone(v), thumb: thumbSrc(v.thumb) })),
+      };
+    }
+    function sendPreview() {
+      if ($("preview").hidden) return;
+      try { $("previewFrame").contentWindow.postMessage(draftForPreview(), location.origin); } catch {}
+    }
+    function schedulePreview() { clearTimeout(schedulePreview.t); schedulePreview.t = setTimeout(sendPreview, 250); }
+    addEventListener("message", (e) => { if (e.origin === location.origin && e.data && e.data.type === "tb-draft-ready") sendPreview(); });
+
+    $("previewBtn").addEventListener("click", () => {
+      $("preview").hidden = false;
+      $("previewFrame").src = "/?draft-preview=1";
+    });
+    $("previewClose").addEventListener("click", () => { $("preview").hidden = true; $("previewFrame").src = "about:blank"; });
+    document.querySelectorAll("[data-width]").forEach((b) => b.addEventListener("click", () => {
+      document.querySelectorAll("[data-width]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      $("previewStage").classList.toggle("phone", b.dataset.width === "phone");
+    }));
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("preview").hidden) $("previewClose").click(); });
+
+    // ---------- load / publish / discard ----------
+    async function load() {
+      setStatus("Loading…");
+      const [vf, sf] = await Promise.all([gitGet("data/videos.json"), gitGet("data/site.json")]);
+      shas = { videos: vf.sha, site: sf.sha };
+      const vjson = JSON.parse(fromB64(vf.content));
+      const sjson = JSON.parse(fromB64(sf.content));
+      videos = vjson.videos || [];
+      site = sjson;
+      loaded = { videos: serialize({ videos }), site: serialize(site) };
+      pendingImages.clear();
+      selected = Math.min(selected, videos.length - 1);
+      renderGrid(); renderPanel(); renderSite(); changed();
+    }
+
+    $("publishBtn").addEventListener("click", async () => {
+      const btn = $("publishBtn");
+      const missing = videos.filter((v) => !v.hidden && !String(v.url || "").trim()).length;
+      if (missing && !confirm(`${missing} visible video${missing === 1 ? " has" : "s have"} no video link and won’t appear on the site. Publish anyway?`)) return;
+      btn.disabled = true; setStatus("Publishing…");
+      try {
+        // Stop if someone (or an old dashboard tab) changed the content since this editor loaded it
+        const [vNow, sNow] = await Promise.all([gitGet("data/videos.json"), gitGet("data/site.json")]);
+        if ((dirtyVideos() && vNow.sha !== shas.videos) || (dirtySite() && sNow.sha !== shas.site)) {
+          setStatus("Not published", "error");
+          alert("Your content was changed somewhere else since this editor opened it (another tab or the old dashboard).\n\nNothing was overwritten. Copy anything you need, then reload this page to get the latest version.");
+          btn.disabled = false;
+          return;
+        }
+        const used = new Set(videos.map((v) => v.thumb));
+        for (const [path, dataUrl] of pendingImages) {
+          if (!used.has(path)) continue;
+          setStatus("Uploading thumbnails…");
+          await gitPut(path.slice(1), dataUrl.split(",")[1], null, `Editor: add thumbnail ${path.split("/").pop()}`);
+          remoteImages.set(path, dataUrl);
+        }
+        pendingImages.clear();
+        if (dirtyVideos()) {
+          shas.videos = await gitPut("data/videos.json", toB64(serialize({ videos })), shas.videos, "Editor: update videos");
+          loaded.videos = serialize({ videos });
+        }
+        if (dirtySite()) {
+          shas.site = await gitPut("data/site.json", toB64(serialize(site)), shas.site, "Editor: update homepage text");
+          loaded.site = serialize(site);
+        }
+        changed();
+        setStatus(LIVE ? "Published · live in about 30 seconds" : "Saved to the test copy", "ok");
+      } catch (err) {
+        setStatus("Not published: " + err.message, "error");
+        btn.disabled = false;
+      }
+    });
+
+    $("discardBtn").addEventListener("click", (e) => armThenRun(e.target, "Click again to discard", async () => {
+      videos = JSON.parse(loaded.videos).videos; site = JSON.parse(loaded.site);
+      pendingImages.clear(); selected = -1;
+      renderGrid(); renderPanel(); renderSite(); changed();
+      e.target.classList.remove("armed"); e.target.textContent = "Discard changes";
+    }));
+
+    addEventListener("beforeunload", (e) => { if (isDirty()) e.preventDefault(); });
+
+    // ---------- login ----------
+    function showLogin() {
+      $("loadingView").hidden = true; $("loginView").hidden = false;
+      $("videosView").hidden = true; $("homepageView").hidden = true;
+      $("topActions").hidden = true; $("tabs").hidden = true; $("testMode").hidden = true;
+    }
+    async function showEditor() {
+      $("loginView").hidden = true; $("loadingView").hidden = false;
+      try {
+        await load();
+        $("loadingView").hidden = true;
+        $("videosView").hidden = false; $("topActions").hidden = false; $("tabs").hidden = false;
+        $("testMode").hidden = LIVE;
+      } catch (err) {
+        $("loadingView").textContent = "Couldn’t load your content: " + err.message;
+      }
+    }
+    $("loginBtn").addEventListener("click", () => identity.open("login"));
+    $("logoutBtn").addEventListener("click", () => {
+      if (isDirty() && !confirm("You have unpublished changes. Log out anyway?")) return;
+      identity.logout();
+    });
+    if (DEMO) { showEditor().then(() => { $("testMode").hidden = false; $("testMode").textContent = "Demo on a local copy: nothing is saved."; }); return; }
+    if (!identity) { $("loadingView").textContent = "The login service could not load. Reload the page."; return; }
+    identity.on("init", (user) => (user ? showEditor() : showLogin()));
+    identity.on("login", () => { identity.close(); showEditor(); });
+    identity.on("logout", showLogin);
+  })();
   </script>
 </body>
 </html>
