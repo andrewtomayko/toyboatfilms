@@ -183,6 +183,14 @@
   .chip { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
   .chip.est { border-color: var(--accent); color: var(--accent); }
   .list-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .filters input[type="search"] { flex: 1 1 260px; }
+  .filters select { width: auto; flex: 0 1 180px; }
+  .list-summary { margin: 0 0 12px; color: var(--muted); font-size: 13px; min-height: 1.2em; }
+  .list-summary b { color: var(--ink); font-family: var(--font-num); font-weight: 600; }
+  .ledger tr.year-row td { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); font-weight: 700; padding-block: 9px; }
+  .ledger tr.year-row td .sub { font-weight: 500; margin-left: 10px; }
+  .ledger tbody tr.year-row:hover { background: none; }
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -220,6 +228,18 @@
         <button class="btn primary" id="newBtn" type="button">New invoice</button>
       </div>
     </div>
+    <div class="filters" role="search">
+      <input type="search" id="searchBox" placeholder="Search client, job, number, line items…" aria-label="Search invoices and estimates">
+      <select id="yearFilter" aria-label="Year"><option value="">All years</option></select>
+      <select id="clientFilter" aria-label="Client"><option value="">All clients</option></select>
+      <select id="typeFilter" aria-label="Type">
+        <option value="">Invoices &amp; estimates</option>
+        <option value="invoice">Invoices only</option>
+        <option value="estimate">Estimates only</option>
+      </select>
+      <button class="btn ghost small" id="clearFilters" type="button" hidden>Clear filters</button>
+    </div>
+    <p class="list-summary" id="listSummary" aria-live="polite"></p>
     <div class="ledger">
       <table>
         <thead><tr><th>No.</th><th>Type</th><th>Date</th><th>Client · Job</th><th class="right">Total</th><th></th></tr></thead>
@@ -488,7 +508,39 @@
     await store.start();
   }
 
+  // Demo mode: only on a local copy (localhost/?demo), with made-up invoices kept in memory.
+  function demoStore() {
+    const clients = [['Harbor Coffee Co.', 'hello@harborcoffee.test'], ['Kitsap Rowing Club', 'info@kitsaprowing.test'], ['North Light Apparel', 'team@northlight.test']];
+    const jobs = ['Brand film', 'Social cutdowns', 'Event recap', 'Product launch', 'Documentary short'];
+    let n = 2400;
+    const demo = [];
+    ['2024', '2025', '2026'].forEach((y, yi) => clients.forEach(([name, email], ci) => [0, 1].forEach((k) => {
+      demo.push({
+        id: `demo-${y}-${ci}-${k}`, docType: k && ci === 1 ? 'estimate' : 'invoice', invoiceNumber: String(n++),
+        invoiceDate: `${y}-${String(3 + ci * 3 + k).padStart(2, '0')}-1${k}`, ...DEFAULT_COMPANY,
+        clientName: name, clientEmail: email, jobName: jobs[(yi + ci + k) % jobs.length], jobDescription: '',
+        terms: 'Payment due within 30 days.', productionFee: 0, taxRate: 0, discount: 0, payments: [],
+        lineItems: [{ category: 'Production', description: 'Shoot day', rate: 1200 + 100 * ci, hours: 1 + k, unit: 'day', notes: '' },
+                    { category: 'Post-Production', description: 'Edit and color', rate: 95, hours: 10 + 5 * yi, unit: 'hour', notes: 'Two rounds of revisions' }],
+      });
+    })));
+    return {
+      shared: false,
+      async start() { invoices = demo; renderList(); },
+      async saveInvoice(inv) { const i = invoices.findIndex((x) => x.id === inv.id); if (i >= 0) invoices[i] = inv; else invoices.push(inv); renderList(); },
+      async deleteInvoice(id) { invoices = invoices.filter((x) => x.id !== id); renderList(); },
+      async saveSettings(s) { settings = { ...settings, ...s }; },
+    };
+  }
+
   function startAuth() {
+    if (location.hostname === 'localhost' && new URLSearchParams(location.search).has('demo')) {
+      $('loginView').hidden = true; $('listView').hidden = false;
+      $('storageNote').textContent = 'Demo · nothing is saved';
+      store = demoStore();
+      store.start();
+      return;
+    }
     if (!identity) {
       $('loadingState').textContent = 'The login service could not load. Check your connection and reload the page.';
       return;
@@ -548,11 +600,81 @@
     $('loadingState').textContent = 'Invoices could not be loaded (' + (e?.code || 'error') + '). Reload the page to try again.';
   }
 
+  // Search and filters (year, client, type). Results are grouped by year, newest first.
+  const yearOf = (inv) => (/^\d{4}/.exec(inv.invoiceDate || '') || ['No date'])[0];
+  const clientKey = (inv) => String(inv.clientName || '').trim().toLowerCase();
+
+  function searchText(inv) {
+    return [
+      inv.invoiceNumber, inv.clientName, inv.clientEmail, inv.jobName, inv.jobDescription, kindOf(inv),
+      ...(inv.lineItems || []).flatMap((it) => [it.category, it.description, it.notes]),
+      ...(inv.payments || []).map((pm) => pm.note),
+    ].filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function fillSelect(sel, options, allLabel) {
+    const keep = sel.value;
+    sel.innerHTML = `<option value="">${allLabel}</option>` + options.map(([v, label]) => `<option value="${esc(v)}">${esc(label)}</option>`).join('');
+    sel.value = options.some(([v]) => v === keep) ? keep : '';
+  }
+
+  function refreshFilterOptions() {
+    const years = [...new Set(invoices.map(yearOf))].sort((a, b) => b.localeCompare(a));
+    fillSelect($('yearFilter'), years.map((y) => [y, y]), 'All years');
+    const clients = knownClients().sort((a, b) => a.name.localeCompare(b.name));
+    fillSelect($('clientFilter'), clients.map((c) => [c.name.toLowerCase(), c.name]), 'All clients');
+  }
+
+  function filteredInvoices() {
+    const words = $('searchBox').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const year = $('yearFilter').value, client = $('clientFilter').value, type = $('typeFilter').value;
+    return invoices.filter((inv) =>
+      (!year || yearOf(inv) === year) &&
+      (!client || clientKey(inv) === client) &&
+      (!type || (type === 'estimate') === isEstimate(inv)) &&
+      (!words.length || (() => { const t = searchText(inv); return words.every((w) => t.includes(w)); })()));
+  }
+
+  const countLabel = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  function summarize(list) {
+    const inv = list.filter((i) => !isEstimate(i)), est = list.filter(isEstimate);
+    const billed = inv.reduce((sum, i) => sum + totals(i).total, 0);
+    return { invoices: inv.length, estimates: est.length, billed };
+  }
+  // "5 invoices · $16,225.00 · 1 estimate", leaving out whichever part is zero
+  function summaryText(sum, moneyHTML = money) {
+    const parts = [];
+    if (sum.invoices || !sum.estimates) parts.push(`${countLabel(sum.invoices, 'invoice')} · ${moneyHTML(sum.billed)}`);
+    if (sum.estimates) parts.push(countLabel(sum.estimates, 'estimate'));
+    return parts.join(' · ');
+  }
+
   function renderList() {
     $('loadingState').hidden = true;
-    const rows = [...invoices].sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '') || String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
+    refreshFilterOptions();
+    const filtering = Boolean($('searchBox').value.trim() || $('yearFilter').value || $('clientFilter').value || $('typeFilter').value);
+    $('clearFilters').hidden = !filtering;
+
+    const rows = filteredInvoices().sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '') || String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
+    const all = summarize(rows);
+    $('listSummary').innerHTML = invoices.length
+      ? `${filtering ? 'Showing ' : ''}${summaryText(all, (m) => `<b>${money(m)}</b> billed`)}${filtering ? ` <span>(of ${invoices.length} total)</span>` : ''}`
+      : '';
+
     $('emptyState').hidden = rows.length > 0;
-    $('invoiceRows').innerHTML = rows.map((inv) => `
+    $('emptyState').innerHTML = invoices.length
+      ? '<strong>No matches</strong>Try a different search, or clear the filters.'
+      : '<strong>No invoices or estimates yet</strong>Choose “New invoice” or “New estimate” to write your first one. It is saved here once you press Save.';
+
+    let html = '', lastYear = null;
+    rows.forEach((inv) => {
+      const y = yearOf(inv);
+      if (y !== lastYear) {
+        const sumY = summarize(rows.filter((r) => yearOf(r) === y));
+        html += `<tr class="year-row"><td colspan="6">${esc(y)}<span class="sub">${summaryText(sumY)}</span></td></tr>`;
+        lastYear = y;
+      }
+      html += `
       <tr>
         <td class="num">${esc(inv.invoiceNumber)}</td>
         <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span></td>
@@ -565,8 +687,18 @@
           <button class="btn small" type="button" data-copy="${esc(inv.id)}">Duplicate</button>
           <button class="btn small danger" type="button" data-del="${esc(inv.id)}">Delete</button>
         </div></td>
-      </tr>`).join('');
+      </tr>`;
+    });
+    $('invoiceRows').innerHTML = html;
   }
+
+  ['searchBox', 'yearFilter', 'clientFilter', 'typeFilter'].forEach((id) =>
+    $(id).addEventListener(id === 'searchBox' ? 'input' : 'change', renderList));
+  $('clearFilters').addEventListener('click', () => {
+    $('searchBox').value = ''; $('yearFilter').value = ''; $('clientFilter').value = ''; $('typeFilter').value = '';
+    renderList();
+    $('searchBox').focus();
+  });
 
   function listBalance(inv) {
     const t = totals(inv);
