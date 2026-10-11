@@ -329,12 +329,17 @@
       ]
     },
     {
-      "title": "Sea Change: By the Wind",
+      "title": "Sea Change",
       "details": [
         {
           "label": "Year",
           "value": "2016",
           "thumb": false
+        },
+        {
+          "label": "",
+          "value": "By the Wind",
+          "thumb": true
         }
       ],
       "url": "https://vimeo.com/211568809",
