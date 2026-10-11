@@ -348,7 +348,7 @@
       ]
     },
     {
-      "title": "One Last Adventure",
+      "title": "sailing to a sea bird sanctuary",
       "details": [
         {
           "label": "",
@@ -357,7 +357,7 @@
         },
         {
           "label": "Year",
-          "value": "2026",
+          "value": "2025",
           "thumb": false
         }
       ],
@@ -372,7 +372,11 @@
         },
         {
           "role": "With",
-          "name": "Chad"
+          "name": "Chad Brigman"
+        },
+        {
+          "role": "Thank you",
+          "name": "Konami"
         }
       ],
       "tags": [
