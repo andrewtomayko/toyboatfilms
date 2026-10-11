@@ -6,5 +6,31 @@
   "cta": "PLAN YOUR PROJECT",
   "headerCta": "BOOK A CALL",
   "email": "",
-  "instagram": ""
+  "instagram": "",
+  "tags": [
+    {
+      "id": "commercial",
+      "label": "Commercial"
+    },
+    {
+      "id": "brand",
+      "label": "Brand"
+    },
+    {
+      "id": "documentary",
+      "label": "Documentary"
+    },
+    {
+      "id": "music-video",
+      "label": "Music Video"
+    },
+    {
+      "id": "behind-the-scenes",
+      "label": "Behind the Scenes"
+    },
+    {
+      "id": "short-film",
+      "label": "Short Film"
+    }
+  ]
 }

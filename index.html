@@ -298,6 +298,37 @@
       .logoTrack{ gap:40px; padding-right:40px; }
     }
 
+    /* ---------- WORK FILTERS ---------- */
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:6px 26px;
+      padding:24px var(--sidePadding) 22px;
+    }
+    .filters[hidden]{ display:none; }
+    .filters button{
+      padding:6px 0;
+      border:0;
+      border-bottom:1px solid transparent;
+      background:none;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:color .2s ease, border-color .2s ease;
+    }
+    .filters button:hover{ color:var(--text); }
+    .filters button[aria-pressed="true"]{ color:var(--text); border-bottom-color:var(--text); }
+    @media (max-width: 800px){
+      /* phones: one swipeable row instead of wrapping */
+      .filters{ flex-wrap:nowrap; justify-content:flex-start; overflow-x:auto; gap:22px; scrollbar-width:none; }
+      .filters::-webkit-scrollbar{ display:none; }
+    }
+
     /* ---------- WORK GRID (EDGE TO EDGE) ---------- */
     .grid{
       display:grid;
@@ -777,6 +808,7 @@
     <!-- WORK -->
     <main>
       <h2 class="sr-only">Work</h2>
+      <nav class="filters" id="filters" aria-label="Filter work" hidden></nav>
       <section class="grid" id="videoGrid" aria-label="Work"></section>
     </main>
 
@@ -865,7 +897,10 @@
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xbdknpvr";
 
     const page = document.getElementById("page");
-    let videos = [];
+    let videos = [];        // what the grid shows right now (all videos, or the active filter)
+    let allVideos = [];     // every published video
+    let tagList = [];       // filter tags from site.json: [{ id, label }]
+    let activeFilter = new URLSearchParams(location.search).get("filter") || "";
 
     async function loadJSON(path) {
       const res = await fetch(path, { cache: "no-store" });
@@ -1143,7 +1178,9 @@
     // The address bar is the source of truth, so links to a specific video can be shared
     function syncFromHash() {
       const m = location.hash.match(/^#video\/(.+)$/);
-      const i = m ? videos.findIndex(v => v.slug === decodeURIComponent(m[1])) : -1;
+      const slug = m ? decodeURIComponent(m[1]) : null;
+      if (slug && activeFilter && !videos.some(v => v.slug === slug) && allVideos.some(v => v.slug === slug)) setFilter("");
+      const i = slug ? videos.findIndex(v => v.slug === slug) : -1;
 
       if (i >= 0) {
         const wasOpen = !player.hidden;
@@ -1287,8 +1324,46 @@
       fitReel();
     }
 
+    /* ---------- FILTERS ----------
+       Tags are set per video in the editor. Each filter has its own link (?filter=music-video), and the
+       popup's next/previous stay within the active filter. */
+    const hasTag = (v, id) => (v.tags || []).includes(id);
+
+    function renderFilters() {
+      const nav = document.getElementById("filters");
+      const available = tagList.filter(t => allVideos.some(v => hasTag(v, t.id)));
+      nav.hidden = !available.length;
+      nav.innerHTML = [{ id: "", label: "All" }, ...available].map(t =>
+        `<button type="button" data-filter="${esc(t.id)}" aria-pressed="${t.id === activeFilter}">${esc(t.label)}</button>`).join("");
+      // On phones the row scrolls sideways: bring the active filter into view (without moving the page)
+      const on = nav.querySelector('[aria-pressed="true"]');
+      if (on && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
+    }
+
+    function applyFilter() {
+      if (activeFilter && !allVideos.some(v => hasTag(v, activeFilter))) activeFilter = "";
+      videos = activeFilter ? allVideos.filter(v => hasTag(v, activeFilter)) : allVideos;
+      renderFilters();
+      renderVideos();
+    }
+
+    function setFilter(id) {
+      activeFilter = id;
+      const url = new URL(location.href);
+      if (id) url.searchParams.set("filter", id); else url.searchParams.delete("filter");
+      history.replaceState(history.state, "", url);
+      applyFilter();
+    }
+
+    document.getElementById("filters").addEventListener("click", e => {
+      const b = e.target.closest("[data-filter]");
+      if (b) setFilter(b.dataset.filter);
+    });
+
     /* ---------- SITE TEXT ---------- */
     function applySite(site) {
+      tagList = Array.isArray(site.tags) ? site.tags.filter(t => t && t.id && t.label) : [];
+      if (allVideos.length) applyFilter(); else renderFilters();
       applyBanner(site);
       const set = (id, val) => { if (val) document.getElementById(id).textContent = val; };
       set("logo", site.logo);
@@ -1326,13 +1401,13 @@
       function useVideos(list) {
         const seen = new Set();
         // Videos ticked "Hide on live site" in the editor stay in the data but aren't shown
-        videos = (list || []).filter(v => v && (v.url || v.id) && !v.hidden).map((v, i) => {
+        allVideos = (list || []).filter(v => v && (v.url || v.id) && !v.hidden).map((v, i) => {
           let slug = slugify(v.title) || "video-" + (i + 1);
           while (seen.has(slug)) slug += "-" + (i + 1);
           seen.add(slug);
           return { ...v, slug };
         });
-        renderVideos();
+        applyFilter();
       }
 
       if (DRAFT_PREVIEW) {
