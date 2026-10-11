@@ -1025,10 +1025,58 @@
       document.documentElement.style.overflow = lock ? "hidden" : "";
     }
 
+    /* ---------- VISITOR STATS ----------
+       Anonymous counts for the private /stats page: visits, video opens, time in each video popup,
+       contact form use. No cookies; nothing identifies a person. Off on local copies and on devices
+       where "Don't count my visits" is switched on in /stats. */
+    const stats = (() => {
+      let off = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+      try { off = off || localStorage.getItem("tb-stats-ignore") === "1"; } catch {}
+      let watching = null; // { slug, since }
+
+      function send(event) {
+        if (off) return;
+        const body = JSON.stringify(event);
+        if (!(navigator.sendBeacon && navigator.sendBeacon("/.netlify/functions/stats", body))) {
+          fetch("/.netlify/functions/stats", { method: "POST", body, keepalive: true }).catch(() => {});
+        }
+      }
+
+      function source() {
+        const params = new URLSearchParams(location.search);
+        const tagged = (params.get("utm_source") || params.get("ref") || "").toLowerCase();
+        if (tagged) return tagged.replace(/[^a-z0-9.\-]/g, "").slice(0, 80) || "direct";
+        try {
+          const host = new URL(document.referrer).hostname.replace(/^(www|m|l|lm)\./, "");
+          return host && host !== location.hostname ? host : "direct";
+        } catch { return "direct"; }
+      }
+
+      function stopWatching() {
+        if (!watching) return;
+        const secs = Math.round((Date.now() - watching.since) / 1000);
+        if (secs >= 1) send({ t: "vt", v: watching.slug, s: Math.min(secs, 3600) });
+        watching = null;
+      }
+
+      addEventListener("pagehide", stopWatching);
+      return {
+        visit() {
+          const w = innerWidth;
+          send({ t: "pv", src: source(), dev: w < 768 ? "phone" : w < 1100 ? "tablet" : "desktop" });
+        },
+        videoOpened(slug) { stopWatching(); watching = { slug, since: Date.now() }; send({ t: "vo", v: slug }); },
+        videoClosed: stopWatching,
+        contactOpened() { send({ t: "cf" }); },
+        inquirySent() { send({ t: "cs" }); },
+      };
+    })();
+
     function showVideo(i) {
       const v = videos[i];
       if (!v) return;
       current = i;
+      stats.videoOpened(v.slug);
 
       const p = parseVideo(v);
       frame.innerHTML = p
@@ -1101,6 +1149,7 @@
         player.classList.remove("is-open");
         player.hidden = true;
         frame.innerHTML = ""; // stops playback
+        stats.videoClosed();
         current = -1;
         lockPage(false);
         if (returnFocus) returnFocus.focus({ preventScroll: true });
@@ -1129,6 +1178,7 @@
     let contactReturnFocus = null;
 
     function openContact() {
+      stats.contactOpened();
       contactReturnFocus = document.activeElement;
       contactModal.hidden = false;
       lockPage(true);
@@ -1171,6 +1221,7 @@
             form.reset();
             form.hidden = true;
             status.textContent = "Thanks — I’ll be in touch shortly.";
+            stats.inquirySent();
             setTimeout(() => {
               closeContact();
               form.hidden = false;
@@ -1237,6 +1288,7 @@
           return { ...v, slug };
         });
         renderVideos();
+        stats.visit();
         syncFromHash(); // open a shared #video/... link
       } catch (e) {
         console.error(e);
