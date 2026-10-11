@@ -1,51 +1,6 @@
 {
   "videos": [
     {
-      "title": "Fin & The Gucci Suit",
-      "details": [
-        {
-          "label": "",
-          "value": "Film essay",
-          "thumb": true
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Toy Boat",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2019",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/369708358",
-      "thumb": "/thumbnails/fin-and-the-gucci-suit.jpg",
-      "description": "On a cross-country pilgrimage, Fin confronts the idiosyncrasies of an unfamiliar world.\n\nFin & The Gucci Suit is a film essay that chronicles the real-life travels of its protagonist, Elle Fin. In the making of the film, acts of time-lapsed performance art, poetry and gypsy folk music are combined as a DIY, no-budget project intended to celebrate the vision of its contributors.",
-      "credits": [
-        {
-          "role": "A Film by",
-          "name": "Andrew Tomayko & Elle Fin"
-        },
-        {
-          "role": "Written by",
-          "name": "Caleb White"
-        },
-        {
-          "role": "Music",
-          "name": "Jon Ratliff"
-        },
-        {
-          "role": "Narration",
-          "name": "Sora Blu"
-        },
-        {
-          "role": "Featuring",
-          "name": "Mariee Sioux"
-        }
-      ]
-    },
-    {
       "url": "https://youtu.be/rCSuFcdtV54",
       "title": " R2AK 2028: For the love of the game",
       "description": "For over a decade, Race to Alaska has quietly collected a drawer full of complaints about fairness, most of them pointing to one thing: human-powered teams racing for glory while everyone else raced for $10,000. So we opened the drawer. This playful investigation follows the race organizers as they dig into the grievances and roll out a brand new prize structure. Did they solve the problem? Not exactly. But they did reorganize it, trading one set of frustrations for an entirely new one.",
@@ -586,6 +541,51 @@
         {
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "Fin & The Gucci Suit",
+      "details": [
+        {
+          "label": "",
+          "value": "Film essay",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/369708358",
+      "thumb": "/thumbnails/fin-and-the-gucci-suit.jpg",
+      "description": "On a cross-country pilgrimage, Fin confronts the idiosyncrasies of an unfamiliar world.\n\nFin & The Gucci Suit is a film essay that chronicles the real-life travels of its protagonist, Elle Fin. In the making of the film, acts of time-lapsed performance art, poetry and gypsy folk music are combined as a DIY, no-budget project intended to celebrate the vision of its contributors.",
+      "credits": [
+        {
+          "role": "A Film by",
+          "name": "Andrew Tomayko & Elle Fin"
+        },
+        {
+          "role": "Written by",
+          "name": "Caleb White"
+        },
+        {
+          "role": "Music",
+          "name": "Jon Ratliff"
+        },
+        {
+          "role": "Narration",
+          "name": "Sora Blu"
+        },
+        {
+          "role": "Featuring",
+          "name": "Mariee Sioux"
         }
       ]
     },
