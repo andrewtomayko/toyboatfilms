@@ -9,6 +9,20 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
+  <!-- Office switcher: the dashboard, invoices and stats share one login -->
+  <style>
+    .office-switch{ position:fixed; left:14px; bottom:14px; z-index:9999; display:flex; gap:2px; padding:4px;
+      background:#1b1b1b; border-radius:999px; box-shadow:0 6px 24px rgba(0,0,0,.25);
+      font:600 12px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; letter-spacing:.04em; }
+    .office-switch a{ color:#cfcfcf; text-decoration:none; padding:8px 12px; border-radius:999px; }
+    .office-switch a:hover{ color:#fff; background:#2a2a2a; }
+    .office-switch a[aria-current="page"]{ background:#f2f2f2; color:#111; }
+  </style>
+  <nav class="office-switch" aria-label="Back office">
+    <a href="/admin/" aria-current="page">Website</a>
+    <a href="/invoices/">Invoices</a>
+    <a href="/stats/">Stats</a>
+  </nav>
   <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
   <script>
     /* Live preview: shows each video the way it appears in the popup on the site */

@@ -27,6 +27,10 @@
     .btn.primary{ background:var(--text); color:var(--bg); border-color:var(--text); }
     .btn[aria-pressed="true"]{ background:var(--text); color:var(--bg); border-color:var(--text); }
     .actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .office-nav{ display:flex; gap:2px; padding:3px; border:1px solid var(--line); border-radius:999px; }
+    .office-nav a{ color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; }
+    .office-nav a:hover{ color:var(--text); }
+    .office-nav a[aria-current="page"]{ background:var(--text); color:var(--bg); }
     main{ padding:28px 0 72px; }
     .login{ max-width:440px; margin:12vh auto 0; text-align:center; border:1px solid var(--line); background:var(--surface); padding:36px 28px; }
     .login h1{ margin:0 0 8px; font-size:26px; }
@@ -73,6 +77,9 @@
   <header>
     <div class="wrap">
       <div class="brand">Toy Boat<span>Visitor stats</span></div>
+      <nav class="office-nav" aria-label="Back office">
+        <a href="/admin/">Website</a><a href="/invoices/">Invoices</a><a href="/stats/" aria-current="page">Stats</a>
+      </nav>
       <div class="actions">
         <span class="status" id="status"></span>
         <button class="btn" id="logoutBtn" type="button" hidden>Log out</button>
