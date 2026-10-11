@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Toy Boat · Classic editor</title>
+  <link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <!-- Office switcher: the dashboard, invoices and stats share one login -->
+  <style>
+    .office-switch{ position:fixed; top:9px; left:50%; transform:translateX(-50%); z-index:9999; display:flex; gap:2px; padding:4px;
+      background:#1b1b1b; border-radius:999px; box-shadow:0 6px 24px rgba(0,0,0,.25);
+      font:600 12px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; letter-spacing:.04em; }
+    .office-switch a{ color:#cfcfcf; text-decoration:none; padding:8px 12px; border-radius:999px; }
+    .office-switch a:hover{ color:#fff; background:#2a2a2a; }
+    .office-switch a[aria-current="page"]{ background:#f2f2f2; color:#111; }
+    /* Narrow windows: Decap's header has no free middle, so the switcher moves to the bottom corner */
+    @media (max-width: 900px){ .office-switch{ top:auto; bottom:14px; left:14px; transform:none; } }
+  </style>
+  <nav class="office-switch" aria-label="Back office">
+    <a href="/admin/">Website</a>
+    <a href="/admin/classic/" aria-current="page">Classic</a>
+    <a href="/invoices/">Invoices</a>
+    <a href="/stats/">Stats</a>
+  </nav>
+  <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+  <script>
+    /* Live preview: shows each video the way it appears in the popup on the site */
+    CMS.registerPreviewStyle(`
+      body{ margin:0; background:#0b0b0b; color:#f2f2f2; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+      .wrap{ padding:24px; }
+      .note{ font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#9a9a9a; margin:0 0 24px; }
+      .item{ margin:0 0 56px; }
+      .item.hidden{ opacity:.35; }
+      .badge{ display:inline-block; margin:0 0 10px; padding:4px 8px; border:1px solid #9a9a9a; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#d6d6d6; }
+      .thumb{ position:relative; aspect-ratio:2.4/1; background:#1a1a1a; overflow:hidden; }
+      .thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+      .thumb .ov{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+                  background:rgba(0,0,0,.55); text-align:center; padding:16px; opacity:0; transition:opacity .3s; }
+      .thumb:hover .ov{ opacity:1; }
+      .ov .t{ margin:0; font-size:20px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .ov .c{ margin:0; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.75); }
+      .empty{ display:flex; align-items:center; justify-content:center; height:100%; color:#666; font-size:13px; }
+      .info{ display:grid; grid-template-columns:3fr 2fr; gap:32px; padding-top:20px; }
+      .info.solo{ grid-template-columns:1fr; }
+      h2{ margin:0 0 6px; font-size:20px; letter-spacing:.06em; text-transform:uppercase; }
+      .meta{ margin:12px 0 0; padding:0; list-style:none; font-size:14px; line-height:1.5; }
+      .meta li + li{ margin-top:3px; }
+      .meta .label{ margin-right:6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
+      .desc{ margin:16px 0 0; font-size:15px; line-height:1.7; color:#d6d6d6; white-space:pre-line; }
+      h3{ margin:0 0 12px; padding-bottom:10px; border-bottom:1px solid #262626; font-size:11px; font-weight:400; letter-spacing:.14em; text-transform:uppercase; color:#9a9a9a; }
+      dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 20px; font-size:14px; }
+      dt{ color:#9a9a9a; text-transform:uppercase; letter-spacing:.1em; font-size:11px; padding-top:2px; }
+      dd{ margin:0; }
+    `, { raw: true });
+
+    const VideosPreview = createClass({
+      render() {
+        const list = this.props.entry.getIn(["data", "videos"]);
+        const items = list ? list.toJS() : [];
+        // Images uploaded in this session come from Decap; ones it hasn't loaded (e.g. added outside
+        // the editor) come back empty, so fall back to the published copy on the site.
+        const live = p => (p && p.startsWith("/") ? window.location.origin + p : p);
+        const asset = p => {
+          if (!p) return "";
+          const a = String(this.props.getAsset(p) || "");
+          return a && a !== "undefined" ? a : live(p);
+        };
+        const fallBack = (e, p) => {
+          const img = e.target;
+          if (img.dataset.fellBack) return;
+          img.dataset.fellBack = "1";
+          img.src = live(p);
+        };
+
+        return h("div", { className: "wrap" },
+          h("p", { className: "note" }, "Preview · hover a thumbnail to see its title"),
+          items.map((v, i) => {
+            const credits = (v.credits || []).filter(c => c && (c.role || c.name));
+            const meta = (v.details || []).filter(d => d && String(d.value || "").trim());
+            const client = meta.filter(d => d.thumb).map(d => d.value).join(" · ");
+            return h("div", { className: "item" + (v.hidden ? " hidden" : ""), key: i },
+              v.hidden ? h("span", { className: "badge" }, "Hidden on live site") : null,
+              h("div", { className: "thumb" },
+                v.thumb ? h("img", { src: asset(v.thumb), onError: e => fallBack(e, v.thumb), style: { objectPosition: "50% " + ({ Top: 0, Upper: 25, Center: 50, Lower: 75, Bottom: 100 }[v.crop] ?? 50) + "%" } }) : h("div", { className: "empty" }, "No thumbnail yet"),
+                h("div", { className: "ov" },
+                  h("p", { className: "t" }, v.title || "Untitled"),
+                  client ? h("p", { className: "c" }, client) : null
+                )
+              ),
+              h("div", { className: "info" + (credits.length ? "" : " solo") },
+                h("div", null,
+                  h("h2", null, v.title || "Untitled"),
+                  meta.length ? h("ul", { className: "meta" }, meta.map((d, j) =>
+                    h("li", { key: j }, d.label ? h("span", { className: "label" }, d.label + ":") : null, d.value))) : null,
+                  v.description ? h("p", { className: "desc" }, v.description) : null
+                ),
+                credits.length ? h("div", null,
+                  h("h3", null, "Credits"),
+                  h("dl", null, credits.flatMap((c, j) => [
+                    h("dt", { key: "r" + j }, c.role),
+                    h("dd", { key: "n" + j }, c.name)
+                  ]))
+                ) : null
+              )
+            );
+          })
+        );
+      }
+    });
+
+    CMS.registerPreviewTemplate("videos", VideosPreview);
+  </script>
+</body>
+</html>
