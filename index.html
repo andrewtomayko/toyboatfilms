@@ -324,9 +324,8 @@
     .filters button:hover{ color:var(--text); }
     .filters button[aria-pressed="true"]{ color:var(--text); border-bottom-color:var(--text); }
     @media (max-width: 800px){
-      /* phones: one swipeable row instead of wrapping */
-      .filters{ flex-wrap:nowrap; justify-content:flex-start; overflow-x:auto; gap:22px; scrollbar-width:none; }
-      .filters::-webkit-scrollbar{ display:none; }
+      /* phones: wrap onto centered lines so every filter is visible without swiping */
+      .filters{ gap:4px 20px; padding:20px var(--sidePadding) 18px; }
     }
 
     /* ---------- WORK GRID (EDGE TO EDGE) ---------- */
@@ -1335,9 +1334,6 @@
       nav.hidden = !available.length;
       nav.innerHTML = [{ id: "", label: "All" }, ...available].map(t =>
         `<button type="button" data-filter="${esc(t.id)}" aria-pressed="${t.id === activeFilter}">${esc(t.label)}</button>`).join("");
-      // On phones the row scrolls sideways: bring the active filter into view (without moving the page)
-      const on = nav.querySelector('[aria-pressed="true"]');
-      if (on && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
     }
 
     function applyFilter() {
