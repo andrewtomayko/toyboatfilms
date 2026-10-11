@@ -20,10 +20,10 @@
           "role": "Director",
           "name": "Jesse Wiegel"
         }
-      ]
+      ],
+      "client": "Race to Alaska"
     },
     {
-      "title": "Polly Wales",
       "details": [
         {
           "label": "Client",
@@ -36,10 +36,11 @@
           "thumb": false
         }
       ],
+      "client": "TWIST",
       "url": "https://vimeo.com/367326427",
-      "thumb": "/thumbnails/polly-wales.jpg",
       "crop": "Upper",
-      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
+      "thumb": "/thumbnails/polly-wales.jpg",
+      "title": "Polly Wales",
       "credits": [
         {
           "role": "Director",
@@ -53,7 +54,9 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
-      ]
+      ],
+      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
+      "year": ""
     },
     {
       "title": "MILAMORE FINE JEWELRY",
@@ -76,7 +79,8 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
-      ]
+      ],
+      "client": "TWIST"
     },
     {
       "title": "Vinátta - Poulsbo 48 Hour Film Challenge ",
@@ -544,7 +548,7 @@
       ]
     },
     {
-      "title": "Big News Events – Behind the Scenes",
+      "title": "Big News Events – BTS",
       "details": [
         {
           "label": "Client",
