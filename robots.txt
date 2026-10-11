@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /invoices/
 
 Sitemap: https://toyboatfilms.com/sitemap.xml
