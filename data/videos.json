@@ -177,12 +177,17 @@
       ]
     },
     {
-      "title": "The Mythical Show – BTS",
+      "title": "Wanderlist",
       "details": [
         {
           "label": "Client",
-          "value": "Rhett & Link",
+          "value": "Condé Nast Traveler",
           "thumb": true
+        },
+        {
+          "label": "Agency",
+          "value": "Kornhaber Brown",
+          "thumb": false
         },
         {
           "label": "Prod. Company",
@@ -191,49 +196,29 @@
         },
         {
           "label": "Year",
-          "value": "2013",
+          "value": "2015",
           "thumb": false
         }
       ],
-      "url": "https://vimeo.com/66525770",
-      "thumb": "/thumbnails/mythical-show-bts.jpg",
-      "description": "A behind-the-scenes look at our stop-motion piece for Rhett & Link’s The Mythical Show. Everything was built by hand, animated practically and photographed in camera: the cave is melted wax, the teardrop a water balloon, the molten lava torched pie crust, and the title was carved from a tree stump found on the side of the road.",
+      "url": "https://vimeo.com/123158426",
+      "thumb": "/thumbnails/conde-nast-traveler-interstitials.jpg",
+      "description": "Title and interstitial cards for Wanderlist, Condé Nast Traveler’s travel series. Inspired by the small visual memories we collect on the road, we built a set of moving portraits from detail shots, each with its own mood and flexible enough to introduce almost any travel story.",
       "credits": [
         {
-          "role": "Creative Director, Animator",
+          "role": "Executive Producer",
+          "name": "Mark Cramer"
+        },
+        {
+          "role": "Creative Director, Animation",
           "name": "Ryan Wehner"
         },
         {
-          "role": "Production Designer",
+          "role": "Creative Director, Production Design",
           "name": "Mike Pasley"
         },
         {
-          "role": "Directors of Photography",
-          "name": "Andrew Tomayko & Chris Vanderwall"
-        },
-        {
-          "role": "Swing",
-          "name": "Jonas Studer"
-        },
-        {
-          "role": "Production Assistant",
-          "name": "Mike Kasper"
-        },
-        {
-          "role": "Art Department",
-          "name": "Mike Pasley, Jonas Studer, Mark Davis, Grant Hyde"
-        },
-        {
-          "role": "Sound Design, Music Composer",
-          "name": "White Noise Lab"
-        },
-        {
-          "role": "Voice Over",
-          "name": "Mick Wingert"
-        },
-        {
-          "role": "Music",
-          "name": "“Yugck” by Pool Cosby"
+          "role": "Director of Photography",
+          "name": "Andrew Tomayko"
         }
       ]
     },
@@ -359,52 +344,6 @@
       ]
     },
     {
-      "title": "Wanderlist",
-      "details": [
-        {
-          "label": "Client",
-          "value": "Condé Nast Traveler",
-          "thumb": true
-        },
-        {
-          "label": "Agency",
-          "value": "Kornhaber Brown",
-          "thumb": false
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Digital Twigs",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2015",
-          "thumb": false
-        }
-      ],
-      "url": "https://vimeo.com/123158426",
-      "thumb": "/thumbnails/conde-nast-traveler-interstitials.jpg",
-      "description": "Title and interstitial cards for Wanderlist, Condé Nast Traveler’s travel series. Inspired by the small visual memories we collect on the road, we built a set of moving portraits from detail shots, each with its own mood and flexible enough to introduce almost any travel story.",
-      "credits": [
-        {
-          "role": "Executive Producer",
-          "name": "Mark Cramer"
-        },
-        {
-          "role": "Creative Director, Animation",
-          "name": "Ryan Wehner"
-        },
-        {
-          "role": "Creative Director, Production Design",
-          "name": "Mike Pasley"
-        },
-        {
-          "role": "Director of Photography",
-          "name": "Andrew Tomayko"
-        }
-      ]
-    },
-    {
       "title": "Prounis",
       "details": [
         {
@@ -434,6 +373,67 @@
         {
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
+        }
+      ]
+    },
+    {
+      "title": "The Mythical Show – BTS",
+      "details": [
+        {
+          "label": "Client",
+          "value": "Rhett & Link",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Digital Twigs",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2013",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/66525770",
+      "thumb": "/thumbnails/mythical-show-bts.jpg",
+      "description": "A behind-the-scenes look at our stop-motion piece for Rhett & Link’s The Mythical Show. Everything was built by hand, animated practically and photographed in camera: the cave is melted wax, the teardrop a water balloon, the molten lava torched pie crust, and the title was carved from a tree stump found on the side of the road.",
+      "credits": [
+        {
+          "role": "Creative Director, Animator",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Production Designer",
+          "name": "Mike Pasley"
+        },
+        {
+          "role": "Directors of Photography",
+          "name": "Andrew Tomayko & Chris Vanderwall"
+        },
+        {
+          "role": "Swing",
+          "name": "Jonas Studer"
+        },
+        {
+          "role": "Production Assistant",
+          "name": "Mike Kasper"
+        },
+        {
+          "role": "Art Department",
+          "name": "Mike Pasley, Jonas Studer, Mark Davis, Grant Hyde"
+        },
+        {
+          "role": "Sound Design, Music Composer",
+          "name": "White Noise Lab"
+        },
+        {
+          "role": "Voice Over",
+          "name": "Mick Wingert"
+        },
+        {
+          "role": "Music",
+          "name": "“Yugck” by Pool Cosby"
         }
       ]
     },
