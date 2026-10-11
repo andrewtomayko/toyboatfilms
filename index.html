@@ -161,10 +161,13 @@
     }
 
     /* ---------- REEL (FULL BLEED) ---------- */
+    /* Banner height and thumbnail shape are set in the editor's Homepage tab */
+    :root{ --reel-aspect:21 / 9; --grid-aspect:2.4 / 1; }
+
     .reelEmbed{
       position:relative;
       width:100%;
-      aspect-ratio:21 / 9;
+      aspect-ratio:var(--reel-aspect);
       overflow:hidden;
       background:#000;
     }
@@ -192,7 +195,7 @@
     .reelFallback{
       display:none;
       width:100%;
-      aspect-ratio:21 / 9;
+      aspect-ratio:var(--reel-aspect);
       object-fit:cover;
       background:#000;
     }
@@ -311,7 +314,7 @@
     .card{
       position:relative;
       display:block;
-      aspect-ratio:2.4 / 1; /* widescreen; each thumbnail's crop is set in the editor */
+      aspect-ratio:var(--grid-aspect); /* shape set in the editor; each thumbnail's crop too */
       overflow:hidden;
       color:#fff;
       text-decoration:none;
@@ -725,7 +728,7 @@
 
     <!-- REEL -->
     <section class="reel" aria-label="Showreel">
-      <div class="reelEmbed">
+      <div class="reelEmbed" id="reelEmbed">
         <iframe
           title="Toy Boat showreel"
           onload="this.classList.add('loaded')"
@@ -734,7 +737,7 @@
           tabindex="-1">
         </iframe>
       </div>
-      <img class="reelFallback" src="/Assets/reel-poster.jpg" alt="A sailboat on Puget Sound">
+      <img class="reelFallback" id="reelFallback" src="/Assets/reel-poster.jpg" alt="A sailboat on Puget Sound">
     </section>
 
     <!-- INTRO -->
@@ -1249,8 +1252,44 @@
       });
     }
 
+    /* ---------- BANNER ---------- */
+    // The banner video always fills its frame: when the chosen height doesn't match the video's own
+    // shape, the iframe is enlarged and centered so the edges crop instead of showing black bars.
+    let reelRatio = 21 / 9;
+    const ratioOf = (r, fallback) => { const [w, h] = String(r || "").split("/").map(Number); return w > 0 && h > 0 ? w / h : fallback; };
+
+    function fitReel() {
+      const box = document.getElementById("reelEmbed");
+      const iframe = box && box.querySelector("iframe");
+      if (!iframe || !box.clientWidth) return;
+      const bw = box.clientWidth, bh = box.clientHeight;
+      let w = bw, h = bw / reelRatio;
+      if (h < bh) { h = bh; w = bh * reelRatio; }
+      Object.assign(iframe.style, { inset: "auto", width: w + "px", height: h + "px", left: (bw - w) / 2 + "px", top: (bh - h) / 2 + "px" });
+    }
+    addEventListener("resize", fitReel);
+
+    function reelEmbedURL(link) {
+      const p = parseVideo({ url: link });
+      if (!p || p.kind !== "vimeo") return null; // background looping needs Vimeo
+      return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${p.hash ? `h=${encodeURIComponent(p.hash)}&` : ""}background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&dnt=1`;
+    }
+
+    function applyBanner(site) {
+      const root = document.documentElement.style;
+      if (site.reelAspect) root.setProperty("--reel-aspect", site.reelAspect);
+      if (site.gridAspect) root.setProperty("--grid-aspect", site.gridAspect);
+      reelRatio = Number(site.reelVideoRatio) > 0 ? Number(site.reelVideoRatio) : 21 / 9;
+      const src = site.reelUrl && reelEmbedURL(site.reelUrl);
+      const iframe = document.querySelector("#reelEmbed iframe");
+      if (src && iframe && iframe.getAttribute("src") !== src) { iframe.classList.remove("loaded"); iframe.src = src; }
+      if (site.reelPoster) document.getElementById("reelFallback").src = site.reelPoster;
+      fitReel();
+    }
+
     /* ---------- SITE TEXT ---------- */
     function applySite(site) {
+      applyBanner(site);
       const set = (id, val) => { if (val) document.getElementById(id).textContent = val; };
       set("logo", site.logo);
       set("headline", site.headline);

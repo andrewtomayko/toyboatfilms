@@ -13,6 +13,7 @@
       color-scheme:dark;
       --bg:#0b0b0b; --surface:#141414; --surface-2:#1b1b1b; --line:#262626; --line-2:#333;
       --text:#f2f2f2; --muted:#9a9a9a; --danger:#ff7b7b; --ok:#8fd19e; --warn:#f0c674;
+      --grid-aspect:2.4 / 1; /* follows the "Thumbnail shape" setting, like the site */
     }
     *{ box-sizing:border-box; }
     [hidden]{ display:none !important; }
@@ -69,7 +70,7 @@
 
     /* Cards copy the site's grid exactly: 2.40:1, two across, title + "on thumbnail" detail on hover */
     .vgrid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:0; background:#111; }
-    .vcard{ position:relative; aspect-ratio:2.4 / 1; overflow:hidden; background:#1a1a1a; cursor:pointer; color:#fff; user-select:none; }
+    .vcard{ position:relative; aspect-ratio:var(--grid-aspect); overflow:hidden; background:#1a1a1a; cursor:pointer; color:#fff; user-select:none; }
     .vcard img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
     .vcard .overlay{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:16px 24px; text-align:center; background:rgba(0,0,0,.55); opacity:0; transition:opacity .2s ease; }
     .vcard:hover .overlay, .vcard.selected .overlay{ opacity:1; }
@@ -97,7 +98,7 @@
     input:focus, textarea:focus{ outline:none; border-color:var(--text); }
     textarea{ resize:vertical; min-height:96px; }
 
-    .cropper{ position:relative; aspect-ratio:2.4 / 1; overflow:hidden; background:#000; border-radius:4px; cursor:ns-resize; touch-action:none; }
+    .cropper{ position:relative; aspect-ratio:var(--grid-aspect); overflow:hidden; background:#000; border-radius:4px; cursor:ns-resize; touch-action:none; }
     .cropper img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
     .cropper .crop-hint{ position:absolute; left:8px; bottom:8px; font-size:11px; background:rgba(0,0,0,.7); padding:3px 7px; border-radius:3px; color:#ddd; }
     .cropper.empty{ display:grid; place-items:center; color:var(--muted); cursor:default; font-size:13px; }
@@ -122,6 +123,14 @@
     /* ---------- homepage ---------- */
     .homepage{ max-width:720px; padding:24px 20px 80px; }
     .homepage .note{ color:var(--muted); font-size:13px; margin:0 0 20px; }
+    .homepage h2{ margin:34px 0 14px; padding-top:22px; border-top:1px solid var(--line); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+    .homepage h2:first-of-type{ border-top:0; padding-top:0; margin-top:8px; }
+    .homepage select{ width:100%; padding:9px 11px; background:#0f0f0f; border:1px solid var(--line-2); border-radius:6px; }
+    .field-help{ font-size:12px; color:var(--muted); margin-top:-6px; margin-bottom:12px; }
+    .inline{ display:flex; gap:8px; }
+    .inline input{ flex:1; }
+    .phone-still{ display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+    .phone-still img{ width:160px; aspect-ratio:16 / 9; object-fit:cover; border-radius:4px; background:#000; }
 
     /* ---------- site preview ---------- */
     .preview{ position:fixed; inset:0; z-index:50; background:rgba(0,0,0,.85); display:flex; flex-direction:column; }
@@ -203,6 +212,36 @@
       <label class="field"><span>Header button text</span><input data-site="headerCta"></label>
       <label class="field"><span>Contact email (shown in the footer)</span><input type="email" data-site="email"></label>
       <label class="field"><span>Instagram link (shown in the footer)</span><input type="url" data-site="instagram" placeholder="https://instagram.com/…"></label>
+
+      <h2>Banner video</h2>
+      <label class="field"><span>Vimeo link for the banner (it plays silently, on a loop)</span>
+        <div class="inline"><input type="url" data-site="reelUrl" id="reelUrl" placeholder="Currently https://vimeo.com/1162374282"><button class="btn" type="button" id="reelCheck">Check link</button></div>
+      </label>
+      <p class="field-help" id="reelHelp">Leave empty to keep the current banner. Vimeo only: YouTube can’t play as a silent background loop.</p>
+      <label class="field"><span>Banner height</span>
+        <select data-site="reelAspect" id="reelAspect">
+          <option value="16 / 9">Tall · 16:9</option>
+          <option value="2 / 1">Medium · 2:1</option>
+          <option value="21 / 9">Wide · 21:9 (original)</option>
+          <option value="2.4 / 1">Cinematic · 2.40:1</option>
+          <option value="3 / 1">Ultra-wide · 3:1</option>
+        </select>
+      </label>
+      <p class="field-help">If the video’s own shape is different, it fills the banner and the edges are cropped, never black bars.</p>
+      <div class="field"><span>Still image phones show instead of the video</span>
+        <div class="phone-still"><img id="reelPosterImg" alt=""><label class="btn small">Upload image<input type="file" id="reelPosterFile" accept="image/*" hidden></label></div>
+      </div>
+
+      <h2>Video grid</h2>
+      <label class="field"><span>Thumbnail shape</span>
+        <select data-site="gridAspect" id="gridAspect">
+          <option value="2.4 / 1">Cinematic · 2.40:1 (current)</option>
+          <option value="2 / 1">Wide · 2:1</option>
+          <option value="1.85 / 1">Film · 1.85:1</option>
+          <option value="16 / 9">Standard · 16:9</option>
+        </select>
+      </label>
+      <p class="field-help">Applies to the whole grid. Each thumbnail keeps its own crop; check a few in the Videos tab after changing this.</p>
     </form>
   </section>
 
@@ -645,12 +684,49 @@
     });
 
     // ---------- homepage ----------
+    const SITE_DEFAULTS = { reelAspect: "21 / 9", gridAspect: "2.4 / 1" };
+    function applyGridShape() {
+      document.documentElement.style.setProperty("--grid-aspect", site.gridAspect || SITE_DEFAULTS.gridAspect);
+    }
     function renderSite() {
-      document.querySelectorAll("[data-site]").forEach((el) => { el.value = site[el.dataset.site] ?? ""; });
+      document.querySelectorAll("[data-site]").forEach((el) => { el.value = site[el.dataset.site] ?? SITE_DEFAULTS[el.dataset.site] ?? ""; });
+      $("reelPosterImg").src = thumbSrc(site.reelPoster || "/Assets/reel-poster.jpg");
+      applyGridShape();
     }
     $("siteForm").addEventListener("input", (e) => {
       const k = e.target.dataset.site; if (!k) return;
-      site[k] = e.target.value; changed();
+      site[k] = e.target.value;
+      if (k === "reelUrl") { delete site.reelVideoRatio; $("reelHelp").textContent = "Click “Check link” so the banner knows the video’s shape."; }
+      if (k === "gridAspect") { applyGridShape(); renderGrid(); renderPanel(); }
+      changed();
+    });
+    $("siteForm").addEventListener("change", (e) => { if (e.target.tagName === "SELECT") e.target.dispatchEvent(new Event("input", { bubbles: true })); });
+
+    // Look up the banner video: confirms the link works and records its shape so it can fill the banner
+    $("reelCheck").addEventListener("click", async () => {
+      const url = String(site.reelUrl || "").trim();
+      if (!url) return toast("Paste a Vimeo link first.");
+      if (!/vimeo\.com\//i.test(url)) return toast("The banner needs a Vimeo link.");
+      $("reelCheck").disabled = true; $("reelCheck").textContent = "Checking…";
+      try {
+        const info = await videoInfo(url);
+        if (info.ratio) site.reelVideoRatio = info.ratio;
+        $("reelHelp").textContent = `Found “${info.title || "untitled"}”${info.ratio ? ` (${info.ratio.toFixed(2)}:1)` : ""}. Open Site preview to see it in the banner.`;
+        changed();
+      } catch (err) { $("reelHelp").textContent = err.message; }
+      finally { $("reelCheck").disabled = false; $("reelCheck").textContent = "Check link"; }
+    });
+
+    $("reelPosterFile").addEventListener("change", async (e) => {
+      const file = e.target.files[0]; e.target.value = ""; if (!file) return;
+      try {
+        const data = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+        const jpeg = await toJpeg(data);
+        const path = `/Assets/banner-phone-${Date.now().toString(36)}.jpg`;
+        pendingImages.set(path, jpeg);
+        site.reelPoster = path;
+        renderSite(); changed();
+      } catch (err) { toast(err.message); }
     });
 
     // ---------- tabs ----------
@@ -665,7 +741,7 @@
     function draftForPreview() {
       return {
         type: "tb-draft",
-        site: clone(site),
+        site: { ...clone(site), ...(site.reelPoster ? { reelPoster: thumbSrc(site.reelPoster) } : {}) },
         videos: videos.map((v) => ({ ...clone(v), thumb: thumbSrc(v.thumb) })),
       };
     }
@@ -716,11 +792,11 @@
           btn.disabled = false;
           return;
         }
-        const used = new Set(videos.map((v) => v.thumb));
+        const used = new Set([...videos.map((v) => v.thumb), site.reelPoster]);
         for (const [path, dataUrl] of pendingImages) {
           if (!used.has(path)) continue;
-          setStatus("Uploading thumbnails…");
-          await gitPut(path.slice(1), dataUrl.split(",")[1], null, `Editor: add thumbnail ${path.split("/").pop()}`);
+          setStatus("Uploading images…");
+          await gitPut(path.slice(1), dataUrl.split(",")[1], null, `Editor: add image ${path.split("/").pop()}`);
           remoteImages.set(path, dataUrl);
         }
         pendingImages.clear();

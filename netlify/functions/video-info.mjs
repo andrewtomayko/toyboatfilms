@@ -2,7 +2,8 @@
 // thumbnail (as a data URL, so the editor can crop it and save it into the site).
 // Login required, so this can't be used as an open proxy.
 //
-//   GET ?url=<YouTube or Vimeo link>  ->  { title, year, description, thumbnail }
+//   GET ?url=<YouTube or Vimeo link>  ->  { title, year, description, thumbnail, ratio }
+//   (ratio = the video's width / height, used to fit the homepage banner)
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129 Safari/537.36";
 const MAX_IMAGE = 6 * 1024 * 1024;
@@ -41,14 +42,17 @@ async function vimeo(link) {
     year: String(o.upload_date || "").slice(0, 4),
     description: cleanDescription(o.description),
     thumbnail: o.thumbnail_url ? await imageDataUrl(o.thumbnail_url) : null,
+    ratio: o.width > 0 && o.height > 0 ? +(o.width / o.height).toFixed(4) : null,
   };
 }
 
 async function youtube(id) {
-  const out = { title: "", year: "", description: "", thumbnail: null };
+  const out = { title: "", year: "", description: "", thumbnail: null, ratio: null };
   const o = await get(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent("https://www.youtube.com/watch?v=" + id)}`);
   if (!o.ok) throw Object.assign(new Error("YouTube couldn’t find that video, or it doesn’t allow embedding."), { status: 404 });
-  out.title = (await o.json()).title || "";
+  const meta = await o.json();
+  out.title = meta.title || "";
+  if (meta.width > 0 && meta.height > 0) out.ratio = +(meta.width / meta.height).toFixed(4);
   try {
     const page = await (await get(`https://www.youtube.com/watch?v=${id}&hl=en`)).text();
     const desc = page.match(/"shortDescription":"((?:[^"\\]|\\.)*)"/);
