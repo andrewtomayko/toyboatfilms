@@ -338,10 +338,75 @@
         }
       ],
       "url": "https://vimeo.com/211568809",
-      "thumb": "/thumbnails/sea-change-by-the-wind.jpg",
-      "crop": "Top",
+      "thumb": "/thumbnails/sea-change-on-deck.jpg",
+      "crop": 50,
       "description": "Sea change (noun): a profound transformation brought about by the sea.\n\nOn December 31st, 2015, two friends, a little dog and I set out to sail from Florida to the Amazon River. It took a little over a year and nine countries to reach our goal, exploring the rivers, jungles and remote islands of the Caribbean along the way. Traveling under sail let us connect deeply with the people and places we met; we took our time and became part of the landscape instead of just observing it. Sea Change combined our passions for adventure and filmmaking into a short video series that blurs the line between documentary and narrative, bringing the viewer aboard to experience life at sea as we knew it.",
       "credits": [],
+      "tags": [
+        "documentary",
+        "film"
+      ]
+    },
+    {
+      "title": "One Last Adventure",
+      "details": [
+        {
+          "label": "",
+          "value": "Pacific Mexico",
+          "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2026",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=mjQUXTrrI88",
+      "thumb": "/thumbnails/konami-last-adventure.jpg",
+      "crop": 75,
+      "description": "I spent the last week of 2025 on one final adventure with Konami, the vessel that carried me safely from Alaska to Costa Rica.\n\nChad joined me, his friendship having grown into brotherhood over the years. Together we sailed through quiet, remote islands off the Pacific coast of Mexico. He was there for Konami’s maiden voyage in Portland over six years ago, so sharing her twilight sail together felt fitting. A perfect bookend to a chapter that shaped my life.\n\nKonami is the Westsail 32 that carried me through some of the most formative years of my life and across thousands of miles of ocean. While this voyage marks the end of my time with her, my sailing journey is far from over.",
+      "credits": [
+        {
+          "role": "Film by",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "With",
+          "name": "Chad"
+        }
+      ],
+      "tags": [
+        "documentary",
+        "film"
+      ]
+    },
+    {
+      "title": "Sea Kayaking Desolation Sound",
+      "details": [
+        {
+          "label": "",
+          "value": "Desolation Sound, BC",
+          "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2018",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=7hT7TdthjMo",
+      "thumb": "/thumbnails/desolation-sound-kayak.jpg",
+      "description": "In honor of Alex’s dad’s would-be 60th birthday, he and I set out on a week-long kayaking adventure into the Canadian wilderness. We covered around 80 nautical miles as we explored Desolation Sound and the surrounding area. During one of our nightly conversations around the fire, Alex told me a piece of advice his dad gave him when he was younger: “Don’t drive past a forest and not be able to tell me what the trees look like.”",
+      "credits": [
+        {
+          "role": "Film by",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "With",
+          "name": "Alex"
+        }
+      ],
       "tags": [
         "documentary",
         "film"
