@@ -17,6 +17,8 @@
     .office-switch a{ color:#cfcfcf; text-decoration:none; padding:8px 12px; border-radius:999px; }
     .office-switch a:hover{ color:#fff; background:#2a2a2a; }
     .office-switch a[aria-current="page"]{ background:#f2f2f2; color:#111; }
+    /* Narrow windows: Decap's header has no free middle, so the switcher moves to the bottom corner */
+    @media (max-width: 900px){ .office-switch{ top:auto; bottom:14px; left:14px; transform:none; } }
   </style>
   <nav class="office-switch" aria-label="Back office">
     <a href="/admin/" aria-current="page">Website</a>
