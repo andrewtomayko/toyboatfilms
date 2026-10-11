@@ -115,6 +115,12 @@
     .onthumb input{ accent-color:#f2f2f2; width:15px; height:15px; }
     .add-row{ background:none; border:1px dashed var(--line-2); border-radius:6px; color:var(--muted); padding:7px; width:100%; cursor:pointer; font-size:13px; margin-top:6px; }
     .add-row:hover{ color:var(--text); border-color:var(--text); }
+    .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+    .chip{ border:1px solid var(--line-2); background:none; color:var(--muted); border-radius:999px; padding:6px 12px; font-size:13px; font-weight:600; cursor:pointer; }
+    .chip:hover{ color:var(--text); border-color:var(--text); }
+    .chip[aria-pressed="true"]{ background:var(--text); color:var(--bg); border-color:var(--text); }
+    .row.tag{ grid-template-columns:minmax(0,1fr) auto auto; }
+    .row .count{ font-size:12px; color:var(--muted); white-space:nowrap; }
     .toggle{ display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; }
     .toggle input{ accent-color:#f2f2f2; width:18px; height:18px; }
     .panel-foot{ display:flex; gap:8px; flex-wrap:wrap; margin-top:24px; padding-top:16px; border-top:1px solid var(--line); }
@@ -231,6 +237,11 @@
       <div class="field"><span>Still image phones show instead of the video</span>
         <div class="phone-still"><img id="reelPosterImg" alt=""><label class="btn small">Upload image<input type="file" id="reelPosterFile" accept="image/*" hidden></label></div>
       </div>
+
+      <h2>Filters</h2>
+      <p class="field-help">The buttons above the video grid. Rename, reorder or add them here; choose which videos each one shows in the Videos tab. Filters with no videos are hidden on the site.</p>
+      <div class="rows" id="tagRows"></div>
+      <button class="add-row" type="button" id="addTag">+ Add filter</button>
 
       <h2>Video grid</h2>
       <label class="field"><span>Thumbnail shape</span>
@@ -506,6 +517,11 @@
         <label class="field"><span>Title (shown on the thumbnail and in the popup)</span><input data-f="title" value="${esc(v.title)}"></label>
         <label class="field"><span>YouTube or Vimeo link</span><input data-f="url" type="url" value="${esc(v.url)}" placeholder="https://vimeo.com/…"></label>
 
+        <h3>Filters <span>Which buttons above the grid show this video</span></h3>
+        <div class="chips">
+          ${(site.tags || []).map((t) => `<button class="chip" type="button" data-tag="${esc(t.id)}" aria-pressed="${(v.tags || []).includes(t.id)}">${esc(t.label)}</button>`).join("") || '<span class="field-help">No filters yet. Add them in the Homepage text tab.</span>'}
+        </div>
+
         <h3>Details <span>Under the title in the popup</span></h3>
         <div class="rows">
           ${details.map((d, j) => `
@@ -586,7 +602,13 @@
       const v = videos[selected]; if (!v) return;
       const t = e.target.closest("button"); if (!t) return;
       const swap = (list, j, dir) => { const k = j + dir; if (k < 0 || k >= list.length) return; [list[j], list[k]] = [list[k], list[j]]; };
-      if (t.id === "addDetail") (v.details ||= []).push({ label: "", value: "", thumb: false });
+      if (t.dataset.tag) {
+        const tags = new Set(v.tags || []);
+        tags.has(t.dataset.tag) ? tags.delete(t.dataset.tag) : tags.add(t.dataset.tag);
+        // keep the same order as the filter buttons
+        v.tags = (site.tags || []).map((x) => x.id).filter((id) => tags.has(id));
+      }
+      else if (t.id === "addDetail") (v.details ||= []).push({ label: "", value: "", thumb: false });
       else if (t.id === "addCredit") (v.credits ||= []).push({ role: "", name: "" });
       else if (t.dataset.delD != null) v.details.splice(+t.dataset.delD, 1);
       else if (t.dataset.delC != null) v.credits.splice(+t.dataset.delC, 1);
@@ -688,7 +710,53 @@
     function applyGridShape() {
       document.documentElement.style.setProperty("--grid-aspect", site.gridAspect || SITE_DEFAULTS.gridAspect);
     }
+    function renderTags() {
+      const tags = site.tags || [];
+      $("tagRows").innerHTML = tags.map((t, j) => {
+        const n = videos.filter((v) => (v.tags || []).includes(t.id)).length;
+        return `
+          <div class="row tag">
+            <input data-tag-label="${j}" value="${esc(t.label)}" placeholder="Filter name" aria-label="Filter name">
+            <span class="count">${n} video${n === 1 ? "" : "s"}</span>
+            <div class="tools">
+              <button class="icon-btn" type="button" data-move-t="${j}" data-dir="-1" ${j === 0 ? "disabled" : ""} aria-label="Move left">↑</button>
+              <button class="icon-btn" type="button" data-move-t="${j}" data-dir="1" ${j === tags.length - 1 ? "disabled" : ""} aria-label="Move right">↓</button>
+              <button class="icon-btn" type="button" data-del-t="${j}" aria-label="Remove filter">✕</button>
+            </div>
+          </div>`;
+      }).join("");
+    }
+    // Labels can be renamed freely; each filter keeps a fixed id so its videos stay tagged
+    $("tagRows").addEventListener("input", (e) => {
+      const j = e.target.dataset.tagLabel; if (j == null) return;
+      site.tags[+j].label = e.target.value; changed();
+    });
+    $("tagRows").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      const tags = site.tags || [];
+      if (b.dataset.moveT != null) {
+        const j = +b.dataset.moveT, k = j + +b.dataset.dir;
+        [tags[j], tags[k]] = [tags[k], tags[j]];
+      } else if (b.dataset.delT != null) {
+        const t = tags[+b.dataset.delT];
+        const n = videos.filter((v) => (v.tags || []).includes(t.id)).length;
+        if (n && !confirm(`Remove the “${t.label}” filter? It will be taken off ${n} video${n === 1 ? "" : "s"}.`)) return;
+        tags.splice(+b.dataset.delT, 1);
+        videos.forEach((v) => { if (v.tags) v.tags = v.tags.filter((id) => id !== t.id); });
+      } else return;
+      renderTags(); renderPanel(); changed();
+    });
+    $("addTag").addEventListener("click", () => {
+      const label = prompt("Name for the new filter (e.g. Event, Nonprofit):");
+      if (!label || !label.trim()) return;
+      let id = slugify(label) || "filter", n = 2;
+      while ((site.tags || []).some((t) => t.id === id)) id = `${slugify(label)}-${n++}`;
+      (site.tags ||= []).push({ id, label: label.trim() });
+      renderTags(); renderPanel(); changed();
+    });
+
     function renderSite() {
+      renderTags();
       document.querySelectorAll("[data-site]").forEach((el) => { el.value = site[el.dataset.site] ?? SITE_DEFAULTS[el.dataset.site] ?? ""; });
       $("reelPosterImg").src = thumbSrc(site.reelPoster || "/Assets/reel-poster.jpg");
       applyGridShape();
@@ -735,6 +803,7 @@
       document.querySelectorAll("[data-tab]").forEach((x) => x.setAttribute("aria-selected", String(x === b)));
       $("videosView").hidden = b.dataset.tab !== "videos";
       $("homepageView").hidden = b.dataset.tab !== "homepage";
+      if (b.dataset.tab === "homepage") renderTags();
     });
 
     // ---------- site preview: the real homepage, fed the unsaved draft ----------

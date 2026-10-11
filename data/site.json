@@ -7,5 +7,31 @@
   "headerCta": "BOOK A CALL",
   "email": "",
   "instagram": "",
-  "reelAspect": "2.4 / 1"
+  "reelAspect": "2.4 / 1",
+  "tags": [
+    {
+      "id": "commercial",
+      "label": "Commercial"
+    },
+    {
+      "id": "brand",
+      "label": "Brand"
+    },
+    {
+      "id": "documentary",
+      "label": "Documentary"
+    },
+    {
+      "id": "music-video",
+      "label": "Music Video"
+    },
+    {
+      "id": "behind-the-scenes",
+      "label": "Behind the Scenes"
+    },
+    {
+      "id": "film",
+      "label": "Film"
+    }
+  ]
 }

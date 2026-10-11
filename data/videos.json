@@ -21,6 +21,10 @@
           "role": "Director",
           "name": "Jesse Wiegel"
         }
+      ],
+      "tags": [
+        "commercial",
+        "brand"
       ]
     },
     {
@@ -54,7 +58,11 @@
           "name": "Sora Blu"
         }
       ],
-      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design."
+      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
+      "tags": [
+        "brand",
+        "documentary"
+      ]
     },
     {
       "title": "MILAMORE FINE JEWELRY",
@@ -77,6 +85,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -105,7 +117,10 @@
           "name": "Avi Brigman"
         }
       ],
-      "crop": "Top"
+      "crop": "Top",
+      "tags": [
+        "film"
+      ]
     },
     {
       "title": "TWIST Curated Jewelry",
@@ -138,6 +153,9 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand"
       ]
     },
     {
@@ -175,6 +193,9 @@
           "role": "Featuring",
           "name": "Lauryn Myers"
         }
+      ],
+      "tags": [
+        "music-video"
       ]
     },
     {
@@ -221,6 +242,9 @@
           "role": "Director of Photography",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -299,6 +323,9 @@
           "role": "Song Produced by",
           "name": "Johnny K"
         }
+      ],
+      "tags": [
+        "music-video"
       ]
     },
     {
@@ -314,7 +341,11 @@
       "thumb": "/thumbnails/sea-change-by-the-wind.jpg",
       "crop": "Top",
       "description": "Sea change (noun): a profound transformation brought about by the sea.\n\nOn December 31st, 2015, two friends, a little dog and I set out to sail from Florida to the Amazon River. It took a little over a year and nine countries to reach our goal, exploring the rivers, jungles and remote islands of the Caribbean along the way. Traveling under sail let us connect deeply with the people and places we met; we took our time and became part of the landscape instead of just observing it. Sea Change combined our passions for adventure and filmmaking into a short video series that blurs the line between documentary and narrative, bringing the viewer aboard to experience life at sea as we knew it.",
-      "credits": []
+      "credits": [],
+      "tags": [
+        "documentary",
+        "film"
+      ]
     },
     {
       "title": "“I Like You”",
@@ -342,6 +373,9 @@
           "role": "Visual Effects",
           "name": "Ryan Wehner"
         }
+      ],
+      "tags": [
+        "music-video"
       ]
     },
     {
@@ -375,6 +409,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -436,6 +474,9 @@
           "role": "Music",
           "name": "“Yugck” by Pool Cosby"
         }
+      ],
+      "tags": [
+        "behind-the-scenes"
       ]
     },
     {
@@ -465,6 +506,9 @@
           "role": "Director, Director of Photography",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -508,6 +552,10 @@
           "role": "Music",
           "name": "Odesza – \"Always This Late\""
         }
+      ],
+      "tags": [
+        "commercial",
+        "behind-the-scenes"
       ]
     },
     {
@@ -542,6 +590,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -587,6 +639,10 @@
           "role": "Featuring",
           "name": "Mariee Sioux"
         }
+      ],
+      "tags": [
+        "documentary",
+        "film"
       ]
     },
     {
@@ -660,6 +716,9 @@
           "role": "Behind the Scenes",
           "name": "Michael Larson"
         }
+      ],
+      "tags": [
+        "behind-the-scenes"
       ]
     },
     {
@@ -698,6 +757,10 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -718,6 +781,9 @@
           "role": "Director",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -771,6 +837,10 @@
           "role": "Composer, Audio Mix",
           "name": "Keith Ruggiero (SoundsRed)"
         }
+      ],
+      "tags": [
+        "commercial",
+        "behind-the-scenes"
       ]
     },
     {
@@ -805,6 +875,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -830,6 +904,9 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "documentary"
       ]
     },
     {
@@ -864,6 +941,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -897,6 +978,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -931,6 +1016,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -955,6 +1044,9 @@
           "role": "Director of Photography/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -979,6 +1071,9 @@
           "role": "DP/editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -1013,6 +1108,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1050,6 +1149,10 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1083,6 +1186,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1117,7 +1224,11 @@
           "name": "Andrew Tomayko"
         }
       ],
-      "crop": "Lower"
+      "crop": "Lower",
+      "tags": [
+        "brand",
+        "documentary"
+      ]
     },
     {
       "title": "Sia Taylor",
@@ -1150,6 +1261,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1184,6 +1299,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1217,6 +1336,10 @@
           "role": "Camera, Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     }
   ]
