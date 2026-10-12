@@ -405,11 +405,8 @@
       color:rgba(255,255,255,.75);
     }
 
-    .card:focus-visible .overlay,
-    .card.in-view .overlay{ opacity:1; transition-duration:.35s; }
-
-    .card:focus-visible .overlay > *,
-    .card.in-view .overlay > *{ transform:none; }
+    .card:focus-visible .overlay{ opacity:1; transition-duration:.35s; }
+    .card:focus-visible .overlay > *{ transform:none; }
 
     .card:focus-visible img{ transform:scale(1.03); }
 
@@ -418,6 +415,24 @@
       .card:hover .overlay{ opacity:1; transition-duration:.35s; }
       .card:hover .overlay > *{ transform:none; }
       .card:hover img{ transform:scale(1.03); }
+    }
+
+    /* Phones and tablets can't hover: titles are always shown as a caption along the bottom,
+       over a soft gradient so the image stays bright */
+    @media (hover: none){
+      .card .overlay{
+        opacity:1;
+        justify-content:flex-end;
+        align-items:flex-start;
+        text-align:left;
+        gap:3px;
+        padding:14px 16px;
+        background:linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 38%, rgba(0,0,0,0) 62%);
+      }
+      .card .overlay > *{ transform:none; }
+      .card .playIcon{ display:none; }
+      .card .cardTitle{ font-size:13px; letter-spacing:.1em; max-width:none; }
+      .card .cardClient{ font-size:10px; }
     }
 
     .card:focus-visible{ outline:3px solid #fff; outline-offset:-3px; }
@@ -1023,36 +1038,7 @@
           e.preventDefault();
           openPlayer(Number(card.dataset.index), card);
         });
-        setupTouchReveal(grid);
       }
-    }
-
-    /* Phones can't hover: show the title of the one thumbnail crossing the middle of the screen */
-    function setupTouchReveal(grid) {
-      if (!window.matchMedia("(hover: none)").matches) return;
-      let active = null;
-      let queued = false;
-
-      function update() {
-        queued = false;
-        const mid = window.innerHeight / 2;
-        const next = [...grid.querySelectorAll(".card")].find(c => {
-          const r = c.getBoundingClientRect();
-          return r.top <= mid && r.bottom > mid;
-        }) || null;
-        if (next === active) return;
-        if (active) active.classList.remove("in-view");
-        if (next) next.classList.add("in-view");
-        active = next;
-      }
-
-      function queue() {
-        if (!queued) { queued = true; requestAnimationFrame(update); }
-      }
-
-      window.addEventListener("scroll", queue, { passive: true });
-      window.addEventListener("resize", queue);
-      update();
     }
 
     /* ---------- PLAYER ---------- */
