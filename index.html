@@ -183,10 +183,13 @@
     }
 
     /* ---------- REEL (FULL BLEED) ---------- */
+    /* Banner height and thumbnail shape are set in the editor's Homepage tab */
+    :root{ --reel-aspect:21 / 9; --grid-aspect:2.4 / 1; }
+
     .reelEmbed{
       position:relative;
       width:100%;
-      aspect-ratio:21 / 9;
+      aspect-ratio:var(--reel-aspect);
       overflow:hidden;
       background:#000;
     }
@@ -214,7 +217,7 @@
     .reelFallback{
       display:none;
       width:100%;
-      aspect-ratio:21 / 9;
+      aspect-ratio:var(--reel-aspect);
       object-fit:cover;
       background:#000;
     }
@@ -317,6 +320,36 @@
       .logoTrack{ gap:40px; padding-right:40px; }
     }
 
+    /* ---------- WORK FILTERS ---------- */
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:6px 26px;
+      padding:24px var(--sidePadding) 22px;
+    }
+    .filters[hidden]{ display:none; }
+    .filters button{
+      padding:6px 0;
+      border:0;
+      border-bottom:1px solid transparent;
+      background:none;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:color .2s ease, border-color .2s ease;
+    }
+    .filters button:hover{ color:var(--text); }
+    .filters button[aria-pressed="true"]{ color:var(--text); border-bottom-color:var(--text); }
+    @media (max-width: 800px){
+      /* phones: wrap onto centered lines so every filter is visible without swiping */
+      .filters{ gap:4px 20px; padding:20px var(--sidePadding) 18px; }
+    }
+
     /* ---------- WORK GRID (EDGE TO EDGE) ---------- */
     .grid{
       display:grid;
@@ -333,7 +366,7 @@
     .card{
       position:relative;
       display:block;
-      aspect-ratio:2.4 / 1; /* widescreen; each thumbnail's crop is set in the editor */
+      aspect-ratio:var(--grid-aspect); /* shape set in the editor; each thumbnail's crop too */
       overflow:hidden;
       color:#fff;
       text-decoration:none;
@@ -394,11 +427,8 @@
       color:rgba(255,255,255,.75);
     }
 
-    .card:focus-visible .overlay,
-    .card.in-view .overlay{ opacity:1; transition-duration:.35s; }
-
-    .card:focus-visible .overlay > *,
-    .card.in-view .overlay > *{ transform:none; }
+    .card:focus-visible .overlay{ opacity:1; transition-duration:.35s; }
+    .card:focus-visible .overlay > *{ transform:none; }
 
     .card:focus-visible img{ transform:scale(1.03); }
 
@@ -407,6 +437,24 @@
       .card:hover .overlay{ opacity:1; transition-duration:.35s; }
       .card:hover .overlay > *{ transform:none; }
       .card:hover img{ transform:scale(1.03); }
+    }
+
+    /* Phones and tablets can't hover: titles are always shown as a caption along the bottom,
+       over a soft gradient so the image stays bright */
+    @media (hover: none){
+      .card .overlay{
+        opacity:1;
+        justify-content:flex-end;
+        align-items:flex-start;
+        text-align:left;
+        gap:3px;
+        padding:14px 16px;
+        background:linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 38%, rgba(0,0,0,0) 62%);
+      }
+      .card .overlay > *{ transform:none; }
+      .card .playIcon{ display:none; }
+      .card .cardTitle{ font-size:13px; letter-spacing:.1em; max-width:none; }
+      .card .cardClient{ font-size:10px; }
     }
 
     .card:focus-visible{ outline:3px solid #fff; outline-offset:-3px; }
@@ -843,7 +891,7 @@
 
     <!-- REEL -->
     <section class="reel" aria-label="Showreel">
-      <div class="reelEmbed">
+      <div class="reelEmbed" id="reelEmbed">
         <iframe
           title="Toy Boat showreel"
           onload="this.classList.add('loaded')"
@@ -852,7 +900,7 @@
           tabindex="-1">
         </iframe>
       </div>
-      <img class="reelFallback" src="/Assets/reel-poster.jpg" alt="A sailboat on Puget Sound">
+      <img class="reelFallback" id="reelFallback" src="/Assets/reel-poster.jpg" alt="A sailboat on Puget Sound">
     </section>
 
     <!-- INTRO -->
@@ -895,6 +943,7 @@
     <!-- WORK -->
     <main>
       <h2 class="sr-only">Work</h2>
+      <nav class="filters" id="filters" aria-label="Filter work" hidden></nav>
       <section class="grid" id="videoGrid" aria-label="Work"></section>
     </main>
 
@@ -1008,7 +1057,10 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
     const FORMSPREE_ENDPOINT = "https://formspree.io/f/xbdknpvr";
 
     const page = document.getElementById("page");
-    let videos = [];
+    let videos = [];        // what the grid shows right now (all videos, or the active filter)
+    let allVideos = [];     // every published video
+    let tagList = [];       // filter tags from site.json: [{ id, label }]
+    let activeFilter = new URLSearchParams(location.search).get("filter") || "";
 
     async function loadJSON(path) {
       const res = await fetch(path, { cache: "no-store" });
@@ -1078,9 +1130,12 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
       return detailsOf(v).filter(d => d.thumb).map(d => d.value).join(" · ");
     }
 
-    // Which part of the 16:9 thumbnail shows in the widescreen tile ("Thumbnail crop" in the editor)
+    // Which part of the 16:9 thumbnail shows in the widescreen tile: a number from 0 (top) to 100 (bottom),
+    // set by dragging in the editor, or one of the older named positions
     const CROPS = { "Top": 0, "Upper": 25, "Center": 50, "Lower": 75, "Bottom": 100 };
     function cropOf(v) {
+      const n = Number(v.crop);
+      if (v.crop !== "" && v.crop != null && Number.isFinite(n)) return Math.min(100, Math.max(0, n));
       return CROPS[v.crop] ?? 50;
     }
 
@@ -1121,43 +1176,15 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
         }, { once: true });
       });
 
-      grid.addEventListener("click", e => {
-        const card = e.target.closest(".card");
-        if (!card || e.metaKey || e.ctrlKey || e.shiftKey) return;
-        e.preventDefault();
-        openPlayer(Number(card.dataset.index), card);
-      });
-
-      setupTouchReveal(grid);
-    }
-
-    /* Phones can't hover: show the title of the one thumbnail crossing the middle of the screen */
-    function setupTouchReveal(grid) {
-      if (!window.matchMedia("(hover: none)").matches) return;
-      const cards = [...grid.querySelectorAll(".card")];
-      let active = null;
-      let queued = false;
-
-      function update() {
-        queued = false;
-        const mid = window.innerHeight / 2;
-        const next = cards.find(c => {
-          const r = c.getBoundingClientRect();
-          return r.top <= mid && r.bottom > mid;
-        }) || null;
-        if (next === active) return;
-        if (active) active.classList.remove("in-view");
-        if (next) next.classList.add("in-view");
-        active = next;
+      if (!grid.dataset.wired) {
+        grid.dataset.wired = "1";
+        grid.addEventListener("click", e => {
+          const card = e.target.closest(".card");
+          if (!card || e.metaKey || e.ctrlKey || e.shiftKey) return;
+          e.preventDefault();
+          openPlayer(Number(card.dataset.index), card);
+        });
       }
-
-      function queue() {
-        if (!queued) { queued = true; requestAnimationFrame(update); }
-      }
-
-      window.addEventListener("scroll", queue, { passive: true });
-      window.addEventListener("resize", queue);
-      update();
     }
 
     /* ---------- PLAYER ---------- */
@@ -1171,10 +1198,61 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
       document.documentElement.style.overflow = lock ? "hidden" : "";
     }
 
+    /* ---------- VISITOR STATS ----------
+       Anonymous counts for the private /stats page: visits, video opens, time in each video popup,
+       contact form use. No cookies; nothing identifies a person. Off on local copies and on devices
+       where "Don't count my visits" is switched on in /stats. */
+    // Shown inside the editor's "Site preview" with unsaved changes (never counted in stats)
+    const DRAFT_PREVIEW = window.parent !== window && new URLSearchParams(location.search).has("draft-preview");
+
+    const stats = (() => {
+      let off = DRAFT_PREVIEW || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+      try { off = off || localStorage.getItem("tb-stats-ignore") === "1"; } catch {}
+      let watching = null; // { slug, since }
+
+      function send(event) {
+        if (off) return;
+        const body = JSON.stringify(event);
+        if (!(navigator.sendBeacon && navigator.sendBeacon("/.netlify/functions/stats", body))) {
+          fetch("/.netlify/functions/stats", { method: "POST", body, keepalive: true }).catch(() => {});
+        }
+      }
+
+      function source() {
+        const params = new URLSearchParams(location.search);
+        const tagged = (params.get("utm_source") || params.get("ref") || "").toLowerCase();
+        if (tagged) return tagged.replace(/[^a-z0-9.\-]/g, "").slice(0, 80) || "direct";
+        try {
+          const host = new URL(document.referrer).hostname.replace(/^(www|m|l|lm)\./, "");
+          return host && host !== location.hostname ? host : "direct";
+        } catch { return "direct"; }
+      }
+
+      function stopWatching() {
+        if (!watching) return;
+        const secs = Math.round((Date.now() - watching.since) / 1000);
+        if (secs >= 1) send({ t: "vt", v: watching.slug, s: Math.min(secs, 3600) });
+        watching = null;
+      }
+
+      addEventListener("pagehide", stopWatching);
+      return {
+        visit() {
+          const w = innerWidth;
+          send({ t: "pv", src: source(), dev: w < 768 ? "phone" : w < 1100 ? "tablet" : "desktop" });
+        },
+        videoOpened(slug) { stopWatching(); watching = { slug, since: Date.now() }; send({ t: "vo", v: slug }); },
+        videoClosed: stopWatching,
+        contactOpened() { send({ t: "cf" }); },
+        inquirySent() { send({ t: "cs" }); },
+      };
+    })();
+
     function showVideo(i) {
       const v = videos[i];
       if (!v) return;
       current = i;
+      stats.videoOpened(v.slug);
 
       const p = parseVideo(v);
       frame.innerHTML = p
@@ -1231,7 +1309,9 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
     // The address bar is the source of truth, so links to a specific video can be shared
     function syncFromHash() {
       const m = location.hash.match(/^#video\/(.+)$/);
-      const i = m ? videos.findIndex(v => v.slug === decodeURIComponent(m[1])) : -1;
+      const slug = m ? decodeURIComponent(m[1]) : null;
+      if (slug && activeFilter && !videos.some(v => v.slug === slug) && allVideos.some(v => v.slug === slug)) setFilter("");
+      const i = slug ? videos.findIndex(v => v.slug === slug) : -1;
 
       if (i >= 0) {
         const wasOpen = !player.hidden;
@@ -1247,6 +1327,7 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
         player.classList.remove("is-open");
         player.hidden = true;
         frame.innerHTML = ""; // stops playback
+        stats.videoClosed();
         current = -1;
         lockPage(false);
         if (returnFocus) returnFocus.focus({ preventScroll: true });
@@ -1275,6 +1356,7 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
     let contactReturnFocus = null;
 
     function openContact() {
+      stats.contactOpened();
       contactReturnFocus = document.activeElement;
       contactModal.hidden = false;
       lockPage(true);
@@ -1317,6 +1399,7 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
             form.reset();
             form.hidden = true;
             status.textContent = "Thanks — I’ll be in touch shortly.";
+            stats.inquirySent();
             setTimeout(() => {
               closeContact();
               form.hidden = false;
@@ -1383,8 +1466,79 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
       pick("A");
     }
 
+    /* ---------- BANNER ---------- */
+    // The banner video always fills its frame: when the chosen height doesn't match the video's own
+    // shape, the iframe is enlarged and centered so the edges crop instead of showing black bars.
+    let reelRatio = 21 / 9;
+    const ratioOf = (r, fallback) => { const [w, h] = String(r || "").split("/").map(Number); return w > 0 && h > 0 ? w / h : fallback; };
+
+    function fitReel() {
+      const box = document.getElementById("reelEmbed");
+      const iframe = box && box.querySelector("iframe");
+      if (!iframe || !box.clientWidth) return;
+      const bw = box.clientWidth, bh = box.clientHeight;
+      let w = bw, h = bw / reelRatio;
+      if (h < bh) { h = bh; w = bh * reelRatio; }
+      Object.assign(iframe.style, { inset: "auto", width: w + "px", height: h + "px", left: (bw - w) / 2 + "px", top: (bh - h) / 2 + "px" });
+    }
+    addEventListener("resize", fitReel);
+
+    function reelEmbedURL(link) {
+      const p = parseVideo({ url: link });
+      if (!p || p.kind !== "vimeo") return null; // background looping needs Vimeo
+      return `https://player.vimeo.com/video/${encodeURIComponent(p.id)}?${p.hash ? `h=${encodeURIComponent(p.hash)}&` : ""}background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0&dnt=1`;
+    }
+
+    function applyBanner(site) {
+      const root = document.documentElement.style;
+      if (site.reelAspect) root.setProperty("--reel-aspect", site.reelAspect);
+      if (site.gridAspect) root.setProperty("--grid-aspect", site.gridAspect);
+      reelRatio = Number(site.reelVideoRatio) > 0 ? Number(site.reelVideoRatio) : 21 / 9;
+      const src = site.reelUrl && reelEmbedURL(site.reelUrl);
+      const iframe = document.querySelector("#reelEmbed iframe");
+      if (src && iframe && iframe.getAttribute("src") !== src) { iframe.classList.remove("loaded"); iframe.src = src; }
+      if (site.reelPoster) document.getElementById("reelFallback").src = site.reelPoster;
+      fitReel();
+    }
+
+    /* ---------- FILTERS ----------
+       Tags are set per video in the editor. Each filter has its own link (?filter=music-video), and the
+       popup's next/previous stay within the active filter. */
+    const hasTag = (v, id) => (v.tags || []).includes(id);
+
+    function renderFilters() {
+      const nav = document.getElementById("filters");
+      const available = tagList.filter(t => allVideos.some(v => hasTag(v, t.id)));
+      nav.hidden = !available.length;
+      nav.innerHTML = [{ id: "", label: "All" }, ...available].map(t =>
+        `<button type="button" data-filter="${esc(t.id)}" aria-pressed="${t.id === activeFilter}">${esc(t.label)}</button>`).join("");
+    }
+
+    function applyFilter() {
+      if (activeFilter && !allVideos.some(v => hasTag(v, activeFilter))) activeFilter = "";
+      videos = activeFilter ? allVideos.filter(v => hasTag(v, activeFilter)) : allVideos;
+      renderFilters();
+      renderVideos();
+    }
+
+    function setFilter(id) {
+      activeFilter = id;
+      const url = new URL(location.href);
+      if (id) url.searchParams.set("filter", id); else url.searchParams.delete("filter");
+      history.replaceState(history.state, "", url);
+      applyFilter();
+    }
+
+    document.getElementById("filters").addEventListener("click", e => {
+      const b = e.target.closest("[data-filter]");
+      if (b) setFilter(b.dataset.filter);
+    });
+
     /* ---------- SITE TEXT ---------- */
     function applySite(site) {
+      tagList = Array.isArray(site.tags) ? site.tags.filter(t => t && t.id && t.label) : [];
+      if (allVideos.length) applyFilter(); else renderFilters();
+      applyBanner(site);
       const set = (id, val) => { if (val) document.getElementById(id).textContent = val; };
       set("logo", site.logo);
       set("headline", site.headline);
@@ -1398,6 +1552,8 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
       if (site.aboutPhoto) document.getElementById("aboutPhoto").src = site.aboutPhoto;
 
       const links = document.getElementById("footerLinks");
+      links.dataset.base ??= links.innerHTML;
+      links.innerHTML = links.dataset.base;
       if (site.email) {
         links.insertAdjacentHTML("afterbegin", `<a href="mailto:${esc(site.email)}">${esc(site.email)}</a>`);
       }
@@ -1421,19 +1577,34 @@ After a decade in Los Angeles, I traded the city for the high seas. These days I
       setupAbout();
       setupPlayer();
 
-      loadJSON("/data/site.json").then(applySite).catch(() => {});
-
-      try {
-        const data = await loadJSON("/data/videos.json");
+      function useVideos(list) {
         const seen = new Set();
         // Videos ticked "Hide on live site" in the editor stay in the data but aren't shown
-        videos = (data.videos || []).filter(v => v && (v.url || v.id) && !v.hidden).map((v, i) => {
+        allVideos = (list || []).filter(v => v && (v.url || v.id) && !v.hidden).map((v, i) => {
           let slug = slugify(v.title) || "video-" + (i + 1);
           while (seen.has(slug)) slug += "-" + (i + 1);
           seen.add(slug);
           return { ...v, slug };
         });
-        renderVideos();
+        applyFilter();
+      }
+
+      if (DRAFT_PREVIEW) {
+        addEventListener("message", e => {
+          if (e.origin !== location.origin || !e.data || e.data.type !== "tb-draft") return;
+          if (e.data.site) applySite(e.data.site);
+          if (e.data.videos) useVideos(e.data.videos);
+        });
+        parent.postMessage({ type: "tb-draft-ready" }, location.origin);
+        return;
+      }
+
+      loadJSON("/data/site.json").then(applySite).catch(() => {});
+
+      try {
+        const data = await loadJSON("/data/videos.json");
+        useVideos(data.videos);
+        stats.visit();
         syncFromHash(); // open a shared #video/... link
       } catch (e) {
         console.error(e);

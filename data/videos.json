@@ -7,7 +7,8 @@
       "details": [
         {
           "thumb": true,
-          "value": "Race to Alaska"
+          "value": "Race to Alaska",
+          "label": "Client"
         }
       ],
       "thumb": "/thumbnails/r2ak-thumb-16-9.jpg",
@@ -20,10 +21,13 @@
           "role": "Director",
           "name": "Jesse Wiegel"
         }
+      ],
+      "tags": [
+        "commercial",
+        "brand"
       ]
     },
     {
-      "title": "Polly Wales",
       "details": [
         {
           "label": "Client",
@@ -37,9 +41,9 @@
         }
       ],
       "url": "https://vimeo.com/367326427",
-      "thumb": "/thumbnails/polly-wales.jpg",
       "crop": "Upper",
-      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
+      "thumb": "/thumbnails/polly-wales.jpg",
+      "title": "Polly Wales",
       "credits": [
         {
           "role": "Director",
@@ -53,6 +57,11 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
+      ],
+      "description": "“It feels like an intergalactic cult”\n\nCombining her skills as a sculptor, her love of traditional casting methods and her craftsmanship, Los Angeles designer Polly Wales creates one-of-a-kind jewelry. Sapphires, rubies and diamonds are cast directly into rich gold, so the finished pieces resemble natural gem-encrusted forms or sparkling geodes split open. Her unorthodox approach has carved out a new niche in fine jewelry design.",
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -76,6 +85,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -104,7 +117,10 @@
           "name": "Avi Brigman"
         }
       ],
-      "crop": "Top"
+      "crop": "Top",
+      "tags": [
+        "film"
+      ]
     },
     {
       "title": "TWIST Curated Jewelry",
@@ -137,10 +153,13 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand"
       ]
     },
     {
-      "title": "Odesza - In Return Tour",
+      "title": "In Return Tour",
       "details": [
         {
           "label": "Client",
@@ -174,15 +193,23 @@
           "role": "Featuring",
           "name": "Lauryn Myers"
         }
+      ],
+      "tags": [
+        "music-video"
       ]
     },
     {
-      "title": "The Mythical Show – BTS",
+      "title": "Wanderlist",
       "details": [
         {
           "label": "Client",
-          "value": "Rhett & Link",
+          "value": "Condé Nast Traveler",
           "thumb": true
+        },
+        {
+          "label": "Agency",
+          "value": "Kornhaber Brown",
+          "thumb": false
         },
         {
           "label": "Prod. Company",
@@ -191,50 +218,33 @@
         },
         {
           "label": "Year",
-          "value": "2013",
+          "value": "2015",
           "thumb": false
         }
       ],
-      "url": "https://vimeo.com/66525770",
-      "thumb": "/thumbnails/mythical-show-bts.jpg",
-      "description": "A behind-the-scenes look at our stop-motion piece for Rhett & Link’s The Mythical Show. Everything was built by hand, animated practically and photographed in camera: the cave is melted wax, the teardrop a water balloon, the molten lava torched pie crust, and the title was carved from a tree stump found on the side of the road.",
+      "url": "https://vimeo.com/123158426",
+      "thumb": "/thumbnails/conde-nast-traveler-interstitials.jpg",
+      "description": "Title and interstitial cards for Wanderlist, Condé Nast Traveler’s travel series. Inspired by the small visual memories we collect on the road, we built a set of moving portraits from detail shots, each with its own mood and flexible enough to introduce almost any travel story.",
       "credits": [
         {
-          "role": "Creative Director, Animator",
+          "role": "Executive Producer",
+          "name": "Mark Cramer"
+        },
+        {
+          "role": "Creative Director, Animation",
           "name": "Ryan Wehner"
         },
         {
-          "role": "Production Designer",
+          "role": "Creative Director, Production Design",
           "name": "Mike Pasley"
         },
         {
-          "role": "Directors of Photography",
-          "name": "Andrew Tomayko & Chris Vanderwall"
-        },
-        {
-          "role": "Swing",
-          "name": "Jonas Studer"
-        },
-        {
-          "role": "Production Assistant",
-          "name": "Mike Kasper"
-        },
-        {
-          "role": "Art Department",
-          "name": "Mike Pasley, Jonas Studer, Mark Davis, Grant Hyde"
-        },
-        {
-          "role": "Sound Design, Music Composer",
-          "name": "White Noise Lab"
-        },
-        {
-          "role": "Voice Over",
-          "name": "Mick Wingert"
-        },
-        {
-          "role": "Music",
-          "name": "“Yugck” by Pool Cosby"
+          "role": "Director of Photography",
+          "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -313,68 +323,116 @@
           "role": "Song Produced by",
           "name": "Johnny K"
         }
-      ]
-    },
-    {
-      "title": "Wanderlist",
-      "details": [
-        {
-          "label": "Client",
-          "value": "Condé Nast Traveler",
-          "thumb": true
-        },
-        {
-          "label": "Agency",
-          "value": "Kornhaber Brown",
-          "thumb": false
-        },
-        {
-          "label": "Prod. Company",
-          "value": "Digital Twigs",
-          "thumb": false
-        },
-        {
-          "label": "Year",
-          "value": "2015",
-          "thumb": false
-        }
       ],
-      "url": "https://vimeo.com/123158426",
-      "thumb": "/thumbnails/conde-nast-traveler-interstitials.jpg",
-      "description": "Title and interstitial cards for Wanderlist, Condé Nast Traveler’s travel series. Inspired by the small visual memories we collect on the road, we built a set of moving portraits from detail shots, each with its own mood and flexible enough to introduce almost any travel story.",
-      "credits": [
-        {
-          "role": "Executive Producer",
-          "name": "Mark Cramer"
-        },
-        {
-          "role": "Creative Director, Animation",
-          "name": "Ryan Wehner"
-        },
-        {
-          "role": "Creative Director, Production Design",
-          "name": "Mike Pasley"
-        },
-        {
-          "role": "Director of Photography",
-          "name": "Andrew Tomayko"
-        }
+      "tags": [
+        "music-video"
       ]
     },
     {
-      "title": "Sea Change: By the Wind",
+      "title": "Sea Change",
       "details": [
         {
           "label": "Year",
-          "value": "2017",
+          "value": "2016",
           "thumb": false
+        },
+        {
+          "label": "",
+          "value": "By the Wind",
+          "thumb": true
         }
       ],
       "url": "https://vimeo.com/211568809",
-      "thumb": "/thumbnails/sea-change-by-the-wind.jpg",
-      "crop": "Top",
+      "thumb": "/thumbnails/sea-change-on-deck.jpg",
+      "crop": 50,
       "description": "Sea change (noun): a profound transformation brought about by the sea.\n\nOn December 31st, 2015, two friends, a little dog and I set out to sail from Florida to the Amazon River. It took a little over a year and nine countries to reach our goal, exploring the rivers, jungles and remote islands of the Caribbean along the way. Traveling under sail let us connect deeply with the people and places we met; we took our time and became part of the landscape instead of just observing it. Sea Change combined our passions for adventure and filmmaking into a short video series that blurs the line between documentary and narrative, bringing the viewer aboard to experience life at sea as we knew it.",
-      "credits": []
+      "credits": [
+        {
+          "role": "Camera, Editor",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "Camera",
+          "name": "Brandon Savory"
+        },
+        {
+          "role": "Camera",
+          "name": "Scott Gallyon"
+        }
+      ],
+      "tags": [
+        "documentary",
+        "film"
+      ]
+    },
+    {
+      "title": "sailing to a sea bird sanctuary",
+      "details": [
+        {
+          "label": "",
+          "value": "Pacific Mexico",
+          "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2025",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=mjQUXTrrI88",
+      "thumb": "/thumbnails/konami-last-adventure.jpg",
+      "crop": 75,
+      "description": "I spent the last week of 2025 on one final adventure with Konami, the vessel that carried me safely from Alaska to Costa Rica.\n\nChad joined me, his friendship having grown into brotherhood over the years. Together we sailed through quiet, remote islands off the Pacific coast of Mexico. He was there for Konami’s maiden voyage in Portland over six years ago, so sharing her twilight sail together felt fitting. A perfect bookend to a chapter that shaped my life.\n\nKonami is the Westsail 32 that carried me through some of the most formative years of my life and across thousands of miles of ocean. While this voyage marks the end of my time with her, my sailing journey is far from over.",
+      "credits": [
+        {
+          "role": "Film by",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "With",
+          "name": "Chad Brigman"
+        },
+        {
+          "role": "Thank you",
+          "name": "Konami"
+        }
+      ],
+      "tags": [
+        "documentary",
+        "film"
+      ]
+    },
+    {
+      "title": "Sea Kayaking",
+      "details": [
+        {
+          "label": "",
+          "value": "Desolation Sound, BC",
+          "thumb": true
+        },
+        {
+          "label": "Year",
+          "value": "2018",
+          "thumb": false
+        }
+      ],
+      "url": "https://www.youtube.com/watch?v=7hT7TdthjMo",
+      "thumb": "/thumbnails/desolation-sound-kayak.jpg",
+      "description": "In honor of Alex’s dad’s would-be 60th birthday, he and I set out on a week-long kayaking adventure into the Canadian wilderness. We covered around 80 nautical miles as we explored Desolation Sound and the surrounding area. During one of our nightly conversations around the fire, Alex told me a piece of advice his dad gave him when he was younger: “Don’t drive past a forest and not be able to tell me what the trees look like.”",
+      "credits": [
+        {
+          "role": "Film by",
+          "name": "Andrew Tomayko"
+        },
+        {
+          "role": "With",
+          "name": "Alex Diana"
+        }
+      ],
+      "tags": [
+        "documentary",
+        "film"
+      ]
     },
     {
       "title": "“I Like You”",
@@ -402,6 +460,9 @@
           "role": "Visual Effects",
           "name": "Ryan Wehner"
         }
+      ],
+      "tags": [
+        "music-video"
       ]
     },
     {
@@ -435,6 +496,74 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
+      ]
+    },
+    {
+      "title": "The Mythical Show – BTS",
+      "details": [
+        {
+          "label": "Client",
+          "value": "Rhett & Link",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Digital Twigs",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2013",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/66525770",
+      "thumb": "/thumbnails/mythical-show-bts.jpg",
+      "description": "A behind-the-scenes look at our stop-motion piece for Rhett & Link’s The Mythical Show. Everything was built by hand, animated practically and photographed in camera: the cave is melted wax, the teardrop a water balloon, the molten lava torched pie crust, and the title was carved from a tree stump found on the side of the road.",
+      "credits": [
+        {
+          "role": "Creative Director, Animator",
+          "name": "Ryan Wehner"
+        },
+        {
+          "role": "Production Designer",
+          "name": "Mike Pasley"
+        },
+        {
+          "role": "Directors of Photography",
+          "name": "Andrew Tomayko & Chris Vanderwall"
+        },
+        {
+          "role": "Swing",
+          "name": "Jonas Studer"
+        },
+        {
+          "role": "Production Assistant",
+          "name": "Mike Kasper"
+        },
+        {
+          "role": "Art Department",
+          "name": "Mike Pasley, Jonas Studer, Mark Davis, Grant Hyde"
+        },
+        {
+          "role": "Sound Design, Music Composer",
+          "name": "White Noise Lab"
+        },
+        {
+          "role": "Voice Over",
+          "name": "Mick Wingert"
+        },
+        {
+          "role": "Music",
+          "name": "“Yugck” by Pool Cosby"
+        }
+      ],
+      "tags": [
+        "behind-the-scenes"
       ]
     },
     {
@@ -464,6 +593,9 @@
           "role": "Director, Director of Photography",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -507,6 +639,10 @@
           "role": "Music",
           "name": "Odesza – \"Always This Late\""
         }
+      ],
+      "tags": [
+        "commercial",
+        "behind-the-scenes"
       ]
     },
     {
@@ -541,10 +677,63 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
-      "title": "Big News Events – Behind the Scenes",
+      "title": "Fin & The Gucci Suit",
+      "details": [
+        {
+          "label": "",
+          "value": "Film essay",
+          "thumb": true
+        },
+        {
+          "label": "Prod. Company",
+          "value": "Toy Boat",
+          "thumb": false
+        },
+        {
+          "label": "Year",
+          "value": "2019",
+          "thumb": false
+        }
+      ],
+      "url": "https://vimeo.com/369708358",
+      "thumb": "/thumbnails/fin-and-the-gucci-suit.jpg",
+      "description": "On a cross-country pilgrimage, Fin confronts the idiosyncrasies of an unfamiliar world.\n\nFin & The Gucci Suit is a film essay that chronicles the real-life travels of its protagonist, Elle Fin. In the making of the film, acts of time-lapsed performance art, poetry and gypsy folk music are combined as a DIY, no-budget project intended to celebrate the vision of its contributors.",
+      "credits": [
+        {
+          "role": "A Film by",
+          "name": "Andrew Tomayko & Elle Fin"
+        },
+        {
+          "role": "Written by",
+          "name": "Caleb White"
+        },
+        {
+          "role": "Music",
+          "name": "Jon Ratliff"
+        },
+        {
+          "role": "Narration",
+          "name": "Sora Blu"
+        },
+        {
+          "role": "Featuring",
+          "name": "Mariee Sioux"
+        }
+      ],
+      "tags": [
+        "documentary",
+        "film"
+      ]
+    },
+    {
+      "title": "Big News Events – BTS",
       "details": [
         {
           "label": "Client",
@@ -614,6 +803,9 @@
           "role": "Behind the Scenes",
           "name": "Michael Larson"
         }
+      ],
+      "tags": [
+        "behind-the-scenes"
       ]
     },
     {
@@ -652,6 +844,10 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -672,6 +868,9 @@
           "role": "Director",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -725,6 +924,10 @@
           "role": "Composer, Audio Mix",
           "name": "Keith Ruggiero (SoundsRed)"
         }
+      ],
+      "tags": [
+        "commercial",
+        "behind-the-scenes"
       ]
     },
     {
@@ -759,6 +962,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -784,6 +991,9 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "documentary"
       ]
     },
     {
@@ -818,6 +1028,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -851,6 +1065,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -885,6 +1103,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -909,6 +1131,9 @@
           "role": "Director of Photography/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -933,6 +1158,9 @@
           "role": "DP/editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "commercial"
       ]
     },
     {
@@ -967,6 +1195,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1004,6 +1236,10 @@
           "role": "Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1037,6 +1273,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1071,7 +1311,11 @@
           "name": "Andrew Tomayko"
         }
       ],
-      "crop": "Lower"
+      "crop": "Lower",
+      "tags": [
+        "brand",
+        "documentary"
+      ]
     },
     {
       "title": "Sia Taylor",
@@ -1104,6 +1348,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1138,6 +1386,10 @@
           "role": "Director/Editor",
           "name": "Andrew Tomayko"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     },
     {
@@ -1171,6 +1423,10 @@
           "role": "Camera, Editor",
           "name": "Sora Blu"
         }
+      ],
+      "tags": [
+        "brand",
+        "documentary"
       ]
     }
   ]

@@ -1,0 +1,8 @@
+{
+  "name": "toyboatfilms",
+  "private": true,
+  "description": "Dependencies for the site's Netlify Functions (the website itself has no build step).",
+  "dependencies": {
+    "@netlify/blobs": "11.1.0"
+  }
+}

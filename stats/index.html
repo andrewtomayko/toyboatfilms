@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Toy Boat · Visitor Stats</title>
+  <link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#0b0b0b; --surface:#141414; --line:#262626; --text:#f2f2f2; --muted:#9a9a9a; --accent:#f2f2f2;
+      --bar:#e8e8e8; --bar-dim:#3a3a3a;
+    }
+    *{ box-sizing:border-box; }
+    [hidden]{ display:none !important; }
+    body{ margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing:antialiased; }
+    button{ font:inherit; color:inherit; }
+    .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; }
+    header{ border-bottom:1px solid var(--line); }
+    header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-block:18px; }
+    .brand{ font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+    .brand span{ color:var(--muted); font-weight:500; margin-left:10px; letter-spacing:.14em; font-size:12px; }
+    .btn{ background:none; border:1px solid #444; border-radius:6px; padding:8px 14px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; color:var(--text); }
+    .btn:hover{ border-color:var(--text); }
+    .btn.primary{ background:var(--text); color:var(--bg); border-color:var(--text); }
+    .btn[aria-pressed="true"]{ background:var(--text); color:var(--bg); border-color:var(--text); }
+    .actions{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .office-nav{ display:flex; gap:2px; padding:3px; border:1px solid var(--line); border-radius:999px; }
+    .office-nav a{ color:var(--muted); text-decoration:none; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; }
+    .office-nav a:hover{ color:var(--text); }
+    .office-nav a[aria-current="page"]{ background:var(--text); color:var(--bg); }
+    main{ padding:28px 0 72px; }
+    .login{ max-width:440px; margin:12vh auto 0; text-align:center; border:1px solid var(--line); background:var(--surface); padding:36px 28px; }
+    .login h1{ margin:0 0 8px; font-size:26px; }
+    .login p{ margin:0 0 22px; color:var(--muted); }
+    .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:22px; }
+    .toolbar h1{ margin:0; font-size:28px; letter-spacing:-.01em; }
+    .note{ color:var(--muted); font-size:13px; margin:0 0 22px; }
+    .cards{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin-bottom:28px; }
+    .card{ border:1px solid var(--line); background:var(--surface); padding:18px; }
+    .card .label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+    .card .value{ font-size:32px; font-weight:700; margin-top:6px; font-variant-numeric:tabular-nums; }
+    .card .hint{ font-size:12px; color:var(--muted); margin-top:4px; }
+    .panel{ border:1px solid var(--line); background:var(--surface); padding:18px 18px 14px; margin-bottom:16px; }
+    .panel h2{ margin:0 0 14px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+    .grid2{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+    .grid3{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+    .chart{ display:flex; align-items:flex-end; gap:3px; height:160px; padding-top:8px; }
+    .chart .col{ flex:1; display:flex; flex-direction:column; justify-content:flex-end; height:100%; min-width:0; position:relative; }
+    .chart .bar{ background:var(--bar); min-height:2px; border-radius:2px 2px 0 0; }
+    .chart .bar.zero{ background:var(--bar-dim); }
+    .chart .col:hover .bar{ opacity:.75; }
+    .chart .col:hover::after{ content:attr(data-tip); position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); white-space:nowrap; background:#000; border:1px solid #444; padding:4px 8px; font-size:12px; z-index:2; }
+    .axis{ display:flex; justify-content:space-between; color:var(--muted); font-size:11px; margin-top:6px; }
+    table{ width:100%; border-collapse:collapse; font-size:14px; }
+    th{ text-align:left; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:6px 0 8px; border-bottom:1px solid var(--line); }
+    td{ padding:9px 0; border-bottom:1px solid #1d1d1d; vertical-align:middle; }
+    tr:last-child td{ border-bottom:0; }
+    .num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; padding-left:12px; }
+    .meter{ height:4px; background:#222; margin-top:6px; border-radius:2px; overflow:hidden; }
+    .meter span{ display:block; height:100%; background:var(--bar); }
+    .empty{ color:var(--muted); font-size:14px; padding:6px 0; }
+    .status{ color:var(--muted); font-size:13px; }
+    .status.error{ color:#ff7b7b; }
+    .ignore{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted); margin-top:28px; }
+    .ignore input{ width:18px; height:18px; accent-color:#f2f2f2; }
+    @media (max-width: 860px){
+      .cards{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+      .grid2, .grid3{ grid-template-columns:1fr; }
+      .wrap{ padding:0 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">Toy Boat<span>Visitor stats</span></div>
+      <nav class="office-nav" aria-label="Back office">
+        <a href="/admin/">Website</a><a href="/invoices/">Invoices</a><a href="/stats/" aria-current="page">Stats</a>
+      </nav>
+      <div class="actions">
+        <span class="status" id="status"></span>
+        <button class="btn" id="logoutBtn" type="button" hidden>Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="login" id="loginView" hidden>
+      <h1>Visitor stats</h1>
+      <p>Log in with your Toy Boat account to see how people use your site.</p>
+      <button class="btn primary" id="loginBtn" type="button">Log in</button>
+    </section>
+
+    <section id="statsView" hidden>
+      <div class="toolbar">
+        <h1>Visitor stats</h1>
+        <div class="actions" role="group" aria-label="Date range">
+          <button class="btn" type="button" data-days="7">7 days</button>
+          <button class="btn" type="button" data-days="30">30 days</button>
+          <button class="btn" type="button" data-days="90">90 days</button>
+        </div>
+      </div>
+      <p class="note" id="rangeNote"></p>
+
+      <div class="cards">
+        <div class="card"><div class="label">Visits</div><div class="value" id="cVisits">–</div><div class="hint">One per visitor per day</div></div>
+        <div class="card"><div class="label">Video opens</div><div class="value" id="cOpens">–</div><div class="hint" id="cOpensHint"></div></div>
+        <div class="card"><div class="label">Avg. time per video</div><div class="value" id="cTime">–</div><div class="hint">Time the video popup stayed open</div></div>
+        <div class="card"><div class="label">Inquiries</div><div class="value" id="cInquiries">–</div><div class="hint" id="cInquiriesHint"></div></div>
+      </div>
+
+      <div class="panel">
+        <h2>Visits per day</h2>
+        <div class="chart" id="chart"></div>
+        <div class="axis"><span id="axisStart"></span><span id="axisEnd"></span></div>
+      </div>
+
+      <div class="panel">
+        <h2>Videos</h2>
+        <table>
+          <thead><tr><th>Video</th><th class="num">Opens</th><th class="num">Avg. time</th><th class="num">Total time</th></tr></thead>
+          <tbody id="videoRows"></tbody>
+        </table>
+      </div>
+
+      <div class="grid3">
+        <div class="panel"><h2>Where visitors came from</h2><table><tbody id="sourceRows"></tbody></table></div>
+        <div class="panel"><h2>Devices</h2><table><tbody id="deviceRows"></tbody></table></div>
+        <div class="panel"><h2>Countries</h2><table><tbody id="countryRows"></tbody></table></div>
+      </div>
+
+      <label class="ignore">
+        <input type="checkbox" id="ignoreMe">
+        Don’t count my visits from this browser (turn this on on each phone and computer you use)
+      </label>
+    </section>
+  </main>
+
+  <script>
+  (() => {
+    const $ = (id) => document.getElementById(id);
+    const identity = window.netlifyIdentity;
+    let days = 30;
+    let titles = {};
+
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const fmtNum = (n) => Number(n || 0).toLocaleString("en-US");
+    const fmtTime = (secs) => {
+      secs = Math.round(secs || 0);
+      if (secs < 60) return `${secs}s`;
+      const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
+      return h ? `${h}h ${m}m` : `${m}m ${String(s).padStart(2, "0")}s`;
+    };
+    const fmtDay = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const slugify = (s) => String(s || "").normalize("NFKD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const SOURCE_NAMES = {
+      direct: "Direct / bookmarks", "instagram.com": "Instagram", "facebook.com": "Facebook", "google.com": "Google",
+      "vimeo.com": "Vimeo", "youtube.com": "YouTube", "linkedin.com": "LinkedIn", "t.co": "X / Twitter",
+      "bing.com": "Bing", "duckduckgo.com": "DuckDuckGo", "northgrown.com": "northgrown.com (old site)",
+    };
+    const sourceName = (s) => SOURCE_NAMES[s] || (s.startsWith("google.") ? "Google" : s);
+    const countryName = (() => {
+      try { const dn = new Intl.DisplayNames(["en"], { type: "region" }); return (c) => dn.of(c) || c; }
+      catch { return (c) => c; }
+    })();
+
+    function setStatus(text, error = false) {
+      $("status").textContent = text;
+      $("status").classList.toggle("error", error);
+    }
+
+    async function loadTitles() {
+      try {
+        const data = await fetch("/data/videos.json", { cache: "no-store" }).then((r) => r.json());
+        (data.videos || []).forEach((v) => { const s = slugify(v.title); if (s) titles[s] = v.title; });
+      } catch {}
+    }
+
+    async function load() {
+      setStatus("Loading…");
+      document.querySelectorAll("[data-days]").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.days === days)));
+      try {
+        const token = await identity.currentUser().jwt();
+        const res = await fetch(`/.netlify/functions/stats?days=${days}`, { headers: { Authorization: "Bearer " + token }, cache: "no-store" });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Server error " + res.status);
+        render(data.days || []);
+        setStatus(location.hostname.endsWith("toyboatfilms.com") ? "" : "Preview · test data only");
+      } catch (e) {
+        setStatus("Couldn’t load stats: " + e.message, true);
+      }
+    }
+
+    function merge(list, key) {
+      const out = {};
+      list.forEach((d) => Object.entries(d[key] || {}).forEach(([k, v]) => { out[k] = (out[k] || 0) + v; }));
+      return out;
+    }
+
+    function shareRows(obj, nameOf, emptyText) {
+      const total = Object.values(obj).reduce((a, b) => a + b, 0);
+      const rows = Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, 10);
+      if (!rows.length) return `<tr><td class="empty">${emptyText}</td></tr>`;
+      return rows.map(([k, n]) => `
+        <tr><td>${esc(nameOf(k))}<div class="meter"><span style="width:${(100 * n / total).toFixed(1)}%"></span></div></td>
+        <td class="num">${fmtNum(n)} · ${Math.round(100 * n / total)}%</td></tr>`).join("");
+    }
+
+    function render(list) {
+      const visits = list.reduce((a, d) => a + (d.visits || 0), 0);
+      const videos = {};
+      list.forEach((d) => Object.entries(d.videos || {}).forEach(([slug, v]) => {
+        const t = (videos[slug] ||= { opens: 0, secs: 0 });
+        t.opens += v.opens || 0; t.secs += v.secs || 0;
+      }));
+      const opens = Object.values(videos).reduce((a, v) => a + v.opens, 0);
+      const secs = Object.values(videos).reduce((a, v) => a + v.secs, 0);
+      const inquiries = list.reduce((a, d) => a + (d.inquiries || 0), 0);
+      const contactOpens = list.reduce((a, d) => a + (d.contactOpens || 0), 0);
+
+      $("rangeNote").textContent = list.length ? `${fmtDay(list[0].date)} – ${fmtDay(list[list.length - 1].date)} · counted in UTC days` : "";
+      $("cVisits").textContent = fmtNum(visits);
+      $("cOpens").textContent = fmtNum(opens);
+      $("cOpensHint").textContent = visits ? `${(opens / visits).toFixed(1)} per visit` : "";
+      $("cTime").textContent = opens ? fmtTime(secs / opens) : "–";
+      $("cInquiries").textContent = fmtNum(inquiries);
+      $("cInquiriesHint").textContent = `Contact form opened ${fmtNum(contactOpens)} time${contactOpens === 1 ? "" : "s"}`;
+
+      const max = Math.max(1, ...list.map((d) => d.visits || 0));
+      $("chart").innerHTML = list.map((d) => `
+        <div class="col" data-tip="${esc(fmtDay(d.date))}: ${fmtNum(d.visits)} visit${d.visits === 1 ? "" : "s"}">
+          <div class="bar ${d.visits ? "" : "zero"}" style="height:${(100 * (d.visits || 0) / max).toFixed(1)}%"></div>
+        </div>`).join("");
+      $("axisStart").textContent = list.length ? fmtDay(list[0].date) : "";
+      $("axisEnd").textContent = list.length ? fmtDay(list[list.length - 1].date) : "";
+
+      const vrows = Object.entries(videos).sort((a, b) => b[1].opens - a[1].opens || b[1].secs - a[1].secs);
+      $("videoRows").innerHTML = vrows.length ? vrows.map(([slug, v]) => `
+        <tr><td>${esc(titles[slug] || slug)}</td><td class="num">${fmtNum(v.opens)}</td>
+        <td class="num">${v.opens ? fmtTime(v.secs / v.opens) : "–"}</td><td class="num">${fmtTime(v.secs)}</td></tr>`).join("")
+        : `<tr><td class="empty" colspan="4">No videos opened in this period yet.</td></tr>`;
+
+      $("sourceRows").innerHTML = shareRows(merge(list, "sources"), sourceName, "No visits yet.");
+      $("deviceRows").innerHTML = shareRows(merge(list, "devices"), (k) => k[0].toUpperCase() + k.slice(1), "No visits yet.");
+      $("countryRows").innerHTML = shareRows(merge(list, "countries"), countryName, "No visits yet.");
+    }
+
+    // This browser's "don't count me" switch (read by the main site)
+    function setupIgnore() {
+      let on = false;
+      try { on = localStorage.getItem("tb-stats-ignore") === "1"; } catch {}
+      $("ignoreMe").checked = on;
+      $("ignoreMe").addEventListener("change", (e) => {
+        try {
+          if (e.target.checked) localStorage.setItem("tb-stats-ignore", "1");
+          else localStorage.removeItem("tb-stats-ignore");
+        } catch { setStatus("This browser blocks site storage, so the switch can’t be saved.", true); }
+      });
+    }
+
+    function showLogin() {
+      $("loginView").hidden = false; $("statsView").hidden = true; $("logoutBtn").hidden = true; setStatus("");
+    }
+    async function showStats() {
+      $("loginView").hidden = true; $("statsView").hidden = false; $("logoutBtn").hidden = false;
+      await loadTitles();
+      load();
+    }
+
+    document.querySelectorAll("[data-days]").forEach((b) => b.addEventListener("click", () => { days = +b.dataset.days; load(); }));
+    $("loginBtn").addEventListener("click", () => identity.open("login"));
+    $("logoutBtn").addEventListener("click", () => identity.logout());
+    setupIgnore();
+
+    if (!identity) { setStatus("The login service could not load. Reload the page.", true); return; }
+    identity.on("init", (user) => (user ? showStats() : showLogin()));
+    identity.on("login", () => { identity.close(); showStats(); });
+    identity.on("logout", showLogin);
+  })();
+  </script>
+</body>
+</html>

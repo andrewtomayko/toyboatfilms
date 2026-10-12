@@ -7,6 +7,33 @@
   "headerCta": "BOOK A CALL",
   "email": "",
   "instagram": "",
+  "reelAspect": "2.4 / 1",
+  "tags": [
+    {
+      "id": "commercial",
+      "label": "Commercial"
+    },
+    {
+      "id": "brand",
+      "label": "Brand"
+    },
+    {
+      "id": "documentary",
+      "label": "Documentary"
+    },
+    {
+      "id": "music-video",
+      "label": "Music Video"
+    },
+    {
+      "id": "behind-the-scenes",
+      "label": "Behind the Scenes"
+    },
+    {
+      "id": "film",
+      "label": "Film"
+    }
+  ],
   "aboutHeading": "Hi, I’m Andrew.",
   "aboutRole": "Director · Cinematographer · Sailor",
   "aboutText": "Toy Boat is me, Andrew Tomayko. I’ve been telling stories with a camera for more than 20 years, sometimes as part of amazing crews, sometimes as a one-man band. Along the way I’ve directed, shot and edited just about every kind of project: commercials, documentaries, music videos and films for brands I love.\n\nAfter a decade in Los Angeles, I traded the city for the high seas. These days I live aboard my sailboat in the Puget Sound, and that love of adventure carries into my work. Whatever the project, I’m looking for the real characters and honest moments that make a story worth telling, because the best stories aren’t just crafted — they’re discovered.",

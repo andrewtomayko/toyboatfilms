@@ -1,0 +1,1379 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="/Assets/favicon/favicon.ico" sizes="any"><script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script><style>:root{box-sizing:border-box}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Toy Boat Films Invoicing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  /* Layout: a working desk — invoice list, then a two-pane editor with a live paper proof beside the form. */
+  /* Same dark palette and type as toyboatfilms.com and the stats page; the invoice proof stays white paper. */
+  :root {
+    color-scheme: dark;
+    --bg: #0b0b0b;
+    --surface: #141414;
+    --ink: #f2f2f2;
+    --muted: #9a9a9a;
+    --line: #262626;
+    --accent: #f2f2f2;
+    --accent-ink: #0b0b0b;
+    --danger: #ff7b7b;
+    --field: #0f0f0f;
+    --paper: #ffffff;
+    --paper-ink: #111111;
+    --paper-muted: #666666;
+    --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-num: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 1320px; margin: 0 auto; padding-inline: 20px; }
+  .topbar { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand b { font-weight: 700; font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .brand span { color: var(--muted); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .storage-note { font-size: 12px; color: var(--muted); }
+  .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .office-nav { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
+  .office-nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; }
+  .office-nav a:hover { color: var(--ink); }
+  .office-nav a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); }
+  .login { max-width: 460px; margin: 10vh auto 0; text-align: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 36px 28px; }
+  .login h1 { margin: 0 0 8px; font-size: 26px; font-weight: 700; }
+  .login p { margin: 0 0 22px; color: var(--muted); }
+
+  .btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .btn.small { padding: 6px 11px; font-size: 13px; }
+  .btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+  .btn.ghost:hover { color: var(--ink); border-color: var(--line); }
+  .btn.danger { color: var(--danger); }
+  .btn.danger.armed { background: var(--danger); color: var(--surface); border-color: var(--danger); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  main { padding-block: 28px 64px; }
+  .banner { border: 1px solid var(--accent); border-radius: 8px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px; background: var(--surface); }
+
+  /* List */
+  .list-head { display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .list-head h1 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+  .ledger { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; }
+  .ledger table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  .ledger th { text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .ledger td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .ledger tr:last-child td { border-bottom: 0; }
+  .ledger tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .ledger tbody tr[data-row] { cursor: pointer; }
+  .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+  .right { text-align: right; }
+  .list-date { white-space: nowrap; }
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .empty { padding: 48px 20px; text-align: center; color: var(--muted); }
+  .empty strong { display: block; color: var(--ink); font-size: 17px; margin-bottom: 4px; }
+
+  /* Editor */
+  .editor-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .editor-head h1 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+  .editor-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .status { font-size: 13px; color: var(--muted); min-height: 1em; }
+  .status.error { color: var(--danger); }
+  .editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 960px) { .editor { grid-template-columns: minmax(0, 1fr); } }
+
+  fieldset { border: 0; padding: 0; margin: 0 0 26px; display: grid; gap: 12px; min-width: 0; }
+  legend { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin-bottom: 10px; padding: 0; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .field { display: grid; gap: 4px; min-width: 0; }
+  .field > span { font-size: 12px; color: var(--muted); font-weight: 500; }
+  input, textarea, select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; background: var(--field); }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  textarea { min-height: 72px; resize: vertical; }
+  input[type="number"] { font-family: var(--font-num); }
+
+  .logo-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .logo-thumb { width: 56px; height: 56px; border: 1px dashed var(--line); border-radius: 6px; display: grid; place-items: center; background: #fff; overflow: hidden; }
+  .logo-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .logo-thumb em { font-size: 11px; color: #888; font-style: normal; }
+
+  .item { border: 1px solid var(--line); border-radius: 8px; padding: 14px; background: var(--surface); display: grid; gap: 10px; }
+  .item-top { display: flex; gap: 10px; align-items: end; }
+  .item-top .field { flex: 1; }
+  .item-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 10px; align-items: end; }
+  @media (max-width: 520px) { .item-meta { grid-template-columns: repeat(3, minmax(0, 1fr)); } .item-total { grid-column: 1 / -1; text-align: left !important; } }
+  .item-total { text-align: right; }
+  .item-total b { font-family: var(--font-num); font-size: 16px; }
+  .add { width: 100%; border: 1px dashed var(--line); background: transparent; padding: 11px; border-radius: 8px; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .add:hover { color: var(--ink); border-color: var(--ink); }
+  .items { display: grid; gap: 16px; }
+  .cat { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+  .cat-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cat-name { flex: 1; min-width: 160px; font-weight: 700; font-size: 16px; }
+  .cat-total { font-family: var(--font-num); font-weight: 600; }
+  .add-section { display: flex; gap: 10px; flex-wrap: wrap; }
+  .add-section input { flex: 1; min-width: 180px; }
+
+  /* Paper proof — sized in container units so it matches the A4 PDF at any width */
+  /* The proof stays in view while you edit and scrolls on its own, so a tall invoice is never cut off. */
+  .proof-col { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); max-height: calc(100vh - env(safe-area-inset-top, 0px) - 32px); overflow-y: auto; overscroll-behavior: contain; padding: 0 14px 28px 4px; }
+  @media (max-width: 960px) { .proof-col { position: static; max-height: none; overflow: visible; padding: 0; } }
+  .proof-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+  .proof { container-type: inline-size; }
+  /* The sheet is measured in A4 millimetres (--mm) and points (--pt), the same numbers the PDF uses. */
+  .sheet { --mm: calc(100cqw / 210); --pt: calc(var(--mm) * 0.3528); background: var(--paper); color: var(--paper-ink); min-height: calc(297 * var(--mm)); /* at least one A4 page, taller when the content needs it */ padding: calc(18 * var(--mm)); box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.12); font-family: Helvetica, Arial, sans-serif; font-size: calc(9 * var(--pt)); line-height: 1.4; overflow-wrap: anywhere; }
+  .sheet p { margin: 0; }
+  .p-caps { font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #6e6e6e; margin-bottom: calc(1.2 * var(--mm)); }
+  .p-logo { max-height: calc(14 * var(--mm)); max-width: calc(46 * var(--mm)); display: block; margin-bottom: calc(5 * var(--mm)); }
+  .p-head { display: flex; justify-content: space-between; gap: calc(8 * var(--mm)); padding-bottom: calc(5 * var(--mm)); border-bottom: calc(0.4 * var(--mm)) solid #111; }
+  .p-co { font-size: calc(10.5 * var(--pt)); font-weight: 700; }
+  .p-sm { font-size: calc(8.5 * var(--pt)); }
+  .p-muted { color: var(--paper-muted); }
+  .p-head-right { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; text-align: right; }
+  .p-title { font-size: calc(17 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; margin-right: -0.14em; }
+  .p-meta { display: grid; grid-template-columns: minmax(0, 1fr) calc(34 * var(--mm)) calc(42 * var(--mm)); padding-block: calc(6 * var(--mm)); border-bottom: calc(0.2 * var(--mm)) solid #c8c8c8; }
+  .p-meta > div { min-width: 0; padding-right: calc(4 * var(--mm)); }
+  .p-meta > div:last-child { padding-right: 0; }
+  .p-val { font-size: calc(10 * var(--pt)); font-weight: 700; }
+  .p-job { padding-top: calc(6 * var(--mm)); }
+  .p-project { font-size: calc(12 * var(--pt)); font-weight: 700; }
+  .p-desc { color: #333; white-space: pre-wrap; margin-top: calc(1.5 * var(--mm)) !important; }
+  .p-items { margin-top: calc(7 * var(--mm)); }
+  .p-items-head { display: flex; justify-content: space-between; padding-bottom: calc(1.5 * var(--mm)); border-bottom: calc(0.4 * var(--mm)) solid #111; }
+  .p-items-head .p-caps { margin: 0; }
+  .p-cat { padding-top: calc(4.5 * var(--mm)); }
+  .p-cat-name { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: calc(0.5 * var(--mm)) !important; }
+  .p-item { display: flex; justify-content: space-between; gap: calc(6 * var(--mm)); padding-block: calc(2.4 * var(--mm)); border-bottom: calc(0.15 * var(--mm)) solid #e1e1e1; }
+  .p-item .d { flex: 1; min-width: 0; }
+  .p-item .t, .p-item .amt { font-size: calc(9.5 * var(--pt)); font-weight: 700; }
+  .p-item .amt { white-space: nowrap; }
+  .p-item .rate { font-size: calc(8.5 * var(--pt)); color: var(--paper-muted); }
+  .p-item .notes { font-size: calc(8 * var(--pt)); color: var(--paper-muted); white-space: pre-wrap; margin-top: calc(1 * var(--mm)); }
+  .p-cat-total { display: flex; justify-content: flex-end; gap: calc(6 * var(--mm)); padding-top: calc(2.4 * var(--mm)); font-size: calc(8.5 * var(--pt)); }
+  .p-cat-total span:first-child { color: var(--paper-muted); }
+  .p-cat-total span:last-child { font-weight: 700; }
+  .p-totals { width: calc(80 * var(--mm)); margin: calc(9 * var(--mm)) 0 0 auto; display: grid; row-gap: calc(0.8 * var(--mm)); }
+  .p-totals .row { display: flex; justify-content: space-between; gap: calc(4 * var(--mm)); }
+  .p-totals .row span:first-child { color: var(--paper-muted); }
+  .p-totals .row span:last-child { font-weight: 700; white-space: nowrap; }
+  .p-totals .grand { border-top: calc(0.4 * var(--mm)) solid #111; padding-top: calc(2.5 * var(--mm)); margin-top: calc(1.5 * var(--mm)); font-size: calc(12 * var(--pt)); }
+  .p-totals .grand.mid { font-size: calc(10.5 * var(--pt)); }
+  .p-totals .grand span:first-child { color: var(--paper-ink); font-weight: 700; }
+  .p-totals .advance { background: #eef1f3; padding: calc(1.2 * var(--mm)) calc(2.5 * var(--mm)); margin-inline: calc(-2.5 * var(--mm)); font-weight: 700; }
+  .p-totals .advance span:first-child { color: var(--paper-ink); }
+  .p-totals .paid-stamp { margin-top: calc(2 * var(--mm)); font-size: calc(10 * var(--pt)); }
+  .p-totals .paid-stamp span { color: #1a7f37 !important; font-weight: 700; }
+  .p-terms { margin-top: calc(12 * var(--mm)); padding-top: calc(5 * var(--mm)); border-top: calc(0.2 * var(--mm)) solid #c8c8c8; }
+  .p-terms .v { font-size: calc(8.5 * var(--pt)); color: #333; white-space: pre-wrap; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; }
+  .seg label { padding: 8px 18px; cursor: pointer; font-weight: 600; color: var(--muted); }
+  .seg label + label { border-left: 1px solid var(--line); }
+  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg label:has(input:checked) { background: var(--accent); color: var(--accent-ink); }
+  .seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .payments { display: grid; gap: 10px; }
+  .advance-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
+  .advance-row .field { width: 160px; }
+  .advance-row .sub b { font-family: var(--font-num); color: var(--ink); }
+  .pay-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 130px auto; gap: 10px; align-items: end; }
+  @media (max-width: 560px) { .pay-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  .chip { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .chip.est { border-color: var(--accent); color: var(--accent); }
+  button.chip { background: none; cursor: pointer; font-family: inherit; margin-top: 4px; }
+  .chip.paid { border-color: color-mix(in srgb, #3fb950 60%, var(--line)); color: #3fb950; }
+  .chip.unpaid { border-style: dashed; }
+  button.chip:hover { border-color: var(--ink); color: var(--ink); }
+  .paid-row { display: flex; gap: 14px; align-items: end; flex-wrap: wrap; margin-bottom: 14px; }
+  .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding-bottom: 10px; }
+  .switch input { appearance: none; width: 40px; height: 22px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .15s; margin: 0; }
+  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; }
+  .switch input:checked { background: #3fb950; }
+  .switch input:checked::after { transform: translateX(18px); }
+  .switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .paid-row .field { width: 170px; }
+  .list-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .filters input[type="search"] { flex: 1 1 260px; }
+  .filters select { width: auto; flex: 0 1 180px; }
+  .list-summary { margin: 0 0 12px; color: var(--muted); font-size: 13px; min-height: 1.2em; }
+  .list-summary b { color: var(--ink); font-family: var(--font-num); font-weight: 600; }
+  .ledger tr.year-row td { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); font-weight: 700; padding-block: 9px; }
+  .ledger tr.year-row td .sub { font-weight: 500; margin-left: 10px; }
+  .ledger tbody tr.year-row:hover { background: none; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand"><b>Toy Boat</b><span>Invoicing</span></div>
+    <nav class="office-nav" aria-label="Back office">
+      <a href="/admin/">Website</a><a href="/invoices/" aria-current="page">Invoices</a><a href="/stats/">Stats</a>
+    </nav>
+    <div class="top-actions">
+      <span class="storage-note" id="storageNote">Connecting…</span>
+      <button class="btn small" id="backupBtn" type="button" hidden>Download backup</button>
+      <label class="btn small" id="restoreLabel" hidden>Import backup<input type="file" id="restoreFile" accept="application/json,.json" hidden></label>
+      <button class="btn small ghost" id="logoutBtn" type="button" hidden>Log out</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="importBanner" class="banner" hidden>
+    <span id="importText"></span>
+    <button class="btn primary small" id="importBtn" type="button">Import them</button>
+  </div>
+
+  <!-- LIST VIEW -->
+  <section id="loginView" class="login" hidden>
+    <h1>Invoices</h1>
+    <p>Log in with your Toy Boat account to view and edit invoices and estimates.</p>
+    <button class="btn primary" id="loginBtn" type="button">Log in</button>
+  </section>
+
+  <section id="listView">
+    <div class="list-head">
+      <h1>Invoices &amp; estimates</h1>
+      <div class="list-actions">
+        <button class="btn" id="newEstimateBtn" type="button">New estimate</button>
+        <button class="btn primary" id="newBtn" type="button">New invoice</button>
+      </div>
+    </div>
+    <div class="filters" role="search">
+      <input type="search" id="searchBox" placeholder="Search client, job, number, line items…" aria-label="Search invoices and estimates">
+      <select id="yearFilter" aria-label="Year"><option value="">All years</option></select>
+      <select id="clientFilter" aria-label="Client"><option value="">All clients</option></select>
+      <select id="typeFilter" aria-label="Type">
+        <option value="">Invoices &amp; estimates</option>
+        <option value="invoice">Invoices only</option>
+        <option value="estimate">Estimates only</option>
+      </select>
+      <select id="paidFilter" aria-label="Paid or unpaid">
+        <option value="">Paid &amp; unpaid</option>
+        <option value="unpaid">Unpaid</option>
+        <option value="paid">Paid</option>
+      </select>
+      <button class="btn small" id="markShownPaid" type="button" hidden>Mark these paid</button>
+      <button class="btn ghost small" id="clearFilters" type="button" hidden>Clear filters</button>
+    </div>
+    <p class="list-summary" id="listSummary" aria-live="polite"></p>
+    <div class="ledger">
+      <table>
+        <thead><tr><th>No.</th><th>Type</th><th>Date</th><th>Job · Client</th><th class="right">Total</th><th></th></tr></thead>
+        <tbody id="invoiceRows"></tbody>
+      </table>
+      <div id="emptyState" class="empty" hidden><strong>No invoices or estimates yet</strong>Choose “New invoice” or “New estimate” to write your first one. It is saved here once you press Save.</div>
+      <div id="loadingState" class="empty">Loading invoices…</div>
+    </div>
+  </section>
+
+  <!-- EDITOR VIEW -->
+  <section id="editorView" hidden>
+    <div class="editor-head">
+      <h1 id="editorTitle">Invoice</h1>
+      <div class="editor-actions">
+        <span class="status" id="status" role="status"></span>
+        <button class="btn" id="cancelBtn" type="button">Back to list</button>
+        <button class="btn" id="pdfBtn" type="button">Download PDF</button>
+        <button class="btn primary" id="saveBtn" type="button">Save</button>
+      </div>
+    </div>
+
+    <div class="editor">
+      <form id="form" autocomplete="off">
+        <fieldset>
+          <legend>Your business</legend>
+          <div class="logo-row">
+            <div class="logo-thumb" id="logoThumb"><em>No logo</em></div>
+            <label class="btn small" for="logoUpload">Upload logo</label>
+            <input type="file" id="logoUpload" accept="image/*" hidden>
+            <button class="btn ghost small" type="button" id="logoRemove" hidden>Remove</button>
+          </div>
+          <label class="field"><span>Company name</span><input id="companyName" data-f="companyName"></label>
+          <label class="field"><span>Street address</span><input id="companyAddress" data-f="companyAddress"></label>
+          <div class="grid2">
+            <label class="field"><span>City, state, ZIP</span><input id="companyCity" data-f="companyCity"></label>
+            <label class="field"><span>Country</span><input id="companyCountry" data-f="companyCountry"></label>
+          </div>
+          <label class="field"><span>Website</span><input id="companyWebsite" data-f="companyWebsite"></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Document</legend>
+          <div class="seg" role="radiogroup" aria-label="Document type">
+            <label><input type="radio" name="docType" value="invoice" id="typeInvoice">Invoice</label>
+            <label><input type="radio" name="docType" value="estimate" id="typeEstimate">Estimate</label>
+          </div>
+          <div class="grid2">
+            <label class="field"><span id="numLabel">Invoice number</span><input id="invoiceNumber" data-f="invoiceNumber"></label>
+            <label class="field"><span id="dateLabel">Invoice date</span><input type="date" id="invoiceDate" data-f="invoiceDate"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Bill to</legend>
+          <div class="grid2">
+            <label class="field"><span>Client name</span><input id="clientName" data-f="clientName" list="clientNameList"></label>
+            <label class="field"><span>Client email</span><input type="email" id="clientEmail" data-f="clientEmail" list="clientEmailList"></label>
+            <label class="field"><span>Contact person</span><input id="contactName" data-f="contactName" placeholder="Optional, shown under the client"></label>
+            <datalist id="clientNameList"></datalist>
+            <datalist id="clientEmailList"></datalist>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Job</legend>
+          <label class="field"><span>Job name</span><input id="jobName" data-f="jobName"></label>
+          <label class="field"><span>Description</span><textarea id="jobDescription" data-f="jobDescription"></textarea></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Line items</legend>
+          <div class="items" id="items"></div>
+          <div class="add-section">
+            <input id="newCategory" list="categoryList" placeholder="Pick or type a category (Production, Crew, Travel…)" aria-label="New category">
+            <button class="btn" type="button" id="addSection">Add category</button>
+          </div>
+          <datalist id="categoryList"></datalist>
+        </fieldset>
+
+        <fieldset>
+          <legend>Fees and adjustments</legend>
+          <div class="grid3">
+            <label class="field"><span>Production fee ($)</span><input type="number" step="0.01" min="0" id="productionFee" data-f="productionFee" data-num></label>
+            <label class="field"><span>Fee name</span><input id="productionFeeLabel" data-f="productionFeeLabel" placeholder="Production fee"></label>
+            <label class="field"><span>Tax rate (%)</span><input type="number" step="0.01" min="0" id="taxRate" data-f="taxRate" data-num></label>
+            <label class="field"><span>Discount ($)</span><input type="number" step="0.01" min="0" id="discount" data-f="discount" data-num></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Advance and payments</legend>
+          <div class="paid-row" id="paidRow">
+            <label class="switch"><input type="checkbox" id="paid" data-f="paid" role="switch">Paid</label>
+            <label class="field" id="paidDateField"><span>Paid on</span><input type="date" id="paidDate" data-f="paidDate"></label>
+          </div>
+          <div class="advance-row">
+            <label class="field"><span>Advance due (%)</span><input type="number" step="1" min="0" max="100" id="advancePercent" data-f="advancePercent" data-num placeholder="0"></label>
+            <p class="sub" id="advanceAmt">Leave at 0 for no advance line.</p>
+          </div>
+          <div class="payments" id="payments"></div>
+          <button class="add" type="button" id="addPayment">Add payment</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Terms</legend>
+          <label class="field"><span>Payment terms</span><textarea id="terms" data-f="terms"></textarea></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Private notes</legend>
+          <label class="field"><span>Only you see these. They never appear on the invoice or PDF.</span><textarea id="privateNotes" data-f="privateNotes"></textarea></label>
+        </fieldset>
+      </form>
+
+      <div class="proof-col">
+        <div class="proof-label">Proof · A4 width, grows with line items</div>
+        <div class="proof"><div class="sheet" id="sheet"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  const DEFAULT_COMPANY = {
+    companyName: 'Toy Boat Films',
+    companyAddress: '19240 Jensen Way NE #648',
+    companyCity: 'Poulsbo, Washington 98370',
+    companyCountry: 'United States',
+    companyWebsite: 'toyboatfilms.com',
+  };
+
+  let invoices = [];          // [{id, ...fields}]
+  let settings = { ...DEFAULT_COMPANY, logo: null };
+  let current = null;         // invoice being edited
+  let dirty = false;
+  let store = null;           // storage adapter
+
+  // ---------- helpers ----------
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
+  const money = (n) => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const fmtDate = (iso) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '';
+    return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+  const UNITS = { hour: ['hour', 'hours'], day: ['day', 'days'], min: ['min', 'mins'], flat: ['flat', 'flat'] };
+  const unitLabel = (u, q) => (UNITS[u] || UNITS.hour)[q === 1 ? 0 : 1];
+  const qtyText = (q) => (Number.isInteger(q) ? String(q) : String(+q.toFixed(2)));
+  const lineAmount = (it) => num(it.rate) * num(it.hours);
+  const rateLine = (it) => it.unit === 'flat'
+    ? 'Flat rate'
+    : `${money(num(it.rate))} × ${qtyText(num(it.hours))} ${unitLabel(it.unit, num(it.hours))}`;
+
+  function totals(inv) {
+    const services = inv.lineItems.reduce((s, it) => s + lineAmount(it), 0);
+    const fee = num(inv.productionFee);
+    const subtotal = services + fee;
+    const tax = subtotal * num(inv.taxRate) / 100;
+    const discount = num(inv.discount);
+    const total = subtotal + tax - discount;
+    const payments = (inv.payments || []).filter((p) => num(p.amount));
+    const paid = payments.reduce((s, p) => s + num(p.amount), 0);
+    const advancePct = Math.min(100, Math.max(0, num(inv.advancePercent)));
+    return { services, fee, subtotal, tax, discount, total, payments, paid, balance: total - paid, advancePct, advance: total * advancePct / 100 };
+  }
+
+  const isEstimate = (inv) => inv.docType === 'estimate';
+  // An invoice is paid when switched to Paid, or when recorded payments cover the total.
+  const isPaid = (inv) => !isEstimate(inv) && (Boolean(inv.paid) || (() => { const t = totals(inv); return t.total > 0 && t.payments.length > 0 && t.balance < 0.005; })());
+  const owed = (inv) => (isEstimate(inv) || isPaid(inv) ? 0 : Math.max(0, totals(inv).balance));
+  const feeLabel = (inv) => String(inv.productionFeeLabel || '').trim() || 'Production fee';
+  const kindOf = (inv) => (isEstimate(inv) ? 'Estimate' : 'Invoice');
+  // "October 8th, 2026"
+  const ordinal = (n) => n + ((n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'));
+  const fmtLong = (iso) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '';
+    const month = new Date(+m[1], +m[2] - 1, 1).toLocaleDateString('en-US', { month: 'long' });
+    return `${month} ${ordinal(+m[3])}, ${m[1]}`;
+  };
+  const fmtShort = (iso) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    return m ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+  };
+  const paymentLabel = (p) => ['Payment received', fmtShort(p.date), String(p.note || '').trim()].filter(Boolean).join(' · ');
+
+  function nextInvoiceNumber() {
+    const nums = invoices.map((i) => parseInt(i.invoiceNumber, 10)).filter(Number.isFinite);
+    return String(nums.length ? Math.max(...nums) + 1 : 2611);
+  }
+
+
+  // Shrink an uploaded logo so it fits comfortably in one stored document.
+  function shrinkLogo(dataUrl) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 360;
+        const k = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        let out = c.toDataURL('image/png');
+        if (out.length > 180000) {
+          const ctx = c.getContext('2d');
+          ctx.globalCompositeOperation = 'destination-over'; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+          out = c.toDataURL('image/jpeg', 0.85);
+        }
+        resolve(out);
+      };
+      img.onerror = () => resolve(null);
+      img.src = dataUrl;
+    });
+  }
+
+  // ---------- storage (private Netlify function, behind the Netlify login) ----------
+  const API = '/.netlify/functions/invoices';
+  const identity = window.netlifyIdentity;
+  const ACCOUNT_CONTROLS = ['backupBtn', 'restoreLabel', 'logoutBtn'];
+
+  async function api(method, query = '', body) {
+    const user = identity && identity.currentUser();
+    if (!user) throw Object.assign(new Error('You are logged out. Log in again.'), { code: 'auth' });
+    const token = await user.jwt(); // refreshes the login token when it has expired
+    const res = await fetch(API + query, {
+      method,
+      cache: 'no-store',
+      headers: { Authorization: 'Bearer ' + token, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw Object.assign(new Error(data.error || 'Server error ' + res.status), { code: res.status });
+    return data;
+  }
+
+  function netlifyStore() {
+    return {
+      shared: true,
+      async start() {
+        try {
+          const data = await api('GET');
+          invoices = (data.invoices || []).map((i) => ({ ...i, id: String(i.id) }));
+          if (data.settings) settings = { ...DEFAULT_COMPANY, ...data.settings };
+          renderList();
+        } catch (e) { showListError(e); }
+      },
+      async saveInvoice(inv) {
+        const { id, ...body } = inv;
+        const clean = JSON.parse(JSON.stringify(body));
+        await api('PUT', '?id=' + encodeURIComponent(id), clean);
+        const saved = { ...clean, id };
+        const i = invoices.findIndex((x) => x.id === id);
+        if (i >= 0) invoices[i] = saved; else invoices.push(saved);
+        renderList();
+      },
+      async deleteInvoice(id) {
+        await api('DELETE', '?id=' + encodeURIComponent(id));
+        invoices = invoices.filter((x) => x.id !== id);
+        renderList();
+      },
+      async saveSettings(s) {
+        await api('PUT', '?settings=1', s);
+        settings = { ...settings, ...s };
+      },
+    };
+  }
+
+  function showLogin() {
+    $('loginView').hidden = false;
+    $('listView').hidden = true;
+    $('editorView').hidden = true;
+    ACCOUNT_CONTROLS.forEach((id) => { $(id).hidden = true; });
+    $('storageNote').textContent = 'Logged out';
+  }
+
+  async function connect() {
+    $('loginView').hidden = true;
+    $('listView').hidden = false;
+    ACCOUNT_CONTROLS.forEach((id) => { $(id).hidden = false; });
+    const preview = !/(^|\.)toyboatfilms\.com$/.test(location.hostname);
+    $('storageNote').textContent = preview ? 'Preview · test data only' : 'Saved to toyboatfilms.com';
+    store = netlifyStore();
+    await store.start();
+  }
+
+  // Demo mode: only on a local copy (localhost/?demo), with made-up invoices kept in memory.
+  function demoStore() {
+    const clients = [['Harbor Coffee Co.', 'hello@harborcoffee.test'], ['Kitsap Rowing Club', 'info@kitsaprowing.test'], ['North Light Apparel', 'team@northlight.test']];
+    const jobs = ['Brand film', 'Social cutdowns', 'Event recap', 'Product launch', 'Documentary short'];
+    let n = 2400;
+    const demo = [];
+    ['2024', '2025', '2026'].forEach((y, yi) => clients.forEach(([name, email], ci) => [0, 1].forEach((k) => {
+      demo.push({
+        id: `demo-${y}-${ci}-${k}`, docType: k && ci === 1 ? 'estimate' : 'invoice', invoiceNumber: String(n++),
+        invoiceDate: `${y}-${String(3 + ci * 3 + k).padStart(2, '0')}-1${k}`, ...DEFAULT_COMPANY,
+        clientName: name, clientEmail: email, jobName: jobs[(yi + ci + k) % jobs.length], jobDescription: '',
+        terms: 'Payment due within 30 days.', productionFee: 0, taxRate: 0, discount: 0, payments: [],
+        lineItems: [{ category: 'Production', description: 'Shoot day', rate: 1200 + 100 * ci, hours: 1 + k, unit: 'day', notes: '' },
+                    { category: 'Post-Production', description: 'Edit and color', rate: 95, hours: 10 + 5 * yi, unit: 'hour', notes: 'Two rounds of revisions' }],
+      });
+    })));
+    return {
+      shared: false,
+      async start() { invoices = demo; renderList(); },
+      async saveInvoice(inv) { const i = invoices.findIndex((x) => x.id === inv.id); if (i >= 0) invoices[i] = inv; else invoices.push(inv); renderList(); },
+      async deleteInvoice(id) { invoices = invoices.filter((x) => x.id !== id); renderList(); },
+      async saveSettings(s) { settings = { ...settings, ...s }; },
+    };
+  }
+
+  function startAuth() {
+    if (location.hostname === 'localhost' && new URLSearchParams(location.search).has('demo')) {
+      $('loginView').hidden = true; $('listView').hidden = false;
+      $('storageNote').textContent = 'Demo · nothing is saved';
+      store = demoStore();
+      store.start();
+      return;
+    }
+    if (!identity) {
+      $('loadingState').textContent = 'The login service could not load. Check your connection and reload the page.';
+      return;
+    }
+    identity.on('init', (user) => (user ? connect() : showLogin()));
+    identity.on('login', () => { identity.close(); connect(); });
+    identity.on('logout', () => { invoices = []; current = null; showLogin(); });
+  }
+  $('loginBtn').addEventListener('click', () => identity.open('login'));
+  $('logoutBtn').addEventListener('click', () => identity.logout());
+
+  // ---------- backup ----------
+  function banner(text) {
+    $('importText').textContent = text;
+    $('importBtn').hidden = true;
+    $('importBanner').hidden = false;
+  }
+
+  $('backupBtn').addEventListener('click', () => {
+    const data = { format: 'toyboat-invoices-backup', version: 1, exportedAt: new Date().toISOString(), settings: pickCompany(settings), invoices };
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = `Toy Boat invoices backup ${todayISO()}.json`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  $('restoreFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    let data;
+    try { data = JSON.parse(await file.text()); } catch { return banner('That file isn’t a backup this page can read.'); }
+    if (data?.format !== 'toyboat-invoices-backup' || !Array.isArray(data.invoices)) return banner('That file isn’t a Toy Boat invoices backup.');
+    const incoming = data.invoices.filter((i) => i && i.id);
+    const existing = new Set(invoices.map((i) => i.id));
+    const replacing = incoming.filter((i) => existing.has(String(i.id))).length;
+    if (!confirm(`Import ${incoming.length} invoices and estimates${replacing ? ` (${replacing} will replace ones with the same ID)` : ''}?`)) return;
+    banner('Importing…');
+    try {
+      if (data.settings) await store.saveSettings(pickCompany({ ...DEFAULT_COMPANY, ...data.settings }));
+      for (const inv of incoming) await store.saveInvoice({ ...inv, id: String(inv.id) });
+      banner(`Imported ${incoming.length} invoices and estimates.`);
+    } catch (err) {
+      banner('Import stopped: ' + (err?.message || err) + '. Anything already imported is safe; you can run it again.');
+    }
+  });
+
+  const pickCompany = (o) => ({
+    companyName: o.companyName, companyAddress: o.companyAddress, companyCity: o.companyCity,
+    companyCountry: o.companyCountry, companyWebsite: o.companyWebsite, logo: o.logo ?? null,
+  });
+
+  // ---------- list ----------
+  function showListError(e) {
+    $('loadingState').hidden = false;
+    $('loadingState').textContent = 'Invoices could not be loaded (' + (e?.code || 'error') + '). Reload the page to try again.';
+  }
+
+  // Search and filters (year, client, type). Results are grouped by year, newest first.
+  const yearOf = (inv) => (/^\d{4}/.exec(inv.invoiceDate || '') || ['No date'])[0];
+  const clientKey = (inv) => String(inv.clientName || '').trim().toLowerCase();
+
+  function searchText(inv) {
+    return [
+      inv.invoiceNumber, inv.clientName, inv.clientEmail, inv.contactName, inv.jobName, inv.jobDescription, inv.privateNotes, kindOf(inv),
+      ...(inv.lineItems || []).flatMap((it) => [it.category, it.description, it.notes]),
+      ...(inv.payments || []).map((pm) => pm.note),
+    ].filter(Boolean).join(' ').toLowerCase();
+  }
+
+  function fillSelect(sel, options, allLabel) {
+    const keep = sel.value;
+    sel.innerHTML = `<option value="">${allLabel}</option>` + options.map(([v, label]) => `<option value="${esc(v)}">${esc(label)}</option>`).join('');
+    sel.value = options.some(([v]) => v === keep) ? keep : '';
+  }
+
+  function refreshFilterOptions() {
+    const years = [...new Set(invoices.map(yearOf))].sort((a, b) => b.localeCompare(a));
+    fillSelect($('yearFilter'), years.map((y) => [y, y]), 'All years');
+    const clients = knownClients().sort((a, b) => a.name.localeCompare(b.name));
+    fillSelect($('clientFilter'), clients.map((c) => [c.name.toLowerCase(), c.name]), 'All clients');
+  }
+
+  function filteredInvoices() {
+    const words = $('searchBox').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const year = $('yearFilter').value, client = $('clientFilter').value, type = $('typeFilter').value, paid = $('paidFilter').value;
+    return invoices.filter((inv) =>
+      (!year || yearOf(inv) === year) &&
+      (!client || clientKey(inv) === client) &&
+      (!type || (type === 'estimate') === isEstimate(inv)) &&
+      (!paid || (!isEstimate(inv) && (paid === 'paid') === isPaid(inv))) &&
+      (!words.length || (() => { const t = searchText(inv); return words.every((w) => t.includes(w)); })()));
+  }
+
+  const countLabel = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+  function summarize(list) {
+    const inv = list.filter((i) => !isEstimate(i)), est = list.filter(isEstimate);
+    const billed = inv.reduce((sum, i) => sum + totals(i).total, 0);
+    const unpaid = inv.reduce((sum, i) => sum + owed(i), 0);
+    return { invoices: inv.length, estimates: est.length, billed, unpaid };
+  }
+  // "5 invoices · $16,225.00 · $1,200.00 unpaid · 1 estimate", leaving out whichever part is zero
+  function summaryText(sum, moneyHTML = money) {
+    const parts = [];
+    if (sum.invoices || !sum.estimates) parts.push(`${countLabel(sum.invoices, 'invoice')} · ${moneyHTML(sum.billed)}`);
+    if (sum.unpaid > 0.005) parts.push(`${money(sum.unpaid)} unpaid`);
+    if (sum.estimates) parts.push(countLabel(sum.estimates, 'estimate'));
+    return parts.join(' · ');
+  }
+
+  function renderList() {
+    $('loadingState').hidden = true;
+    refreshFilterOptions();
+    const filtering = Boolean($('searchBox').value.trim() || $('yearFilter').value || $('clientFilter').value || $('typeFilter').value || $('paidFilter').value);
+    $('clearFilters').hidden = !filtering;
+
+    const rows = filteredInvoices().sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '') || String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
+    const all = summarize(rows);
+    $('listSummary').innerHTML = invoices.length
+      ? `${filtering ? 'Showing ' : ''}${summaryText(all, (m) => `<b>${money(m)}</b> billed`)}${filtering ? ` <span>(of ${invoices.length} total)</span>` : ''}`
+      : '';
+
+    $('emptyState').hidden = rows.length > 0;
+    $('emptyState').innerHTML = invoices.length
+      ? '<strong>No matches</strong>Try a different search, or clear the filters.'
+      : '<strong>No invoices or estimates yet</strong>Choose “New invoice” or “New estimate” to write your first one. It is saved here once you press Save.';
+
+    let html = '', lastYear = null;
+    rows.forEach((inv) => {
+      const y = yearOf(inv);
+      if (y !== lastYear) {
+        const sumY = summarize(rows.filter((r) => yearOf(r) === y));
+        html += `<tr class="year-row"><td colspan="6">${esc(y)}<span class="sub">${summaryText(sumY)}</span></td></tr>`;
+        lastYear = y;
+      }
+      html += `
+      <tr data-row="${esc(inv.id)}" title="Double-click to open">
+        <td class="num">${esc(inv.invoiceNumber)}</td>
+        <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
+        <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
+        <td><b>${esc(inv.jobName)}</b><div class="sub">${esc(inv.clientName)}</div></td>
+        <td class="right num">${money(totals(inv).total)}${listBalance(inv)}</td>
+        <td><div class="row-actions">
+          <button class="btn small" type="button" data-edit="${esc(inv.id)}">Open</button>
+          ${isEstimate(inv) ? `<button class="btn small" type="button" data-convert="${esc(inv.id)}">Make invoice</button>` : ''}
+          <button class="btn small" type="button" data-copy="${esc(inv.id)}">Duplicate</button>
+          <button class="btn small danger" type="button" data-del="${esc(inv.id)}">Delete</button>
+        </div></td>
+      </tr>`;
+    });
+    $('invoiceRows').innerHTML = html;
+    const toMark = rows.filter((i) => !isEstimate(i) && !isPaid(i));
+    $('markShownPaid').hidden = $('paidFilter').value !== 'unpaid' || !toMark.length;
+    $('markShownPaid').textContent = `Mark ${toMark.length === 1 ? 'this' : 'these ' + toMark.length} paid`;
+  }
+
+  ['searchBox', 'yearFilter', 'clientFilter', 'typeFilter', 'paidFilter'].forEach((id) =>
+    $(id).addEventListener(id === 'searchBox' ? 'input' : 'change', renderList));
+
+  // Marks every unpaid invoice in the current filtered list as paid (dated today unless already dated).
+  $('markShownPaid').addEventListener('click', async () => {
+    const list = filteredInvoices().filter((i) => !isEstimate(i) && !isPaid(i));
+    if (!list.length || !confirm(`Mark ${countLabel(list.length, 'invoice')} as paid?`)) return;
+    const btn = $('markShownPaid'); btn.disabled = true;
+    try {
+      for (const inv of list) await store.saveInvoice({ ...inv, paid: true, paidDate: inv.paidDate || '' });
+    } catch (err) {
+      alert('Some invoices could not be saved: ' + (err?.message || err) + '. Try again.');
+    }
+    btn.disabled = false;
+    renderList();
+  });
+  $('clearFilters').addEventListener('click', () => {
+    $('searchBox').value = ''; $('yearFilter').value = ''; $('clientFilter').value = ''; $('typeFilter').value = ''; $('paidFilter').value = '';
+    renderList();
+    $('searchBox').focus();
+  });
+
+  function listBalance(inv) {
+    const t = totals(inv);
+    if (isEstimate(inv)) return '';
+    if (isPaid(inv)) return inv.paidDate ? `<div class="sub">Paid ${esc(fmtShort(inv.paidDate))}</div>` : '';
+    if (!t.payments.length) return '';
+    return `<div class="sub">Balance ${money(t.balance)}</div>`;
+  }
+
+  // Double-clicking anywhere on a row (except its buttons) opens it.
+  $('invoiceRows').addEventListener('dblclick', (e) => {
+    if (e.target.closest('button')) return;
+    const row = e.target.closest('[data-row]');
+    if (!row) return;
+    getSelection()?.removeAllRanges();
+    openEditor(invoices.find((i) => i.id === row.dataset.row));
+  });
+
+  $('invoiceRows').addEventListener('click', async (e) => {
+    const toggle = e.target.closest('[data-togglepaid]');
+    if (toggle) {
+      const inv = invoices.find((i) => i.id === toggle.dataset.togglepaid);
+      if (!inv) return;
+      toggle.disabled = true;
+      // Marking unpaid also clears the switch; payments that cover the total still count as paid.
+      const next = isPaid(inv) ? { ...inv, paid: false, paidDate: '' } : { ...inv, paid: true, paidDate: inv.paidDate || todayISO() };
+      try { await store.saveInvoice(next); renderList(); } catch (err) { toggle.disabled = false; toggle.textContent = 'Save failed'; }
+      return;
+    }
+    const convert = e.target.closest('[data-convert]');
+    if (convert) {
+      const src = invoices.find((i) => i.id === convert.dataset.convert);
+      return duplicateInvoice(src, { docType: 'invoice', payments: src?.payments || [], advancePercent: 0 }, `New invoice (from estimate ${src?.invoiceNumber})`);
+    }
+    const copy = e.target.closest('[data-copy]');
+    if (copy) return duplicateInvoice(invoices.find((i) => i.id === copy.dataset.copy));
+    const edit = e.target.closest('[data-edit]');
+    if (edit) return openEditor(invoices.find((i) => i.id === edit.dataset.edit));
+    const del = e.target.closest('[data-del]');
+    if (!del) return;
+    if (!del.classList.contains('armed')) {
+      del.classList.add('armed'); del.textContent = 'Confirm delete';
+      setTimeout(() => { if (del.isConnected) { del.classList.remove('armed'); del.textContent = 'Delete'; } }, 4000);
+      return;
+    }
+    del.disabled = true;
+    try { await store.deleteInvoice(del.dataset.del); } catch (err) { del.disabled = false; del.textContent = 'Delete failed'; }
+  });
+
+  // A copy gets a new id, the next invoice number and today's date; it isn't stored until Save.
+  // Payments don't carry over to a plain copy; converting an estimate keeps its deposits.
+  function duplicateInvoice(src, overrides = {}, title) {
+    if (!src) return;
+    const copy = JSON.parse(JSON.stringify(src));
+    openEditor({ ...copy, payments: [], ...JSON.parse(JSON.stringify(overrides)), id: 'inv-' + Date.now().toString(36), invoiceNumber: nextInvoiceNumber(), invoiceDate: todayISO() }, true);
+    $('editorTitle').textContent = title || `New ${kindOf(current).toLowerCase()} (copy of ${src.invoiceNumber})`;
+  }
+
+  // Clients from saved invoices, newest first: name -> most recent email.
+  function knownClients() {
+    const byName = new Map();
+    [...invoices].sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '')).forEach((inv) => {
+      const name = String(inv.clientName || '').trim();
+      if (name && !byName.has(name.toLowerCase())) byName.set(name.toLowerCase(), { name, email: String(inv.clientEmail || '').trim() });
+    });
+    return [...byName.values()];
+  }
+
+  function renderClientLists() {
+    const clients = knownClients();
+    $('clientNameList').innerHTML = clients.map((c) => `<option value="${esc(c.name)}"></option>`).join('');
+    const emails = [...new Set(invoices.map((i) => String(i.clientEmail || '').trim()).filter(Boolean))];
+    $('clientEmailList').innerHTML = emails.map((m) => `<option value="${esc(m)}"></option>`).join('');
+  }
+
+  // Picking a known client fills in their email, unless an email for someone else was typed by hand.
+  $('clientName').addEventListener('change', () => {
+    const clients = knownClients();
+    const hit = clients.find((c) => c.name.toLowerCase() === $('clientName').value.trim().toLowerCase());
+    if (!hit || !hit.email) return;
+    const cur = $('clientEmail').value.trim();
+    if (cur && !clients.some((c) => c.email === cur)) return;
+    $('clientEmail').value = current.clientEmail = hit.email;
+    markDirty(); renderProof();
+  });
+
+  $('newBtn').addEventListener('click', () => newDocument('invoice'));
+  $('newEstimateBtn').addEventListener('click', () => newDocument('estimate'));
+
+  function newDocument(docType) {
+    openEditor({
+      docType, payments: [],
+      id: 'inv-' + Date.now().toString(36),
+      invoiceNumber: nextInvoiceNumber(),
+      invoiceDate: todayISO(),
+      ...pickCompany(settings), logo: undefined,
+      clientName: '', clientEmail: '',
+      jobName: '', jobDescription: '',
+      terms: 'Payment due within 30 days.',
+      lineItems: [{ category: 'Post-Production', description: '', rate: 100, hours: 1, unit: 'hour', notes: '' }],
+      productionFee: 0, taxRate: 0, discount: 0,
+    }, true);
+  }
+
+  // ---------- editor ----------
+  function openEditor(inv, isNew = false) {
+    if (!inv) return;
+    current = JSON.parse(JSON.stringify(inv));
+    delete current.logo; delete current.logoImage;
+    current.lineItems = current.lineItems || [];
+    current.payments = current.payments || [];
+    current.docType = current.docType || 'invoice';
+    dirty = isNew;
+    document.querySelectorAll('#form [data-f]').forEach((el) => { if (el.type === 'checkbox') el.checked = Boolean(current[el.dataset.f]); else el.value = current[el.dataset.f] ?? ''; });
+    renderPaidRow();
+    $(isEstimate(current) ? 'typeEstimate' : 'typeInvoice').checked = true;
+    setTitle(isNew);
+    setStatus(isNew ? 'Not saved yet' : '');
+    renderClientLists(); renderItems(); renderPayments(); renderLogo(); renderProof();
+    $('listView').hidden = true; $('editorView').hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function setTitle(isNew) {
+    const kind = kindOf(current);
+    $('editorTitle').textContent = isNew ? `New ${kind.toLowerCase()}` : `${kind} ${current.invoiceNumber}`;
+    $('numLabel').textContent = `${kind} number`;
+    $('dateLabel').textContent = `${kind} date`;
+  }
+
+  document.querySelectorAll('input[name="docType"]').forEach((r) => r.addEventListener('change', () => {
+    current.docType = r.value;
+    renderPaidRow();
+    setTitle(dirty && !invoices.some((i) => i.id === current.id));
+    markDirty(); renderProof();
+  }));
+
+  // The Paid switch only applies to invoices; its date shows once it's on.
+  function renderPaidRow() {
+    $('paidRow').hidden = isEstimate(current);
+    $('paidDateField').hidden = !current.paid;
+  }
+
+  function renderPayments() {
+    $('payments').innerHTML = current.payments.map((p, i) => `
+      <div class="pay-row">
+        <label class="field"><span>Date</span><input type="date" id="pay-${i}-date" data-p="${i}" data-pk="date" value="${esc(p.date)}"></label>
+        <label class="field"><span>Note</span><input id="pay-${i}-note" data-p="${i}" data-pk="note" value="${esc(p.note)}" placeholder="Deposit, check #1042, Zelle…"></label>
+        <label class="field"><span>Amount ($)</span><input type="number" step="0.01" min="0" id="pay-${i}-amt" data-p="${i}" data-pk="amount" value="${esc(p.amount)}"></label>
+        <button class="btn small ghost danger" type="button" data-rmpay="${i}">Remove</button>
+      </div>`).join('');
+  }
+  $('addPayment').addEventListener('click', () => {
+    current.payments.push({ date: todayISO(), note: '', amount: 0 });
+    renderPayments(); markDirty(); renderProof();
+    $(`pay-${current.payments.length - 1}-amt`)?.focus();
+  });
+  $('payments').addEventListener('click', (e) => {
+    const rm = e.target.closest('[data-rmpay]');
+    if (!rm) return;
+    current.payments.splice(+rm.dataset.rmpay, 1);
+    renderPayments(); markDirty(); renderProof();
+  });
+
+  function closeEditor() {
+    current = null;
+    $('editorView').hidden = true; $('listView').hidden = false;
+    $('cancelBtn').textContent = 'Back to list';
+  }
+
+  function setStatus(text, isError = false) {
+    $('status').textContent = text;
+    $('status').classList.toggle('error', isError);
+  }
+
+  function markDirty() { dirty = true; setStatus('Unsaved changes'); }
+  // Leaving for the dashboard or stats (or closing the tab) with an unsaved invoice asks first.
+  addEventListener('beforeunload', (e) => { if (current && dirty) e.preventDefault(); });
+
+  $('form').addEventListener('submit', (e) => e.preventDefault());
+  $('form').addEventListener('input', (e) => {
+    const el = e.target;
+    if (el.dataset.f === 'paid') {
+      current.paid = el.checked;
+      if (el.checked && !current.paidDate) $('paidDate').value = current.paidDate = todayISO();
+      renderPaidRow();
+    } else if (el.dataset.f) {
+      current[el.dataset.f] = el.hasAttribute('data-num') ? num(el.value) : el.value;
+    } else if (el.dataset.pk) {
+      current.payments[+el.dataset.p][el.dataset.pk] = el.dataset.pk === 'amount' ? num(el.value) : el.value;
+    } else if (el.dataset.k != null) {
+      const it = current.lineItems[+el.dataset.i];
+      it[el.dataset.k] = (el.dataset.k === 'rate' || el.dataset.k === 'hours') ? num(el.value) : el.value;
+      const tot = el.closest('.item')?.querySelector('.item-total b');
+      if (tot) tot.textContent = money(lineAmount(it));
+      const catTot = el.closest('.cat')?.querySelector('.cat-total');
+      if (catTot) catTot.textContent = money(categoryTotal(it.category));
+    } else return;
+    markDirty(); renderProof();
+  });
+
+  // Line items stay a flat list with a `category` field; the editor, proof and PDF group them.
+  function groupItems(items) {
+    const groups = [];
+    items.forEach((it, i) => {
+      const name = it.category || '';
+      let g = groups.find((x) => x.category === name);
+      if (!g) groups.push(g = { category: name, items: [] });
+      g.items.push({ it, i });
+    });
+    return groups;
+  }
+  const categoryTotal = (name) => current.lineItems.filter((it) => (it.category || '') === name).reduce((s, it) => s + lineAmount(it), 0);
+
+  // Every category used on any saved invoice, plus a few common ones.
+  function rememberedCategories() {
+    const seen = new Map();
+    ['Production', 'Post-Production', 'Crew', 'Travel', 'Equipment', ...invoices.flatMap((inv) => (inv.lineItems || []).map((it) => it.category))]
+      .forEach((c) => { const t = String(c || '').trim(); if (t && !seen.has(t.toLowerCase())) seen.set(t.toLowerCase(), t); });
+    return [...seen.values()].sort((a, b) => a.localeCompare(b));
+  }
+
+  function renderItems() {
+    const used = new Set(current.lineItems.map((it) => (it.category || '').toLowerCase()));
+    $('categoryList').innerHTML = rememberedCategories().filter((c) => !used.has(c.toLowerCase())).map((c) => `<option value="${esc(c)}"></option>`).join('');
+    $('items').innerHTML = groupItems(current.lineItems).map((g, gi) => `
+      <section class="cat">
+        <div class="cat-head">
+          <input class="cat-name" id="cat-${gi}" list="categoryList" data-cat="${esc(g.category)}" value="${esc(g.category)}" placeholder="Category" aria-label="Category name">
+          <span class="cat-total">${money(categoryTotal(g.category))}</span>
+          <button class="btn small ghost danger" type="button" data-rmcat="${gi}">Remove category</button>
+        </div>
+        ${g.items.map(({ it, i }) => itemHTML(it, i)).join('')}
+        <button class="add" type="button" data-addto="${gi}">Add line item to ${esc(g.category || 'this category')}</button>
+      </section>`).join('');
+  }
+
+  function itemHTML(it, i) {
+    return `
+      <div class="item">
+        <div class="item-top">
+          <label class="field"><span>Description</span><input id="li-${i}-desc" data-i="${i}" data-k="description" value="${esc(it.description)}" placeholder="September 24th 2026"></label>
+          <button class="btn small ghost" type="button" data-dup="${i}">Duplicate</button>
+          <button class="btn small ghost danger" type="button" data-rm="${i}">Remove</button>
+        </div>
+        <div class="item-meta">
+          <label class="field"><span>Rate ($)</span><input id="li-${i}-rate" type="number" step="0.01" data-i="${i}" data-k="rate" value="${esc(it.rate)}"></label>
+          <label class="field"><span>Qty</span><input id="li-${i}-qty" type="number" step="0.25" data-i="${i}" data-k="hours" value="${esc(it.hours)}"></label>
+          <label class="field"><span>Unit</span><select id="li-${i}-unit" data-i="${i}" data-k="unit">
+            ${Object.keys(UNITS).map((u) => `<option value="${u}" ${it.unit === u ? 'selected' : ''}>${u === 'min' ? 'Minute' : u[0].toUpperCase() + u.slice(1)}</option>`).join('')}
+          </select></label>
+          <div class="item-total"><div class="sub">Line total</div><b>${money(lineAmount(it))}</b></div>
+        </div>
+        <label class="field"><span>Notes (shown under the line; Enter adds a new line)</span><textarea id="li-${i}-notes" data-i="${i}" data-k="notes" rows="2" style="min-height:44px">${esc(it.notes)}</textarea></label>
+      </div>`;
+  }
+
+  // Add a line at the end of a category, copying the rate and unit of the line above it.
+  function addToCategory(name) {
+    let at = -1;
+    current.lineItems.forEach((it, i) => { if ((it.category || '') === name) at = i; });
+    const prev = current.lineItems[at];
+    const item = { category: name, description: '', rate: prev ? prev.rate : 100, hours: 1, unit: prev ? prev.unit : 'hour', notes: '' };
+    const idx = at >= 0 ? at + 1 : current.lineItems.length;
+    current.lineItems.splice(idx, 0, item);
+    renderItems(); markDirty(); renderProof();
+    $(`li-${idx}-desc`)?.focus();
+  }
+
+  $('items').addEventListener('click', (e) => {
+    const dup = e.target.closest('[data-dup]');
+    const rm = e.target.closest('[data-rm]');
+    const addto = e.target.closest('[data-addto]');
+    const rmcat = e.target.closest('[data-rmcat]');
+    if (addto) return addToCategory(groupItems(current.lineItems)[+addto.dataset.addto].category);
+    if (rmcat) {
+      if (!rmcat.classList.contains('armed')) {
+        rmcat.classList.add('armed'); rmcat.textContent = 'Remove all its lines?';
+        setTimeout(() => { if (rmcat.isConnected) { rmcat.classList.remove('armed'); rmcat.textContent = 'Remove category'; } }, 4000);
+        return;
+      }
+      const name = groupItems(current.lineItems)[+rmcat.dataset.rmcat].category;
+      current.lineItems = current.lineItems.filter((it) => (it.category || '') !== name);
+    }
+    else if (dup) { const i = +dup.dataset.dup; current.lineItems.splice(i + 1, 0, { ...current.lineItems[i] }); }
+    else if (rm) { current.lineItems.splice(+rm.dataset.rm, 1); }
+    else return;
+    renderItems(); markDirty(); renderProof();
+  });
+
+  // Renaming a category renames it on all of its lines (and merges into an existing one with that name).
+  $('items').addEventListener('change', (e) => {
+    const el = e.target.closest('.cat-name');
+    if (!el) return;
+    const from = el.dataset.cat, to = el.value.trim();
+    if (!to || to === from) { el.value = from; return; }
+    const match = current.lineItems.find((it) => (it.category || '').toLowerCase() === to.toLowerCase() && (it.category || '') !== from);
+    current.lineItems.forEach((it) => { if ((it.category || '') === from) it.category = match ? match.category : to; });
+    // Keep merged lines together: stable sort by each category's first position.
+    const order = groupItems(current.lineItems).map((g) => g.category);
+    current.lineItems.sort((a, b) => order.indexOf(a.category || '') - order.indexOf(b.category || ''));
+    renderItems(); markDirty(); renderProof();
+  });
+
+  $('addSection').addEventListener('click', () => {
+    const typed = $('newCategory').value.trim() || 'Post-Production';
+    const existing = current.lineItems.find((it) => (it.category || '').toLowerCase() === typed.toLowerCase());
+    $('newCategory').value = '';
+    addToCategory(existing ? existing.category : typed);
+  });
+  $('newCategory').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('addSection').click(); } });
+
+  // Logo lives in shared company settings, so it applies to every invoice.
+  function renderLogo() {
+    $('logoThumb').innerHTML = settings.logo ? `<img src="${esc(settings.logo)}" alt="Logo">` : '<em>No logo</em>';
+    $('logoRemove').hidden = !settings.logo;
+  }
+  $('logoUpload').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const logo = await shrinkLogo(reader.result);
+      if (!logo) return setStatus('That file could not be read as an image.', true);
+      settings = { ...settings, logo };
+      renderLogo(); renderProof();
+      try { await store.saveSettings(pickCompany(settings)); setStatus('Logo saved'); }
+      catch (err) { setStatus('Logo could not be saved (' + (err?.code || 'error') + ').', true); }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  });
+  $('logoRemove').addEventListener('click', async () => {
+    settings = { ...settings, logo: null };
+    renderLogo(); renderProof();
+    try { await store.saveSettings(pickCompany(settings)); } catch {}
+  });
+
+  // ---------- proof ----------
+  function renderProof() {
+    const inv = current, t = totals(inv), groups = groupItems(inv.lineItems);
+    $('advanceAmt').innerHTML = t.advancePct ? `Advance due: <b>${money(t.advance)}</b> of ${money(t.total)}` : 'Leave at 0 for no advance line.';
+    const logo = settings.logo ? `<img class="p-logo" src="${esc(settings.logo)}" alt="">` : '';
+    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
+    const row = (label, value, cls = 'row') => `<div class="${cls}"><span>${label}</span><span>${value}</span></div>`;
+    $('sheet').innerHTML = `
+      ${logo}
+      <div class="p-head">
+        <div>
+          <p class="p-co">${esc(inv.companyName)}</p>
+          ${[inv.companyAddress, inv.companyCity, inv.companyCountry].filter(Boolean).map((l) => `<p class="p-sm p-muted">${esc(l)}</p>`).join('')}
+        </div>
+        <div class="p-head-right">
+          <p class="p-title">${kindOf(inv).toUpperCase()}</p>
+          <p class="p-sm p-muted">${esc(inv.companyWebsite)}</p>
+        </div>
+      </div>
+      <div class="p-meta">
+        <div>
+          <p class="p-caps">Bill to</p>
+          <p class="p-val">${esc(inv.clientName)}</p>
+          ${inv.contactName ? `<p class="p-sm">Attn: ${esc(inv.contactName)}</p>` : ''}
+          ${inv.clientEmail ? `<p class="p-sm p-muted">${esc(inv.clientEmail)}</p>` : ''}
+        </div>
+        <div><p class="p-caps">${kindOf(inv)} no.</p><p class="p-val">${esc(inv.invoiceNumber)}</p></div>
+        <div><p class="p-caps">Date</p><p class="p-val">${esc(fmtDate(inv.invoiceDate))}</p></div>
+      </div>
+      ${inv.jobName || inv.jobDescription ? `<div class="p-job">
+        <p class="p-caps">Project</p>
+        ${inv.jobName ? `<p class="p-project">${esc(inv.jobName)}</p>` : ''}
+        ${inv.jobDescription ? `<p class="p-desc">${esc(inv.jobDescription)}</p>` : ''}
+      </div>` : ''}
+      <div class="p-items">
+        <div class="p-items-head"><p class="p-caps">Description</p><p class="p-caps">Amount</p></div>
+        ${groups.map((g) => `
+          <div class="p-cat">
+            ${g.category ? `<p class="p-cat-name">${esc(g.category)}</p>` : ''}
+            ${g.items.map(({ it }) => `
+              <div class="p-item">
+                <div class="d">
+                  <p class="t">${esc(it.description || rateLine(it))}</p>
+                  ${it.description ? `<p class="rate">${esc(rateLine(it))}</p>` : ''}
+                  ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
+                </div>
+                <div class="amt">${money(lineAmount(it))}</div>
+              </div>`).join('')}
+            ${groups.length > 1 ? `<div class="p-cat-total"><span>${esc(g.category || 'Other')} total</span><span>${money(g.items.reduce((s, { it }) => s + lineAmount(it), 0))}</span></div>` : ''}
+          </div>`).join('')}
+      </div>
+      <div class="p-totals">
+        ${t.fee ? row('Services', money(t.services)) + row(esc(feeLabel(inv)), money(t.fee)) : ''}
+        ${row('Subtotal', money(t.subtotal))}
+        ${num(inv.taxRate) ? row(`Tax (${esc(num(inv.taxRate))}%)`, money(t.tax)) : ''}
+        ${t.discount ? row('Discount', money(-t.discount)) : ''}
+        ${row(`${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)`, money(t.total), `row grand ${t.payments.length || t.advancePct ? 'mid' : ''}`)}
+        ${t.advancePct ? row(`Advance due (${esc(+t.advancePct.toFixed(2))}%)`, money(t.advance), 'row advance') : ''}
+        ${t.payments.map((p) => row(esc(paymentLabel(p)), money(-num(p.amount)))).join('')}
+        ${t.payments.length && !paidInFull ? row('Balance due (USD)', money(t.balance), 'row grand') : ''}
+        ${paidInFull ? row(`Paid in full${inv.paidDate ? ' · ' + esc(fmtShort(inv.paidDate)) : ''}`, `${money(0)} due`, 'row paid-stamp') : ''}
+      </div>
+      ${inv.terms ? `<div class="p-terms"><p class="p-caps">Terms</p><p class="v">${esc(inv.terms)}</p></div>` : ''}`;
+  }
+
+  // ---------- save / cancel ----------
+  $('saveBtn').addEventListener('click', async () => {
+    const btn = $('saveBtn'); btn.disabled = true; setStatus('Saving…');
+    try {
+      await store.saveInvoice({ ...current });
+      // Remember the business details for the next new invoice.
+      const company = pickCompany({ ...current, logo: settings.logo });
+      if (JSON.stringify(company) !== JSON.stringify(pickCompany(settings))) await store.saveSettings(company);
+      settings = { ...settings, ...company };
+      dirty = false;
+      setTitle(false);
+      setStatus('Saved');
+    } catch (e) {
+      setStatus('Not saved: ' + (e?.code === 'quota_exceeded' ? 'storage is full. Delete old invoices and try again.' : (e?.message || e?.code || 'error')), true);
+    } finally { btn.disabled = false; }
+  });
+
+  $('cancelBtn').addEventListener('click', () => {
+    const btn = $('cancelBtn');
+    if (dirty && btn.dataset.armed !== '1') {
+      btn.dataset.armed = '1'; btn.textContent = 'Discard changes?';
+      setTimeout(() => { btn.dataset.armed = ''; btn.textContent = 'Back to list'; }, 4000);
+      return;
+    }
+    btn.dataset.armed = '';
+    closeEditor();
+  });
+
+  // ---------- PDF ----------
+  function imageSize(src) {
+    return new Promise((resolve) => { const i = new Image(); i.onload = () => resolve({ w: i.width, h: i.height }); i.onerror = () => resolve(null); i.src = src; });
+  }
+
+  // One continuous page, A4 wide, as tall as the invoice needs (never shorter than A4).
+  // Lay out once on a scratch page to measure, then draw for real at that height.
+  async function buildPDF(inv) {
+    const { jsPDF } = window.jspdf;
+    const W = 210, A4_H = 297, M = 18;
+    const scratch = new jsPDF({ unit: 'mm', format: [W, 5000] });
+    const height = Math.max(A4_H, Math.ceil(await drawInvoice(scratch, inv) + M));
+    const doc = new jsPDF({ unit: 'mm', format: [W, height] });
+    await drawInvoice(doc, inv);
+    return doc;
+  }
+
+  // Same layout as the proof (which is drawn in the same millimetres and points).
+  async function drawInvoice(doc, inv) {
+    const W = doc.internal.pageSize.getWidth();
+    const M = 18, R = W - M, CW = W - 2 * M;
+    const PT = 0.3528; // mm per point
+    const t = totals(inv);
+    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
+    let y = M;
+
+    const font = (size, style = 'normal', color = 17) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(color); };
+    const lh = (size) => size * PT * 1.4;          // line height, as in the proof
+    const base = (size) => y + size * PT * 0.97;   // baseline of a line whose top is at y
+    const hline = (x1, x2, w, color) => { doc.setDrawColor(color); doc.setLineWidth(w); doc.line(x1, y, x2, y); };
+    // Wrapped text with its top at y; moves y below it.
+    const para = (text, size, style = 'normal', color = 17, x = M, width = CW) => {
+      font(size, style, color);
+      String(text ?? '').split('\n').forEach((raw) => {
+        (raw ? doc.splitTextToSize(raw, width) : ['']).forEach((ln) => { doc.text(ln, x, base(size)); y += lh(size); });
+      });
+    };
+    // Small spaced capitals, like the website's labels.
+    const caps = (text, size, x, align = 'left', color = 110) => {
+      const s = String(text).toUpperCase(), cs = size * PT * 0.14;
+      font(size, 'bold', color);
+      const w = doc.getTextWidth(s) + cs * Math.max(0, s.length - 1);
+      doc.text(s, align === 'right' ? x - w : x, base(size), { charSpace: cs });
+    };
+    const label = (text, x = M, align) => { caps(text, 6.5, x, align); };
+    const LABEL_H = lh(6.5) + 1.2;
+
+    // Header: logo, then company details beside the INVOICE title
+    if (settings.logo) {
+      const sz = await imageSize(settings.logo);
+      if (sz) {
+        let h = 14, w = h * sz.w / sz.h;
+        if (w > 46) { w = 46; h = w * sz.h / sz.w; }
+        doc.addImage(settings.logo, settings.logo.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG', M, y, w, h);
+        y += h + 5;
+      }
+    }
+    const top = y;
+    para(inv.companyName, 10.5, 'bold', 17, M, CW * 0.6);
+    [inv.companyAddress, inv.companyCity, inv.companyCountry].filter(Boolean).forEach((l) => para(l, 8.5, 'normal', 102, M, CW * 0.6));
+    const leftBottom = y;
+    y = top; caps(kindOf(inv), 17, R, 'right', 17);
+    const rightBottom = Math.max(leftBottom, top + lh(17) + lh(8.5));
+    y = rightBottom - lh(8.5); font(8.5, 'normal', 102); doc.text(String(inv.companyWebsite || ''), R, base(8.5), { align: 'right' });
+    y = rightBottom + 5;
+    hline(M, R, 0.4, 17);
+
+    // Bill to · number · date, each a label over its value
+    y += 6;
+    const NX = R - 76, DX = R - 42;
+    label('Bill to'); label(`${kindOf(inv)} no.`, NX); label('Date', DX);
+    y += LABEL_H;
+    const valTop = y;
+    para(inv.clientName, 10, 'bold', 17, M, NX - M - 4);
+    if (inv.contactName) para('Attn: ' + inv.contactName, 8.5, 'normal', 17, M, NX - M - 4);
+    if (inv.clientEmail) para(inv.clientEmail, 8.5, 'normal', 102, M, NX - M - 4);
+    const billBottom = y;
+    y = valTop; para(inv.invoiceNumber, 10, 'bold', 17, NX, DX - NX - 4);
+    y = valTop; para(fmtDate(inv.invoiceDate), 10, 'bold', 17, DX, R - DX);
+    y = Math.max(billBottom, valTop + lh(10)) + 6;
+    hline(M, R, 0.2, 200);
+
+    // Project
+    if (inv.jobName || inv.jobDescription) {
+      y += 6;
+      label('Project'); y += LABEL_H;
+      if (inv.jobName) para(inv.jobName, 12, 'bold');
+      if (inv.jobDescription) { y += 1.5; para(inv.jobDescription, 9, 'normal', 51); }
+    }
+
+    // Line items
+    y += 7;
+    label('Description'); label('Amount', R, 'right');
+    y += lh(6.5) + 1.5;
+    hline(M, R, 0.4, 17);
+    const amtW = 30, descW = CW - amtW - 6;
+    const groups = groupItems(inv.lineItems);
+    groups.forEach((g) => {
+      y += 4.5;
+      if (g.category) { caps(g.category, 7.5, M, 'left', 17); y += lh(7.5) + 0.5; }
+      g.items.forEach(({ it }) => {
+        y += 2.4;
+        const rowTop = y;
+        font(9.5, 'bold'); doc.text(money(lineAmount(it)), R, base(9.5), { align: 'right' });
+        para(it.description || rateLine(it), 9.5, 'bold', 17, M, descW);
+        if (it.description) para(rateLine(it), 8.5, 'normal', 102, M, descW);
+        if (it.notes) { y += 1; para(it.notes, 8, 'normal', 102, M, descW); }
+        y = Math.max(y, rowTop + lh(9.5)) + 2.4;
+        hline(M, R, 0.15, 225);
+      });
+      if (groups.length > 1) {
+        y += 2.4;
+        font(8.5, 'bold'); const amt = money(g.items.reduce((s, { it }) => s + lineAmount(it), 0));
+        doc.text(amt, R, base(8.5), { align: 'right' });
+        font(8.5, 'normal', 102); doc.text(`${g.category || 'Other'} total`, R - doc.getTextWidth(amt) - 6 - 0.5, base(8.5), { align: 'right' });
+        y += lh(8.5);
+      }
+    });
+
+    // Totals, a column on the right
+    y += 9;
+    const TX = R - 80;
+    const row = (k, v, size = 9, labelColor = 102, valueColor = 17) => {
+      const lines = (font(size, 'normal', labelColor), doc.splitTextToSize(k, R - TX - 30));
+      lines.forEach((ln, i) => doc.text(ln, TX, base(size) + i * lh(size)));
+      font(size, 'bold', valueColor); doc.text(v, R, base(size), { align: 'right' });
+      y += lh(size) * lines.length + 0.8;
+    };
+    const grand = (k, v, size) => {
+      y += 1.5; hline(TX, R, 0.4, 17); y += 2.5;
+      font(size, 'bold'); doc.text(k, TX, base(size)); doc.text(v, R, base(size), { align: 'right' });
+      y += lh(size) + 0.8;
+    };
+    if (t.fee) { row('Services', money(t.services)); row(feeLabel(inv), money(t.fee)); }
+    row('Subtotal', money(t.subtotal));
+    if (num(inv.taxRate)) row(`Tax (${num(inv.taxRate)}%)`, money(t.tax));
+    if (t.discount) row('Discount', money(-t.discount));
+    grand(`${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)`, money(t.total), t.payments.length || t.advancePct ? 10.5 : 12);
+    if (t.advancePct) {
+      doc.setFillColor(238, 241, 243); doc.rect(TX - 2.5, y, R - TX + 5, lh(9) + 2.4, 'F');
+      y += 1.2; font(9, 'bold'); doc.text(`Advance due (${+t.advancePct.toFixed(2)}%)`, TX, base(9)); doc.text(money(t.advance), R, base(9), { align: 'right' });
+      y += lh(9) + 1.2 + 0.8;
+    }
+    t.payments.forEach((p) => row(paymentLabel(p), money(-num(p.amount))));
+    if (t.payments.length && !paidInFull) grand('Balance due (USD)', money(t.balance), 12);
+    if (paidInFull) {
+      y += 2;
+      const green = [26, 127, 55];
+      font(10, 'bold'); doc.setTextColor(...green);
+      doc.text(`Paid in full${inv.paidDate ? ' · ' + fmtShort(inv.paidDate) : ''}`, TX, base(10));
+      doc.text(`${money(0)} due`, R, base(10), { align: 'right' });
+      y += lh(10);
+    }
+
+    // Terms
+    if (inv.terms) {
+      y += 12; hline(M, R, 0.2, 200); y += 5;
+      label('Terms'); y += LABEL_H;
+      para(inv.terms, 8.5, 'normal', 51);
+    }
+
+    return y;
+  }
+
+  $('pdfBtn').addEventListener('click', async () => {
+    const btn = $('pdfBtn'); btn.disabled = true;
+    const filename = `${kindOf(current)} ${current.invoiceNumber || 'draft'}${current.clientName ? ' - ' + current.clientName : ''}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+    try {
+      const doc = await buildPDF(current);
+      doc.save(filename);
+      setStatus('PDF downloaded');
+    } catch (e) {
+      setStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true);
+    } finally { btn.disabled = false; }
+  });
+
+  startAuth();
+})();
+</script>
+
+</body></html>
