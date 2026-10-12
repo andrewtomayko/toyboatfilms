@@ -125,43 +125,51 @@
   @media (max-width: 960px) { .proof-col { position: static; max-height: none; overflow: visible; padding: 0; } }
   .proof-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
   .proof { container-type: inline-size; }
-  .sheet { background: var(--paper); color: var(--paper-ink); min-height: calc(100cqw * 297 / 210); /* at least one A4 page, taller when the content needs it */ padding: 8.57cqw; box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.12); font-family: Helvetica, Arial, sans-serif; font-size: 1.52cqw; line-height: 1.35; overflow-wrap: anywhere; }
+  /* The sheet is measured in A4 millimetres (--mm) and points (--pt), the same numbers the PDF uses. */
+  .sheet { --mm: calc(100cqw / 210); --pt: calc(var(--mm) * 0.3528); background: var(--paper); color: var(--paper-ink); min-height: calc(297 * var(--mm)); /* at least one A4 page, taller when the content needs it */ padding: calc(18 * var(--mm)); box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.12); font-family: Helvetica, Arial, sans-serif; font-size: calc(9 * var(--pt)); line-height: 1.4; overflow-wrap: anywhere; }
   .sheet p { margin: 0; }
-  .p-head { padding-bottom: 2.4cqw; border-bottom: 0.24cqw solid #111; }
-  .p-head-row { display: flex; justify-content: space-between; gap: 4cqw; }
-  .p-head-right { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; text-align: right; }
-  .p-head-right .p-title { line-height: 1; margin-top: 0.2cqw; }
-  .p-logo { max-height: 7.6cqw; max-width: 22cqw; display: block; margin-bottom: 1.4cqw; }
-  .p-co { font-weight: 700; font-size: 1.86cqw; }
-  .p-title { font-size: 3.4cqw; font-weight: 700; letter-spacing: 0.04em; text-align: right; }
+  .p-caps { font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #6e6e6e; margin-bottom: calc(1.2 * var(--mm)); }
+  .p-logo { max-height: calc(14 * var(--mm)); max-width: calc(46 * var(--mm)); display: block; margin-bottom: calc(5 * var(--mm)); }
+  .p-head { display: flex; justify-content: space-between; gap: calc(8 * var(--mm)); padding-bottom: calc(5 * var(--mm)); border-bottom: calc(0.4 * var(--mm)) solid #111; }
+  .p-co { font-size: calc(10.5 * var(--pt)); font-weight: 700; }
+  .p-sm { font-size: calc(8.5 * var(--pt)); }
   .p-muted { color: var(--paper-muted); }
-  .p-label { font-size: 1.19cqw; text-transform: uppercase; letter-spacing: 0.06em; color: var(--paper-muted); font-weight: 700; }
-  .p-meta { display: flex; justify-content: space-between; gap: 4cqw; padding-block: 2.4cqw; border-bottom: 0.12cqw solid #111; }
-  .p-meta dl { display: grid; grid-template-columns: auto auto; gap: 0.3cqw 2cqw; margin: 0; text-align: right; }
-  .p-meta dt { color: var(--paper-muted); }
-  .p-meta dd { margin: 0; font-weight: 700; text-align: left; }
-  .p-job { display: grid; gap: 1.4cqw; padding-block: 2.4cqw; border-bottom: 0.12cqw solid #111; }
-  .p-job p.v { white-space: pre-wrap; }
-  .p-items { padding-top: 1.6cqw; }
-  .p-items-head { display: flex; justify-content: space-between; padding-bottom: 0.8cqw; border-bottom: 0.08cqw solid #ccc; }
-  .p-item { display: flex; justify-content: space-between; gap: 3cqw; padding-block: 1.3cqw; border-bottom: 0.08cqw solid #ddd; }
+  .p-head-right { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; text-align: right; }
+  .p-title { font-size: calc(17 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; margin-right: -0.14em; }
+  .p-meta { display: grid; grid-template-columns: minmax(0, 1fr) calc(34 * var(--mm)) calc(42 * var(--mm)); padding-block: calc(6 * var(--mm)); border-bottom: calc(0.2 * var(--mm)) solid #c8c8c8; }
+  .p-meta > div { min-width: 0; padding-right: calc(4 * var(--mm)); }
+  .p-meta > div:last-child { padding-right: 0; }
+  .p-val { font-size: calc(10 * var(--pt)); font-weight: 700; }
+  .p-job { padding-top: calc(6 * var(--mm)); }
+  .p-project { font-size: calc(12 * var(--pt)); font-weight: 700; }
+  .p-desc { color: #333; white-space: pre-wrap; margin-top: calc(1.5 * var(--mm)) !important; }
+  .p-items { margin-top: calc(7 * var(--mm)); }
+  .p-items-head { display: flex; justify-content: space-between; padding-bottom: calc(1.5 * var(--mm)); border-bottom: calc(0.4 * var(--mm)) solid #111; }
+  .p-items-head .p-caps { margin: 0; }
+  .p-cat { padding-top: calc(4.5 * var(--mm)); }
+  .p-cat-name { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: calc(0.5 * var(--mm)) !important; }
+  .p-item { display: flex; justify-content: space-between; gap: calc(6 * var(--mm)); padding-block: calc(2.4 * var(--mm)); border-bottom: calc(0.15 * var(--mm)) solid #e1e1e1; }
   .p-item .d { flex: 1; min-width: 0; }
-  .p-item b { display: block; }
-  .p-item .notes { color: var(--paper-muted); font-size: 1.27cqw; white-space: pre-wrap; margin-top: 1cqw; }
-  .p-item .amt { font-weight: 700; white-space: nowrap; }
-  .p-item .rate { font-weight: 700; font-size: 1.44cqw; }
-  .p-item b + .rate { margin-top: 0.6cqw; }
-  .p-cat { padding-top: 2.2cqw; }
-  .p-cat-name { font-weight: 700; font-size: 1.7cqw; padding-bottom: 0.6cqw; border-bottom: 0.16cqw solid #111; }
-  .p-cat-total { display: flex; justify-content: flex-end; gap: 3cqw; padding-top: 1cqw; font-weight: 700; }
-  .p-totals { margin: 6cqw 0 0 auto; width: 45%; display: grid; gap: 1cqw; border-top: 0.08cqw solid #ccc; padding-top: 1.8cqw; }
-  .p-totals div { display: flex; justify-content: space-between; gap: 2cqw; }
-  .p-totals div span:first-child { color: var(--paper-muted); }
-  .p-totals div span:last-child { font-weight: 700; }
-  .p-totals .grand { border-top: 0.24cqw solid #111; padding-top: 1.6cqw; margin-top: 0.8cqw; font-size: 2cqw; }
+  .p-item .t, .p-item .amt { font-size: calc(9.5 * var(--pt)); font-weight: 700; }
+  .p-item .amt { white-space: nowrap; }
+  .p-item .rate { font-size: calc(8.5 * var(--pt)); color: var(--paper-muted); }
+  .p-item .notes { font-size: calc(8 * var(--pt)); color: var(--paper-muted); white-space: pre-wrap; margin-top: calc(1 * var(--mm)); }
+  .p-cat-total { display: flex; justify-content: flex-end; gap: calc(6 * var(--mm)); padding-top: calc(2.4 * var(--mm)); font-size: calc(8.5 * var(--pt)); }
+  .p-cat-total span:first-child { color: var(--paper-muted); }
+  .p-cat-total span:last-child { font-weight: 700; }
+  .p-totals { width: calc(80 * var(--mm)); margin: calc(9 * var(--mm)) 0 0 auto; display: grid; row-gap: calc(0.8 * var(--mm)); }
+  .p-totals .row { display: flex; justify-content: space-between; gap: calc(4 * var(--mm)); }
+  .p-totals .row span:first-child { color: var(--paper-muted); }
+  .p-totals .row span:last-child { font-weight: 700; white-space: nowrap; }
+  .p-totals .grand { border-top: calc(0.4 * var(--mm)) solid #111; padding-top: calc(2.5 * var(--mm)); margin-top: calc(1.5 * var(--mm)); font-size: calc(12 * var(--pt)); }
+  .p-totals .grand.mid { font-size: calc(10.5 * var(--pt)); }
   .p-totals .grand span:first-child { color: var(--paper-ink); font-weight: 700; }
-  .p-totals .grand.mid { font-size: 1.6cqw; padding-top: 1.2cqw; }
-  .p-totals .paid span:first-child { color: var(--paper-muted); }
+  .p-totals .advance { background: #eef1f3; padding: calc(1.2 * var(--mm)) calc(2.5 * var(--mm)); margin-inline: calc(-2.5 * var(--mm)); font-weight: 700; }
+  .p-totals .advance span:first-child { color: var(--paper-ink); }
+  .p-totals .paid-stamp { margin-top: calc(2 * var(--mm)); font-size: calc(10 * var(--pt)); }
+  .p-totals .paid-stamp span { color: #1a7f37 !important; font-weight: 700; }
+  .p-terms { margin-top: calc(12 * var(--mm)); padding-top: calc(5 * var(--mm)); border-top: calc(0.2 * var(--mm)) solid #c8c8c8; }
+  .p-terms .v { font-size: calc(8.5 * var(--pt)); color: #333; white-space: pre-wrap; }
   .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; width: fit-content; }
   .seg label { padding: 8px 18px; cursor: pointer; font-weight: 600; color: var(--muted); }
   .seg label + label { border-left: 1px solid var(--line); }
@@ -172,8 +180,6 @@
   .advance-row { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; }
   .advance-row .field { width: 160px; }
   .advance-row .sub b { font-family: var(--font-num); color: var(--ink); }
-  .p-totals .advance { background: #eef1f3; padding: 1cqw 1.2cqw; margin-inline: -1.2cqw; font-weight: 700; }
-  .p-totals .advance span:first-child { color: var(--paper-ink); }
   .pay-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 130px auto; gap: 10px; align-items: end; }
   @media (max-width: 560px) { .pay-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .chip { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
@@ -190,8 +196,6 @@
   .switch input:checked::after { transform: translateX(18px); }
   .switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .paid-row .field { width: 170px; }
-  .p-totals .paid-stamp { color: #1a7f37; font-weight: 700; }
-  .p-totals .paid-stamp span:first-child { color: #1a7f37; }
   .list-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
   .filters input[type="search"] { flex: 1 1 260px; }
@@ -1104,49 +1108,45 @@
     const inv = current, t = totals(inv), groups = groupItems(inv.lineItems);
     $('advanceAmt').innerHTML = t.advancePct ? `Advance due: <b>${money(t.advance)}</b> of ${money(t.total)}` : 'Leave at 0 for no advance line.';
     const logo = settings.logo ? `<img class="p-logo" src="${esc(settings.logo)}" alt="">` : '';
+    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
+    const row = (label, value, cls = 'row') => `<div class="${cls}"><span>${label}</span><span>${value}</span></div>`;
     $('sheet').innerHTML = `
+      ${logo}
       <div class="p-head">
-        ${logo}
-        <div class="p-head-row">
-          <div>
-            <p class="p-co">${esc(inv.companyName)}</p>
-            <p>${esc(inv.companyAddress)}</p>
-            <p>${esc(inv.companyCity)}</p>
-            <p>${esc(inv.companyCountry)}</p>
-          </div>
-          <div class="p-head-right">
-            <p class="p-title">${kindOf(inv).toUpperCase()}</p>
-            <p class="p-muted">${esc(inv.companyWebsite)}</p>
-          </div>
+        <div>
+          <p class="p-co">${esc(inv.companyName)}</p>
+          ${[inv.companyAddress, inv.companyCity, inv.companyCountry].filter(Boolean).map((l) => `<p class="p-sm p-muted">${esc(l)}</p>`).join('')}
+        </div>
+        <div class="p-head-right">
+          <p class="p-title">${kindOf(inv).toUpperCase()}</p>
+          <p class="p-sm p-muted">${esc(inv.companyWebsite)}</p>
         </div>
       </div>
       <div class="p-meta">
         <div>
-          <p class="p-label">Bill to</p>
-          <p style="font-weight:700">${esc(inv.clientName)}</p>
-          ${inv.contactName ? `<p>Attn: ${esc(inv.contactName)}</p>` : ''}
-          <p class="p-muted">${esc(inv.clientEmail)}</p>
+          <p class="p-caps">Bill to</p>
+          <p class="p-val">${esc(inv.clientName)}</p>
+          ${inv.contactName ? `<p class="p-sm">Attn: ${esc(inv.contactName)}</p>` : ''}
+          ${inv.clientEmail ? `<p class="p-sm p-muted">${esc(inv.clientEmail)}</p>` : ''}
         </div>
-        <dl>
-          <dt>${kindOf(inv)} #</dt><dd>${esc(inv.invoiceNumber)}</dd>
-          <dt>Date</dt><dd>${esc(fmtDate(inv.invoiceDate))}</dd>
-        </dl>
+        <div><p class="p-caps">${kindOf(inv)} no.</p><p class="p-val">${esc(inv.invoiceNumber)}</p></div>
+        <div><p class="p-caps">Date</p><p class="p-val">${esc(fmtDate(inv.invoiceDate))}</p></div>
       </div>
-      <div class="p-job">
-        ${inv.jobName ? `<div><p class="p-label">Job</p><p class="v" style="font-weight:700">${esc(inv.jobName)}</p></div>` : ''}
-        ${inv.jobDescription ? `<div><p class="p-label">Description</p><p class="v">${esc(inv.jobDescription)}</p></div>` : ''}
-        ${inv.terms ? `<div><p class="p-label">Terms</p><p class="v">${esc(inv.terms)}</p></div>` : ''}
-      </div>
+      ${inv.jobName || inv.jobDescription ? `<div class="p-job">
+        <p class="p-caps">Project</p>
+        ${inv.jobName ? `<p class="p-project">${esc(inv.jobName)}</p>` : ''}
+        ${inv.jobDescription ? `<p class="p-desc">${esc(inv.jobDescription)}</p>` : ''}
+      </div>` : ''}
       <div class="p-items">
-        <div class="p-items-head p-label"><span>Item</span><span>Amount</span></div>
+        <div class="p-items-head"><p class="p-caps">Description</p><p class="p-caps">Amount</p></div>
         ${groups.map((g) => `
           <div class="p-cat">
             ${g.category ? `<p class="p-cat-name">${esc(g.category)}</p>` : ''}
             ${g.items.map(({ it }) => `
               <div class="p-item">
                 <div class="d">
-                  ${it.description ? `<b>${esc(it.description)}</b>` : ''}
-                  <p class="rate">${esc(rateLine(it))}</p>
+                  <p class="t">${esc(it.description || rateLine(it))}</p>
+                  ${it.description ? `<p class="rate">${esc(rateLine(it))}</p>` : ''}
                   ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
                 </div>
                 <div class="amt">${money(lineAmount(it))}</div>
@@ -1155,17 +1155,17 @@
           </div>`).join('')}
       </div>
       <div class="p-totals">
-        ${t.fee ? `<div><span>Services</span><span>${money(t.services)}</span></div>
-                   <div><span>${esc(feeLabel(inv))}</span><span>${money(t.fee)}</span></div>` : ''}
-        <div><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
-        ${num(inv.taxRate) ? `<div><span>Tax (${esc(num(inv.taxRate))}%)</span><span>${money(t.tax)}</span></div>` : ''}
-        ${t.discount ? `<div><span>Discount</span><span>${money(-t.discount)}</span></div>` : ''}
-        <div class="grand ${t.payments.length || t.advancePct ? 'mid' : ''}"><span>${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)</span><span>${money(t.total)}</span></div>
-        ${t.advancePct ? `<div class="advance"><span>Advance due (${esc(+t.advancePct.toFixed(2))}%)</span><span>${money(t.advance)}</span></div>` : ''}
-        ${t.payments.map((p) => `<div class="paid"><span>${esc(paymentLabel(p))}</span><span>${money(-num(p.amount))}</span></div>`).join('')}
-        ${t.payments.length && !(inv.paid && !isEstimate(inv)) ? `<div class="grand"><span>Balance due (USD)</span><span>${money(t.balance)}</span></div>` : ''}
-        ${inv.paid && !isEstimate(inv) ? `<div class="paid-stamp"><span>Paid in full${inv.paidDate ? ' · ' + esc(fmtShort(inv.paidDate)) : ''}</span><span>${money(0)} due</span></div>` : ''}
-      </div>`;
+        ${t.fee ? row('Services', money(t.services)) + row(esc(feeLabel(inv)), money(t.fee)) : ''}
+        ${row('Subtotal', money(t.subtotal))}
+        ${num(inv.taxRate) ? row(`Tax (${esc(num(inv.taxRate))}%)`, money(t.tax)) : ''}
+        ${t.discount ? row('Discount', money(-t.discount)) : ''}
+        ${row(`${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)`, money(t.total), `row grand ${t.payments.length || t.advancePct ? 'mid' : ''}`)}
+        ${t.advancePct ? row(`Advance due (${esc(+t.advancePct.toFixed(2))}%)`, money(t.advance), 'row advance') : ''}
+        ${t.payments.map((p) => row(esc(paymentLabel(p)), money(-num(p.amount)))).join('')}
+        ${t.payments.length && !paidInFull ? row('Balance due (USD)', money(t.balance), 'row grand') : ''}
+        ${paidInFull ? row(`Paid in full${inv.paidDate ? ' · ' + esc(fmtShort(inv.paidDate)) : ''}`, `${money(0)} due`, 'row paid-stamp') : ''}
+      </div>
+      ${inv.terms ? `<div class="p-terms"><p class="p-caps">Terms</p><p class="v">${esc(inv.terms)}</p></div>` : ''}`;
   }
 
   // ---------- save / cancel ----------
@@ -1213,140 +1213,148 @@
     return doc;
   }
 
+  // Same layout as the proof (which is drawn in the same millimetres and points).
   async function drawInvoice(doc, inv) {
     const W = doc.internal.pageSize.getWidth();
     const M = 18, R = W - M, CW = W - 2 * M;
+    const PT = 0.3528; // mm per point
     const t = totals(inv);
     const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
     let y = M;
 
-    const font = (size, style = 'normal', grey = false) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(grey ? 102 : 17); };
-    const lh = (size) => size * 0.3528 * 1.35; // pt → mm line height
-    const ensure = () => {}; // single growing page: no page breaks
-    const rule = (w = 0.5, color = 17) => { doc.setDrawColor(color); doc.setLineWidth(w); doc.line(M, y, R, y); };
-    const para = (text, size, style, grey, x = M, width = CW) => {
-      font(size, style, grey);
-      const lines = doc.splitTextToSize(String(text ?? ''), width);
-      lines.forEach((ln) => { ensure(lh(size)); y += lh(size) * 0.78; doc.text(ln, x, y); y += lh(size) * 0.22; });
+    const font = (size, style = 'normal', color = 17) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(color); };
+    const lh = (size) => size * PT * 1.4;          // line height, as in the proof
+    const base = (size) => y + size * PT * 0.97;   // baseline of a line whose top is at y
+    const hline = (x1, x2, w, color) => { doc.setDrawColor(color); doc.setLineWidth(w); doc.line(x1, y, x2, y); };
+    // Wrapped text with its top at y; moves y below it.
+    const para = (text, size, style = 'normal', color = 17, x = M, width = CW) => {
+      font(size, style, color);
+      String(text ?? '').split('\n').forEach((raw) => {
+        (raw ? doc.splitTextToSize(raw, width) : ['']).forEach((ln) => { doc.text(ln, x, base(size)); y += lh(size); });
+      });
     };
+    // Small spaced capitals, like the website's labels.
+    const caps = (text, size, x, align = 'left', color = 110) => {
+      const s = String(text).toUpperCase(), cs = size * PT * 0.14;
+      font(size, 'bold', color);
+      const w = doc.getTextWidth(s) + cs * Math.max(0, s.length - 1);
+      doc.text(s, align === 'right' ? x - w : x, base(size), { charSpace: cs });
+    };
+    const label = (text, x = M, align) => { caps(text, 6.5, x, align); };
+    const LABEL_H = lh(6.5) + 1.2;
 
-    // Header: logo on its own row, then company details and the INVOICE title side by side
+    // Header: logo, then company details beside the INVOICE title
     if (settings.logo) {
       const sz = await imageSize(settings.logo);
       if (sz) {
-        const h = 16, w = Math.min(46, h * sz.w / sz.h), hh = w * sz.h / sz.w;
-        doc.addImage(settings.logo, settings.logo.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG', M, y, w, hh);
-        y += hh + 3;
+        let h = 14, w = h * sz.w / sz.h;
+        if (w > 46) { w = 46; h = w * sz.h / sz.w; }
+        doc.addImage(settings.logo, settings.logo.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG', M, y, w, h);
+        y += h + 5;
       }
     }
     const top = y;
-    para(inv.companyName, 11, 'bold', false, M, CW * 0.6);
-    [inv.companyAddress, inv.companyCity, inv.companyCountry].filter(Boolean).forEach((l) => para(l, 9, 'normal', false, M, CW * 0.6));
+    para(inv.companyName, 10.5, 'bold', 17, M, CW * 0.6);
+    [inv.companyAddress, inv.companyCity, inv.companyCountry].filter(Boolean).forEach((l) => para(l, 8.5, 'normal', 102, M, CW * 0.6));
     const leftBottom = y;
-    // Top of INVOICE lines up with the top of the company name; website sits on the last address line.
-    font(20, 'bold'); doc.text(kindOf(inv).toUpperCase(), R, top + 6.4, { align: 'right' });
-    const siteY = Math.max(top + 11.5, leftBottom - lh(9) * 0.22);
-    font(9, 'normal', true); doc.text(String(inv.companyWebsite || ''), R, siteY, { align: 'right' });
-    y = Math.max(leftBottom, siteY + 1) + 4;
-    rule(0.7); y += 5;
+    y = top; caps(kindOf(inv), 17, R, 'right', 17);
+    const rightBottom = Math.max(leftBottom, top + lh(17) + lh(8.5));
+    y = rightBottom - lh(8.5); font(8.5, 'normal', 102); doc.text(String(inv.companyWebsite || ''), R, base(8.5), { align: 'right' });
+    y = rightBottom + 5;
+    hline(M, R, 0.4, 17);
 
-    // Bill to / meta
-    const metaTop = y;
-    font(7, 'bold', true); doc.text('BILL TO', M, y); y += 4.5;
-    para(inv.clientName, 10, 'bold', false, M, CW * 0.55);
-    if (inv.contactName) para('Attn: ' + inv.contactName, 9, 'normal', false, M, CW * 0.55);
-    if (inv.clientEmail) para(inv.clientEmail, 9, 'normal', true, M, CW * 0.55);
-    const metaY = metaTop + 3;
-    // Values share a left edge, set by the wider of the two so the column still ends at the right margin.
-    const numText = String(inv.invoiceNumber || ''), dateText = fmtDate(inv.invoiceDate);
-    font(9, 'bold');
-    const valX = R - Math.max(doc.getTextWidth(numText), doc.getTextWidth(dateText));
-    doc.text(numText, valX, metaY); doc.text(dateText, valX, metaY + 4.6);
-    font(9, 'normal', true); doc.text(`${kindOf(inv)} #`, valX - 4, metaY, { align: 'right' }); doc.text('Date', valX - 4, metaY + 4.6, { align: 'right' });
-    y = Math.max(y, metaY + 6) + 3;
-    rule(0.35); y += 5;
+    // Bill to · number · date, each a label over its value
+    y += 6;
+    const NX = R - 76, DX = R - 42;
+    label('Bill to'); label(`${kindOf(inv)} no.`, NX); label('Date', DX);
+    y += LABEL_H;
+    const valTop = y;
+    para(inv.clientName, 10, 'bold', 17, M, NX - M - 4);
+    if (inv.contactName) para('Attn: ' + inv.contactName, 8.5, 'normal', 17, M, NX - M - 4);
+    if (inv.clientEmail) para(inv.clientEmail, 8.5, 'normal', 102, M, NX - M - 4);
+    const billBottom = y;
+    y = valTop; para(inv.invoiceNumber, 10, 'bold', 17, NX, DX - NX - 4);
+    y = valTop; para(fmtDate(inv.invoiceDate), 10, 'bold', 17, DX, R - DX);
+    y = Math.max(billBottom, valTop + lh(10)) + 6;
+    hline(M, R, 0.2, 200);
 
-    // Job block
-    const block = (label, text, bold) => {
-      if (!text) return;
-      ensure(10); font(7, 'bold', true); doc.text(label, M, y); y += 1;
-      para(text, bold ? 10 : 9, bold ? 'bold' : 'normal'); y += 2.5;
-    };
-    block('JOB', inv.jobName, true);
-    block('DESCRIPTION', inv.jobDescription);
-    block('TERMS', inv.terms);
-    rule(0.35); y += 5;
+    // Project
+    if (inv.jobName || inv.jobDescription) {
+      y += 6;
+      label('Project'); y += LABEL_H;
+      if (inv.jobName) para(inv.jobName, 12, 'bold');
+      if (inv.jobDescription) { y += 1.5; para(inv.jobDescription, 9, 'normal', 51); }
+    }
 
     // Line items
-    font(7, 'bold', true); doc.text('ITEM', M, y); doc.text('AMOUNT', R, y, { align: 'right' }); y += 2;
-    rule(0.2, 200); y += 1;
-    const amtW = 28, descW = CW - amtW - 4;
+    y += 7;
+    label('Description'); label('Amount', R, 'right');
+    y += lh(6.5) + 1.5;
+    hline(M, R, 0.4, 17);
+    const amtW = 30, descW = CW - amtW - 6;
     const groups = groupItems(inv.lineItems);
-    groups.forEach((g, gi) => {
-      y += gi ? 5 : 2;
-      if (g.category) { para(g.category, 10.5, 'bold', false, M, descW); y += 0.8; rule(0.4); y += 1.5; }
+    groups.forEach((g) => {
+      y += 4.5;
+      if (g.category) { caps(g.category, 7.5, M, 'left', 17); y += lh(7.5) + 0.5; }
       g.items.forEach(({ it }) => {
+        y += 2.4;
         const rowTop = y;
-        if (it.description) para(it.description, 9.5, 'bold', false, M, descW);
-        else para(rateLine(it), 9, 'normal', true, M, descW);
-        font(9.5, 'bold'); doc.text(money(lineAmount(it)), R, rowTop + lh(9.5) * 0.78, { align: 'right' });
-        if (it.description) { y += 1.2; para(rateLine(it), 8.5, 'bold', false, M, descW); }
-        if (it.notes) { y += 1.8; String(it.notes).split('\n').forEach((ln) => para(ln || ' ', 8, 'normal', true, M, descW)); }
-        y += 2; rule(0.15, 220); y += 1;
+        font(9.5, 'bold'); doc.text(money(lineAmount(it)), R, base(9.5), { align: 'right' });
+        para(it.description || rateLine(it), 9.5, 'bold', 17, M, descW);
+        if (it.description) para(rateLine(it), 8.5, 'normal', 102, M, descW);
+        if (it.notes) { y += 1; para(it.notes, 8, 'normal', 102, M, descW); }
+        y = Math.max(y, rowTop + lh(9.5)) + 2.4;
+        hline(M, R, 0.15, 225);
       });
       if (groups.length > 1) {
-        y += 3.5; font(9, 'bold');
-        doc.text(money(g.items.reduce((s, { it }) => s + lineAmount(it), 0)), R, y, { align: 'right' });
-        doc.text(`${g.category || 'Other'} total`, R - 32, y, { align: 'right' });
-        y += 1;
+        y += 2.4;
+        font(8.5, 'bold'); const amt = money(g.items.reduce((s, { it }) => s + lineAmount(it), 0));
+        doc.text(amt, R, base(8.5), { align: 'right' });
+        font(8.5, 'normal', 102); doc.text(`${g.category || 'Other'} total`, R - doc.getTextWidth(amt) - 6 - 0.5, base(8.5), { align: 'right' });
+        y += lh(8.5);
       }
     });
 
-    // Totals
-    y += 14; // clear space between the last line item and the totals
-    const rows = [];
-    if (t.fee) { rows.push(['Services', money(t.services)]); rows.push([feeLabel(inv), money(t.fee)]); }
-    rows.push(['Subtotal', money(t.subtotal)]);
-    if (num(inv.taxRate)) rows.push([`Tax (${num(inv.taxRate)}%)`, money(t.tax)]);
-    if (t.discount) rows.push(['Discount', money(-t.discount)]);
-    const TX = R - CW * 0.45;
-    doc.setDrawColor(204); doc.setLineWidth(0.2); doc.line(TX, y, R, y); y += 6;
-    rows.forEach(([k, v]) => { font(9, 'normal', true); doc.text(k, TX, y); font(9, 'bold'); doc.text(v, R, y, { align: 'right' }); y += 5.5; });
-    y += 0.5;
-    doc.setDrawColor(17); doc.setLineWidth(0.7); doc.line(TX, y - 2, R, y - 2); y += 5;
-    const totalLabel = `${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)`;
-    if (!t.payments.length && !t.advancePct) {
-      font(12, 'bold'); doc.text(totalLabel, TX, y); doc.text(money(t.total), R, y, { align: 'right' });
-    } else {
-      font(10, 'bold'); doc.text(totalLabel, TX, y); doc.text(money(t.total), R, y, { align: 'right' });
-      y += 6.5;
-      if (t.advancePct) {
-        // Shaded band so the amount due up front stands out under the total.
-        doc.setFillColor(238, 241, 243); doc.rect(TX - 2.5, y - 4.4, R - TX + 5, 6.8, 'F');
-        font(10, 'bold'); doc.text(`Advance due (${+t.advancePct.toFixed(2)}%)`, TX, y); doc.text(money(t.advance), R, y, { align: 'right' });
-        y += 7.5;
-      }
+    // Totals, a column on the right
+    y += 9;
+    const TX = R - 80;
+    const row = (k, v, size = 9, labelColor = 102, valueColor = 17) => {
+      const lines = (font(size, 'normal', labelColor), doc.splitTextToSize(k, R - TX - 30));
+      lines.forEach((ln, i) => doc.text(ln, TX, base(size) + i * lh(size)));
+      font(size, 'bold', valueColor); doc.text(v, R, base(size), { align: 'right' });
+      y += lh(size) * lines.length + 0.8;
+    };
+    const grand = (k, v, size) => {
+      y += 1.5; hline(TX, R, 0.4, 17); y += 2.5;
+      font(size, 'bold'); doc.text(k, TX, base(size)); doc.text(v, R, base(size), { align: 'right' });
+      y += lh(size) + 0.8;
+    };
+    if (t.fee) { row('Services', money(t.services)); row(feeLabel(inv), money(t.fee)); }
+    row('Subtotal', money(t.subtotal));
+    if (num(inv.taxRate)) row(`Tax (${num(inv.taxRate)}%)`, money(t.tax));
+    if (t.discount) row('Discount', money(-t.discount));
+    grand(`${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)`, money(t.total), t.payments.length || t.advancePct ? 10.5 : 12);
+    if (t.advancePct) {
+      doc.setFillColor(238, 241, 243); doc.rect(TX - 2.5, y, R - TX + 5, lh(9) + 2.4, 'F');
+      y += 1.2; font(9, 'bold'); doc.text(`Advance due (${+t.advancePct.toFixed(2)}%)`, TX, base(9)); doc.text(money(t.advance), R, base(9), { align: 'right' });
+      y += lh(9) + 1.2 + 0.8;
     }
-    if (t.payments.length) {
-      t.payments.forEach((p) => {
-        font(9, 'normal', true);
-        const lines = doc.splitTextToSize(paymentLabel(p), R - TX - 26);
-        doc.text(lines, TX, y);
-        font(9, 'bold'); doc.text(money(-num(p.amount)), R, y, { align: 'right' });
-        y += 5.5 + (lines.length - 1) * lh(9);
-      });
-      if (!paidInFull) {
-        y += 0.5;
-        doc.setDrawColor(17); doc.setLineWidth(0.7); doc.line(TX, y - 2, R, y - 2); y += 5;
-        font(12, 'bold'); doc.text('Balance due (USD)', TX, y); doc.text(money(t.balance), R, y, { align: 'right' });
-      }
-    }
+    t.payments.forEach((p) => row(paymentLabel(p), money(-num(p.amount))));
+    if (t.payments.length && !paidInFull) grand('Balance due (USD)', money(t.balance), 12);
     if (paidInFull) {
-      y += 7;
-      font(10, 'bold'); doc.setTextColor(26, 127, 55);
-      doc.text(`Paid in full${inv.paidDate ? ' · ' + fmtShort(inv.paidDate) : ''}`, TX, y);
-      doc.text(`${money(0)} due`, R, y, { align: 'right' });
-      doc.setTextColor(17);
+      y += 2;
+      const green = [26, 127, 55];
+      font(10, 'bold'); doc.setTextColor(...green);
+      doc.text(`Paid in full${inv.paidDate ? ' · ' + fmtShort(inv.paidDate) : ''}`, TX, base(10));
+      doc.text(`${money(0)} due`, R, base(10), { align: 'right' });
+      y += lh(10);
+    }
+
+    // Terms
+    if (inv.terms) {
+      y += 12; hline(M, R, 0.2, 200); y += 5;
+      label('Terms'); y += LABEL_H;
+      para(inv.terms, 8.5, 'normal', 51);
     }
 
     return y;
