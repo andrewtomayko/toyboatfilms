@@ -806,7 +806,8 @@
       ],
       "tags": [
         "behind-the-scenes"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "Lizzie Mandler",
@@ -1200,7 +1201,8 @@
       "tags": [
         "brand",
         "documentary"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "Jennie Kwon",
