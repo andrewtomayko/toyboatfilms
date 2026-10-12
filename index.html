@@ -280,26 +280,23 @@
 
     .logoStrip:hover .logoTrack{ animation-play-state:paused; }
 
+    /* Logos are spaced by their real edges, and each gets a height (--h, set per logo) that
+       balances its shape: wide wordmarks shorter, compact marks taller, so they read as equals. */
     .logo{
       height:54px;
-      width:190px;
       display:flex;
       align-items:center;
-      justify-content:center;
       flex:0 0 auto;
     }
 
     .logo img{
-      max-height:100%;
-      max-width:100%;
+      height:var(--h, 34px);
+      width:auto;
       display:block;
       /* Logos come in mixed colors; show them all in white on the dark page */
       filter:brightness(0) invert(1);
       opacity:.85;
     }
-
-    /* Square marks read smaller than wordmarks, so they get a little more height (without growing the strip) */
-    .logo.mark{ height:72px; margin-block:-9px; }
 
     @keyframes scrollLogos{
       from{ transform:translateX(0); }
@@ -324,8 +321,8 @@
     }
 
     @media (max-width: 800px){
-      .logo{ height:28px; width:120px; }
-      .logo.mark{ height:40px; margin-block:-6px; }
+      .logo{ height:30px; }
+      .logo img{ height:calc(var(--h, 34px) * .58); }
       .logoTrack{ gap:40px; padding-right:40px; }
     }
 
@@ -957,32 +954,32 @@
       <div class="logoScroller" id="logoScroller">
       <div class="logoStripInner">
         <div class="logoTrack">
-          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler"></div>
-          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt="Bluesky"></div>
-          <div class="logo"><img src="/Assets/logos/allstate.svg" alt="Allstate"></div>
-          <div class="logo"><img src="/Assets/logos/samsung.svg" alt="Samsung"></div>
-          <div class="logo"><img src="/Assets/logos/SCU.svg" alt="Seattle Credit Union"></div>
-          <div class="logo"><img src="/Assets/logos/intel.svg" alt="Intel"></div>
-          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="IDEO"></div>
-          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="North Coast Credit Union"></div>
-          <div class="logo"><img src="/Assets/logos/twist.png" alt="TWIST"></div>
-          <div class="logo mark"><img src="/Assets/logos/the-met.svg" alt="The Met"></div>
-          <div class="logo"><img src="/Assets/logos/truecar.png" alt="TrueCar"></div>
-          <div class="logo mark"><img src="/Assets/logos/race-to-alaska.png" alt="Race to Alaska"></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler"></div>
+          <div class="logo" style="--h:35px"><img src="/Assets/logos/bluesky.svg" alt="Bluesky"></div>
+          <div class="logo" style="--h:34px"><img src="/Assets/logos/allstate.svg" alt="Allstate"></div>
+          <div class="logo" style="--h:28px"><img src="/Assets/logos/samsung.svg" alt="Samsung"></div>
+          <div class="logo" style="--h:43px"><img src="/Assets/logos/SCU.svg" alt="Seattle Credit Union"></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/intel.svg" alt="Intel"></div>
+          <div class="logo" style="--h:33px"><img src="/Assets/logos/IDEO.svg" alt="IDEO"></div>
+          <div class="logo" style="--h:39px"><img src="/Assets/logos/NCCU.svg" alt="North Coast Credit Union"></div>
+          <div class="logo" style="--h:36px"><img src="/Assets/logos/twist.png" alt="TWIST"></div>
+          <div class="logo" style="--h:46px"><img src="/Assets/logos/the-met.svg" alt="The Met"></div>
+          <div class="logo" style="--h:30px"><img src="/Assets/logos/truecar.png" alt="TrueCar"></div>
+          <div class="logo" style="--h:48px"><img src="/Assets/logos/race-to-alaska.png" alt="Race to Alaska"></div>
         </div>
         <div class="logoTrack" aria-hidden="true">
-          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/allstate.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/samsung.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/SCU.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/intel.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/twist.png" alt=""></div>
-          <div class="logo mark"><img src="/Assets/logos/the-met.svg" alt=""></div>
-          <div class="logo"><img src="/Assets/logos/truecar.png" alt=""></div>
-          <div class="logo mark"><img src="/Assets/logos/race-to-alaska.png" alt=""></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/conde-nast-traveler.svg" alt=""></div>
+          <div class="logo" style="--h:35px"><img src="/Assets/logos/bluesky.svg" alt=""></div>
+          <div class="logo" style="--h:34px"><img src="/Assets/logos/allstate.svg" alt=""></div>
+          <div class="logo" style="--h:28px"><img src="/Assets/logos/samsung.svg" alt=""></div>
+          <div class="logo" style="--h:43px"><img src="/Assets/logos/SCU.svg" alt=""></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/intel.svg" alt=""></div>
+          <div class="logo" style="--h:33px"><img src="/Assets/logos/IDEO.svg" alt=""></div>
+          <div class="logo" style="--h:39px"><img src="/Assets/logos/NCCU.svg" alt=""></div>
+          <div class="logo" style="--h:36px"><img src="/Assets/logos/twist.png" alt=""></div>
+          <div class="logo" style="--h:46px"><img src="/Assets/logos/the-met.svg" alt=""></div>
+          <div class="logo" style="--h:30px"><img src="/Assets/logos/truecar.png" alt=""></div>
+          <div class="logo" style="--h:48px"><img src="/Assets/logos/race-to-alaska.png" alt=""></div>
         </div>
       </div>
       </div>
