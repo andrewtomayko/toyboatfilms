@@ -68,6 +68,7 @@
   .ledger td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
   .ledger tr:last-child td { border-bottom: 0; }
   .ledger tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .ledger tbody tr[data-row] { cursor: pointer; }
   .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .right { text-align: right; }
   .list-date { white-space: nowrap; }
@@ -719,7 +720,7 @@
         lastYear = y;
       }
       html += `
-      <tr>
+      <tr data-row="${esc(inv.id)}" title="Double-click to open">
         <td class="num">${esc(inv.invoiceNumber)}</td>
         <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
         <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
@@ -768,6 +769,15 @@
     if (!t.payments.length) return '';
     return `<div class="sub">Balance ${money(t.balance)}</div>`;
   }
+
+  // Double-clicking anywhere on a row (except its buttons) opens it.
+  $('invoiceRows').addEventListener('dblclick', (e) => {
+    if (e.target.closest('button')) return;
+    const row = e.target.closest('[data-row]');
+    if (!row) return;
+    getSelection()?.removeAllRanges();
+    openEditor(invoices.find((i) => i.id === row.dataset.row));
+  });
 
   $('invoiceRows').addEventListener('click', async (e) => {
     const toggle = e.target.closest('[data-togglepaid]');
