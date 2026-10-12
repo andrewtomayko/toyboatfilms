@@ -966,7 +966,8 @@
       "tags": [
         "brand",
         "documentary"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "Silverwood School",
@@ -1240,7 +1241,8 @@
       "tags": [
         "brand",
         "documentary"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "Ellie Top",
@@ -1315,7 +1317,8 @@
       "tags": [
         "brand",
         "documentary"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "Sia Taylor",
@@ -1390,7 +1393,8 @@
       "tags": [
         "brand",
         "documentary"
-      ]
+      ],
+      "filterOnly": true
     },
     {
       "title": "White Aspen Glamping",

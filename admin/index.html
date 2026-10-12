@@ -409,6 +409,7 @@
     function cardHTML(v, i) {
       const badges = [
         v.hidden ? '<span class="badge">Hidden</span>' : "",
+        !v.hidden && v.filterOnly ? '<span class="badge">Filters only</span>' : "",
         !String(v.url || "").trim() ? '<span class="badge warn">No video link</span>' : "",
         !v.thumb ? '<span class="badge warn">No thumbnail</span>' : "",
       ].join("");
@@ -558,6 +559,7 @@
 
         <div class="panel-foot">
           <label class="toggle"><input type="checkbox" id="hiddenToggle" ${v.hidden ? "checked" : ""}>Hide on live site</label>
+          <label class="toggle" title="Left out of “All” on the homepage; still shows when a visitor picks one of its filters"><input type="checkbox" id="filterOnlyToggle" ${v.filterOnly ? "checked" : ""}>Only show when filtered</label>
           <span class="spacer"></span>
           <button class="btn small ghost" type="button" id="moveTop" ${selected === 0 ? "disabled" : ""}>Move to top</button>
           <button class="btn small" type="button" id="dupBtn">Duplicate</button>
@@ -574,8 +576,10 @@
       else if (el.dataset.d != null) v.details[+el.dataset.d][el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
       else if (el.dataset.c != null) v.credits[+el.dataset.c][el.dataset.k] = el.value;
       else if (el.id === "hiddenToggle") v.hidden = el.checked || undefined;
+      else if (el.id === "filterOnlyToggle") v.filterOnly = el.checked || undefined;
       else return;
       if (v.hidden === undefined) delete v.hidden;
+      if (v.filterOnly === undefined) delete v.filterOnly;
       refreshCard(selected); changed();
     });
     $("panel").addEventListener("change", async (e) => {
