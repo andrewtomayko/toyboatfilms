@@ -280,18 +280,18 @@
 
     .logoStrip:hover .logoTrack{ animation-play-state:paused; }
 
+    /* Logos are spaced by their real edges, and each gets a height (--h, set per logo) that
+       balances its shape: wide wordmarks shorter, compact marks taller, so they read as equals. */
     .logo{
       height:54px;
-      width:190px;
       display:flex;
       align-items:center;
-      justify-content:center;
       flex:0 0 auto;
     }
 
     .logo img{
-      max-height:100%;
-      max-width:100%;
+      height:var(--h, 34px);
+      width:auto;
       display:block;
       /* Logos come in mixed colors; show them all in white on the dark page */
       filter:brightness(0) invert(1);
@@ -321,7 +321,8 @@
     }
 
     @media (max-width: 800px){
-      .logo{ height:28px; width:120px; }
+      .logo{ height:30px; }
+      .logo img{ height:calc(var(--h, 34px) * .58); }
       .logoTrack{ gap:40px; padding-right:40px; }
     }
 
@@ -861,7 +862,11 @@
     }
 
 
+    .aboutActions{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+
     @media (max-width: 800px){
+      /* On phones the close button stays put while the About text scrolls */
+      .about-content .close{ position:fixed; top:calc(env(safe-area-inset-top, 0px) + 14px); right:14px; z-index:5; }
       .aboutBody{ padding:26px 22px 30px; }
       .aboutText{ font-size:16px; }
     }
@@ -949,24 +954,32 @@
       <div class="logoScroller" id="logoScroller">
       <div class="logoStripInner">
         <div class="logoTrack">
-          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt="Bluesky" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/allstate.svg" alt="Allstate" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/samsung.svg" alt="Samsung" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/SCU.svg" alt="Seattle Credit Union" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/intel.svg" alt="Intel" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="IDEO" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="North Coast Credit Union" loading="lazy"></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler"></div>
+          <div class="logo" style="--h:35px"><img src="/Assets/logos/bluesky.svg" alt="Bluesky"></div>
+          <div class="logo" style="--h:34px"><img src="/Assets/logos/allstate.svg" alt="Allstate"></div>
+          <div class="logo" style="--h:28px"><img src="/Assets/logos/samsung.svg" alt="Samsung"></div>
+          <div class="logo" style="--h:43px"><img src="/Assets/logos/SCU.svg" alt="Seattle Credit Union"></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/intel.svg" alt="Intel"></div>
+          <div class="logo" style="--h:33px"><img src="/Assets/logos/IDEO.svg" alt="IDEO"></div>
+          <div class="logo" style="--h:39px"><img src="/Assets/logos/NCCU.svg" alt="North Coast Credit Union"></div>
+          <div class="logo" style="--h:36px"><img src="/Assets/logos/twist.png" alt="TWIST"></div>
+          <div class="logo" style="--h:46px"><img src="/Assets/logos/the-met.svg" alt="The Met"></div>
+          <div class="logo" style="--h:30px"><img src="/Assets/logos/truecar.png" alt="TrueCar"></div>
+          <div class="logo" style="--h:48px"><img src="/Assets/logos/race-to-alaska.png" alt="Race to Alaska"></div>
         </div>
         <div class="logoTrack" aria-hidden="true">
-          <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/bluesky.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/allstate.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/samsung.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/SCU.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/intel.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="" loading="lazy"></div>
-          <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="" loading="lazy"></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/conde-nast-traveler.svg" alt=""></div>
+          <div class="logo" style="--h:35px"><img src="/Assets/logos/bluesky.svg" alt=""></div>
+          <div class="logo" style="--h:34px"><img src="/Assets/logos/allstate.svg" alt=""></div>
+          <div class="logo" style="--h:28px"><img src="/Assets/logos/samsung.svg" alt=""></div>
+          <div class="logo" style="--h:43px"><img src="/Assets/logos/SCU.svg" alt=""></div>
+          <div class="logo" style="--h:40px"><img src="/Assets/logos/intel.svg" alt=""></div>
+          <div class="logo" style="--h:33px"><img src="/Assets/logos/IDEO.svg" alt=""></div>
+          <div class="logo" style="--h:39px"><img src="/Assets/logos/NCCU.svg" alt=""></div>
+          <div class="logo" style="--h:36px"><img src="/Assets/logos/twist.png" alt=""></div>
+          <div class="logo" style="--h:46px"><img src="/Assets/logos/the-met.svg" alt=""></div>
+          <div class="logo" style="--h:30px"><img src="/Assets/logos/truecar.png" alt=""></div>
+          <div class="logo" style="--h:48px"><img src="/Assets/logos/race-to-alaska.png" alt=""></div>
         </div>
       </div>
       </div>
@@ -1059,7 +1072,10 @@
         <p class="aboutText" id="aboutText">Toy Boat is me, Andrew Tomayko. I’ve been telling stories with a camera for more than 20 years, sometimes as part of amazing crews, sometimes as a one-man band. Along the way I’ve directed, shot and edited just about every kind of project: commercials, documentaries, music videos and films for brands I love.
 
 After a decade in Los Angeles, I traded the city for solitude on the high seas. These days I live aboard my sailboat in the Puget Sound, and that love of adventure carries into my work. Whatever the project, I look for the real characters and genuine moments that make a story worth telling, because the best stories aren’t just crafted — they’re discovered.</p>
-        <button class="btn" id="aboutCta" type="button">PLAN YOUR PROJECT</button>
+        <div class="aboutActions">
+          <button class="btn" id="aboutCta" type="button">PLAN YOUR PROJECT</button>
+          <button class="textLink" id="aboutBack" type="button"><span aria-hidden="true">←</span> Back to the site</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1516,6 +1532,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         openAbout();
       }));
       document.getElementById("closeAbout").onclick = closeAbout;
+      document.getElementById("aboutBack").onclick = closeAbout;
       document.getElementById("aboutCta").onclick = () => { closeAbout(); openContact(); };
       aboutModal.addEventListener("click", e => { if (e.target === aboutModal) closeAbout(); });
       document.addEventListener("keydown", e => {
