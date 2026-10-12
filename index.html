@@ -1345,7 +1345,9 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
     function syncFromHash() {
       const m = location.hash.match(/^#video\/(.+)$/);
       const slug = m ? decodeURIComponent(m[1]) : null;
-      if (slug && activeFilter && !videos.some(v => v.slug === slug) && allVideos.some(v => v.slug === slug)) setFilter("");
+      // A link to a video outside the current list switches to All, or to its filter if it only shows there
+      const linked = slug && !videos.some(v => v.slug === slug) && allVideos.find(v => v.slug === slug);
+      if (linked) setFilter(inAll(linked) ? "" : filtersOf(linked)[0]);
       const i = slug ? videos.findIndex(v => v.slug === slug) : -1;
 
       if (i >= 0) {
@@ -1565,6 +1567,9 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
        Tags are set per video in the editor. Each filter has its own link (?filter=music-video), and the
        popup's next/previous stay within the active filter. */
     const hasTag = (v, id) => (v.tags || []).includes(id);
+    // "Only show when filtered" videos are left out of All, as long as they have a filter to appear under.
+    const filtersOf = v => (v.tags || []).filter(id => tagList.some(t => t.id === id));
+    const inAll = v => !v.filterOnly || !filtersOf(v).length;
 
     function renderFilters() {
       const nav = document.getElementById("filters");
@@ -1576,7 +1581,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
 
     function applyFilter() {
       if (activeFilter && !allVideos.some(v => hasTag(v, activeFilter))) activeFilter = "";
-      videos = activeFilter ? allVideos.filter(v => hasTag(v, activeFilter)) : allVideos;
+      videos = activeFilter ? allVideos.filter(v => hasTag(v, activeFilter)) : allVideos.filter(inAll);
       renderFilters();
       renderVideos();
     }
