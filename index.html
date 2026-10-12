@@ -125,6 +125,28 @@
     }
     .header-inner > :last-child{ justify-self:end; }
 
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:22px;
+    }
+    .headerLink{
+      padding:8px 0;
+      border:0;
+      border-bottom:1px solid transparent;
+      background:none;
+      color:var(--text);
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+    .headerLink:hover{ border-bottom-color:var(--text); }
+    @media (max-width: 600px){
+      .header-actions .headerLink{ display:none; } /* phones: About lives under the intro and in the footer */
+    }
+
     .header-mark{
       display:block;
       line-height:0;
@@ -721,6 +743,124 @@
       .modal-content{ padding:36px 22px 28px; }
     }
 
+    /* ---------- ABOUT ---------- */
+    .introActions{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:14px 28px;
+    }
+    .textLink{
+      padding:6px 0;
+      border:0;
+      border-bottom:1px solid currentColor;
+      background:none;
+      color:var(--text);
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      opacity:.85;
+    }
+    .textLink:hover{ opacity:1; }
+
+    #aboutModal{ background:rgba(0,0,0,.6); } /* lighter than the contact form, so the site shows through */
+
+    .about-content{
+      max-width:860px;
+      padding:0;
+    }
+    /* About photos: a swipeable strip (arrows and dots on desktop, swipe on phones) */
+    .aboutGallery{ position:relative; background:#1a1a1a; }
+    .aboutTrack{
+      display:flex;
+      aspect-ratio:2 / 1;
+      max-height:44vh;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      overscroll-behavior-x:contain;
+      scrollbar-width:none;
+    }
+    .aboutTrack::-webkit-scrollbar{ display:none; }
+    .aboutTrack img{
+      flex:0 0 100%;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      scroll-snap-align:start;
+      scroll-snap-stop:always;
+      user-select:none;
+    }
+    .galleryArrow{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px; height:40px;
+      display:grid; place-items:center;
+      border:0; border-radius:50%;
+      background:rgba(0,0,0,.45);
+      color:#fff;
+      cursor:pointer;
+      opacity:0;
+      transition:opacity .2s, background .2s;
+    }
+    .galleryArrow svg{ width:18px; height:18px; }
+    .galleryArrow.prev{ left:14px; }
+    .galleryArrow.next{ right:14px; }
+    .aboutGallery:hover .galleryArrow, .galleryArrow:focus-visible{ opacity:1; }
+    .galleryArrow:hover{ background:rgba(0,0,0,.7); }
+    .galleryDots{
+      position:absolute; left:0; right:0; bottom:12px;
+      display:flex; justify-content:center; gap:7px;
+      pointer-events:none;
+    }
+    .galleryDots button{
+      width:7px; height:7px; padding:0;
+      border:0; border-radius:50%;
+      background:rgba(255,255,255,.45);
+      cursor:pointer;
+      pointer-events:auto;
+      transition:background .2s, transform .2s;
+    }
+    .galleryDots button[aria-current="true"]{ background:#fff; transform:scale(1.25); }
+    .aboutGallery.single .galleryArrow, .aboutGallery.single .galleryDots{ display:none; }
+    @media (hover: none){ .galleryArrow{ display:none; } }
+    .aboutBody{ padding:36px 44px 44px; }
+    .aboutBody h2{
+      margin:0 0 6px;
+      font-size:clamp(24px, 3vw, 32px);
+      letter-spacing:-.01em;
+    }
+    .aboutRole{
+      margin:0 0 22px;
+      font-size:12px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .aboutText{
+      margin:0 0 30px;
+      max-width:64ch;
+      font-size:17px;
+      line-height:1.7;
+      color:#d6d6d6;
+      white-space:pre-line;
+    }
+    .about-content .close{
+      top:10px;
+      right:10px;
+      background:rgba(0,0,0,.45);
+      border-radius:50%;
+      opacity:1;
+    }
+
+
+    @media (max-width: 800px){
+      .aboutBody{ padding:26px 22px 30px; }
+      .aboutText{ font-size:16px; }
+    }
+
     /* ---------- FOOTER ---------- */
     .site-footer{
       padding:56px var(--sidePadding);
@@ -767,7 +907,10 @@
         <a href="#top" class="header-mark" aria-label="Back to top">
           <img src="/Assets/logo-wave-white.png" alt="" width="439" height="171">
         </a>
-        <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
+        <div class="header-actions">
+          <button class="headerLink" type="button" data-about>About</button>
+          <button class="btn btn-small" id="openContactHeader" type="button">BOOK A CALL</button>
+        </div>
       </div>
     </header>
 
@@ -790,7 +933,10 @@
       <h1 id="headline">We document characters, capture stories and explore worlds.</h1>
       <p id="description">Toy Boat is a full-service film production team. We set out to navigate the open waters of storytelling, capturing authentic narratives from unique perspectives. We explore the personalities and creative expressions that define a subject, believing that the best stories aren’t just crafted—they’re discovered.</p>
       <p class="location" id="location">Based in Poulsbo, serving the Puget Sound</p>
-      <button class="btn" id="openContact" type="button">PLAN YOUR PROJECT</button>
+      <div class="introActions">
+        <button class="btn" id="openContact" type="button">PLAN YOUR PROJECT</button>
+        <button class="textLink" type="button" data-about>Meet Andrew <span aria-hidden="true">→</span></button>
+      </div>
     </section>
 
     <!-- LOGOS -->
@@ -829,6 +975,7 @@
     <!-- FOOTER -->
     <footer class="site-footer">
       <nav class="footer-links" id="footerLinks" aria-label="Footer">
+        <a href="#about" data-about>About</a>
         <a href="#top">Back to top ↑</a>
       </nav>
       <div class="footer-bottom">
@@ -880,6 +1027,33 @@
           <span aria-hidden="true">→</span>
         </button>
       </nav>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" hidden>
+    <div class="modal-content about-content">
+      <button class="iconBtn close" id="closeAbout" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+      <div class="aboutGallery" id="aboutGallery">
+        <div class="aboutTrack" id="aboutTrack" tabindex="-1">
+          <img src="/Assets/about-andrew.jpg" alt="Andrew Tomayko filming from the bow of his sailboat at sunset" style="object-position:50% 40%" draggable="false">
+          <img src="/Assets/about-andrew-camera.jpg" alt="Andrew Tomayko behind the camera on a shoot" style="object-position:50% 22%" loading="lazy" draggable="false">
+          <img src="/Assets/about-andrew-forest.jpg" alt="Andrew Tomayko smiling beside his camera in an old-growth forest" style="object-position:50% 60%" loading="lazy" draggable="false">
+        </div>
+        <button class="galleryArrow prev" id="galleryPrev" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="galleryArrow next" id="galleryNext" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg></button>
+        <div class="galleryDots" id="galleryDots"></div>
+      </div>
+      <div class="aboutBody">
+        <h2 id="aboutTitle">Hello!</h2>
+        <p class="aboutRole" id="aboutRole">Director · Cinematographer · Sailor</p>
+        <p class="aboutText" id="aboutText">Toy Boat is me, Andrew Tomayko. I’ve been telling stories with a camera for more than 20 years, sometimes as part of amazing crews, sometimes as a one-man band. Along the way I’ve directed, shot and edited just about every kind of project: commercials, documentaries, music videos and films for brands I love.
+
+After a decade in Los Angeles, I traded the city for solitude on the high seas. These days I live aboard my sailboat in the Puget Sound, and that love of adventure carries into my work. Whatever the project, I look for the real characters and genuine moments that make a story worth telling, because the best stories aren’t just crafted — they’re discovered.</p>
+        <button class="btn" id="aboutCta" type="button">PLAN YOUR PROJECT</button>
+      </div>
     </div>
   </div>
 
@@ -1274,6 +1448,77 @@
       });
     }
 
+    /* ---------- ABOUT ---------- */
+    const aboutModal = document.getElementById("aboutModal");
+    let aboutReturnFocus = null;
+
+    function openAbout() {
+      aboutReturnFocus = document.activeElement;
+      aboutModal.hidden = false;
+      aboutModal.querySelector(".modal-content").scrollTop = 0;
+      document.getElementById("aboutTrack").scrollLeft = 0;
+      lockPage(true);
+      document.getElementById("closeAbout").focus({ preventScroll: true, focusVisible: false });
+    }
+
+    function closeAbout() {
+      if (aboutModal.hidden) return;
+      aboutModal.hidden = true;
+      lockPage(false);
+      if (aboutReturnFocus) aboutReturnFocus.focus({ preventScroll: true });
+    }
+
+    // Photos: [{ src, alt, position }] from site.json; position is the CSS object-position for the crop.
+    function renderAboutPhotos(photos) {
+      const track = document.getElementById("aboutTrack");
+      track.innerHTML = photos.filter(p => p && p.src).map((p, i) =>
+        `<img src="${esc(p.src)}" alt="${esc(p.alt || "")}" style="object-position:${esc(p.position || "50% 50%")}"${i ? ' loading="lazy"' : ""} draggable="false">`).join("");
+      updateAboutDots();
+    }
+
+    const aboutIndex = () => { const t = document.getElementById("aboutTrack"); return t.clientWidth ? Math.round(t.scrollLeft / t.clientWidth) : 0; };
+
+    function updateAboutDots() {
+      const track = document.getElementById("aboutTrack"), dots = document.getElementById("galleryDots");
+      const n = track.children.length, cur = aboutIndex();
+      document.getElementById("aboutGallery").classList.toggle("single", n < 2);
+      if (dots.children.length !== n) dots.innerHTML = Array.from({ length: n }, (_, i) => `<button type="button" aria-label="Photo ${i + 1} of ${n}" data-photo="${i}"></button>`).join("");
+      [...dots.children].forEach((d, i) => d.setAttribute("aria-current", String(i === cur)));
+    }
+
+    function showAboutPhoto(i) {
+      const track = document.getElementById("aboutTrack"), n = track.children.length;
+      track.scrollTo({ left: ((i % n) + n) % n * track.clientWidth, behavior: "smooth" });
+    }
+    const stepAboutPhoto = (d) => showAboutPhoto(aboutIndex() + d); // wraps around at either end
+
+    function setupAboutGallery() {
+      const track = document.getElementById("aboutTrack");
+      track.addEventListener("scroll", () => requestAnimationFrame(updateAboutDots), { passive: true });
+      document.getElementById("galleryPrev").onclick = () => stepAboutPhoto(-1);
+      document.getElementById("galleryNext").onclick = () => stepAboutPhoto(1);
+      document.getElementById("galleryDots").addEventListener("click", e => { const b = e.target.closest("[data-photo]"); if (b) showAboutPhoto(+b.dataset.photo); });
+      updateAboutDots();
+    }
+
+    function setupAbout() {
+      document.querySelectorAll("[data-about]").forEach(el => el.addEventListener("click", e => {
+        e.preventDefault();
+        openAbout();
+      }));
+      document.getElementById("closeAbout").onclick = closeAbout;
+      document.getElementById("aboutCta").onclick = () => { closeAbout(); openContact(); };
+      aboutModal.addEventListener("click", e => { if (e.target === aboutModal) closeAbout(); });
+      document.addEventListener("keydown", e => {
+        if (aboutModal.hidden) return;
+        if (e.key === "Escape") closeAbout();
+        else if (e.key === "ArrowRight" || e.key === "ArrowLeft") stepAboutPhoto(e.key === "ArrowRight" ? 1 : -1);
+      });
+      setupAboutGallery();
+      if (location.hash === "#about") openAbout();
+    }
+
+
     /* ---------- BANNER ---------- */
     // The banner video always fills its frame: when the chosen height doesn't match the video's own
     // shape, the iframe is enlarged and centered so the edges crop instead of showing black bars.
@@ -1354,6 +1599,10 @@
       set("openContact", site.cta);
       set("openContactHeader", site.headerCta);
       document.getElementById("location").textContent = site.location || "";
+      set("aboutTitle", site.aboutHeading);
+      set("aboutRole", site.aboutRole);
+      set("aboutText", site.aboutText);
+      if (Array.isArray(site.aboutPhotos) && site.aboutPhotos.length) renderAboutPhotos(site.aboutPhotos);
 
       const links = document.getElementById("footerLinks");
       links.dataset.base ??= links.innerHTML;
@@ -1378,6 +1627,7 @@
       maybeUseReelFallback();
       document.getElementById("year").textContent = new Date().getFullYear();
       setupContact();
+      setupAbout();
       setupPlayer();
 
       function useVideos(list) {
