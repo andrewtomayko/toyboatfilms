@@ -70,6 +70,7 @@
   .ledger tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
   .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
   .right { text-align: right; }
+  .list-date { white-space: nowrap; }
   .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
   .sub { color: var(--muted); font-size: 13px; }
   .empty { padding: 48px 20px; text-align: center; color: var(--muted); }
@@ -259,7 +260,7 @@
     <p class="list-summary" id="listSummary" aria-live="polite"></p>
     <div class="ledger">
       <table>
-        <thead><tr><th>No.</th><th>Type</th><th>Date</th><th>Client · Job</th><th class="right">Total</th><th></th></tr></thead>
+        <thead><tr><th>No.</th><th>Type</th><th>Date</th><th>Job · Client</th><th class="right">Total</th><th></th></tr></thead>
         <tbody id="invoiceRows"></tbody>
       </table>
       <div id="emptyState" class="empty" hidden><strong>No invoices or estimates yet</strong>Choose “New invoice” or “New estimate” to write your first one. It is saved here once you press Save.</div>
@@ -435,6 +436,14 @@
   const owed = (inv) => (isEstimate(inv) || isPaid(inv) ? 0 : Math.max(0, totals(inv).balance));
   const feeLabel = (inv) => String(inv.productionFeeLabel || '').trim() || 'Production fee';
   const kindOf = (inv) => (isEstimate(inv) ? 'Estimate' : 'Invoice');
+  // "October 8th, 2026"
+  const ordinal = (n) => n + ((n % 100 >= 11 && n % 100 <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th'));
+  const fmtLong = (iso) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '';
+    const month = new Date(+m[1], +m[2] - 1, 1).toLocaleDateString('en-US', { month: 'long' });
+    return `${month} ${ordinal(+m[3])}, ${m[1]}`;
+  };
   const fmtShort = (iso) => {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
     return m ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
@@ -713,8 +722,8 @@
       <tr>
         <td class="num">${esc(inv.invoiceNumber)}</td>
         <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
-        <td class="num">${esc(inv.invoiceDate)}</td>
-        <td>${esc(inv.clientName)}<div class="sub">${esc(inv.jobName)}</div></td>
+        <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
+        <td><b>${esc(inv.jobName)}</b><div class="sub">${esc(inv.clientName)}</div></td>
         <td class="right num">${money(totals(inv).total)}${listBalance(inv)}</td>
         <td><div class="row-actions">
           <button class="btn small" type="button" data-edit="${esc(inv.id)}">Open</button>
