@@ -304,12 +304,17 @@
     }
 
     @media (max-width: 800px), (prefers-reduced-motion: reduce){
-      .logoStrip{
+      /* Swipeable; the edges fade where there are more logos to scroll to */
+      .logoScroller{
+        --fadeL:0px;
+        --fadeR:56px;
         overflow-x:auto;
         -webkit-overflow-scrolling:touch;
         scrollbar-width:none;
+        -webkit-mask-image:linear-gradient(to right, transparent, #000 var(--fadeL), #000 calc(100% - var(--fadeR)), transparent);
+                mask-image:linear-gradient(to right, transparent, #000 var(--fadeL), #000 calc(100% - var(--fadeR)), transparent);
       }
-      .logoStrip::-webkit-scrollbar{ display:none; }
+      .logoScroller::-webkit-scrollbar{ display:none; }
       .logoStripInner{ padding:0 var(--sidePadding); }
       .logoTrack{ animation:none; }
       .logoTrack[aria-hidden="true"]{ display:none; }
@@ -941,6 +946,7 @@
 
     <!-- LOGOS -->
     <section class="logoStrip" aria-label="Clients">
+      <div class="logoScroller" id="logoScroller">
       <div class="logoStripInner">
         <div class="logoTrack">
           <div class="logo"><img src="/Assets/logos/conde-nast-traveler.svg" alt="Condé Nast Traveler" loading="lazy"></div>
@@ -962,6 +968,7 @@
           <div class="logo"><img src="/Assets/logos/IDEO.svg" alt="" loading="lazy"></div>
           <div class="logo"><img src="/Assets/logos/NCCU.svg" alt="" loading="lazy"></div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -1586,6 +1593,20 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       const b = e.target.closest("[data-filter]");
       if (b) setFilter(b.dataset.filter);
     });
+
+    /* ---------- LOGO STRIP FADES ---------- */
+    // On phones the logo strip scrolls sideways; fade whichever edge still has logos past it.
+    (() => {
+      const sc = document.getElementById("logoScroller");
+      const update = () => {
+        const max = sc.scrollWidth - sc.clientWidth;
+        sc.style.setProperty("--fadeL", sc.scrollLeft > 4 ? "56px" : "0px");
+        sc.style.setProperty("--fadeR", max - sc.scrollLeft > 4 ? "56px" : "0px");
+      };
+      sc.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+      addEventListener("resize", update);
+      addEventListener("load", update);
+    })();
 
     /* ---------- SITE TEXT ---------- */
     function applySite(site) {
