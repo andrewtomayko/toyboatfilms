@@ -176,6 +176,20 @@
   @media (max-width: 560px) { .pay-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   .chip { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
   .chip.est { border-color: var(--accent); color: var(--accent); }
+  button.chip { background: none; cursor: pointer; font-family: inherit; margin-top: 4px; }
+  .chip.paid { border-color: color-mix(in srgb, #3fb950 60%, var(--line)); color: #3fb950; }
+  .chip.unpaid { border-style: dashed; }
+  button.chip:hover { border-color: var(--ink); color: var(--ink); }
+  .paid-row { display: flex; gap: 14px; align-items: end; flex-wrap: wrap; margin-bottom: 14px; }
+  .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; padding-bottom: 10px; }
+  .switch input { appearance: none; width: 40px; height: 22px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .15s; margin: 0; }
+  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; }
+  .switch input:checked { background: #3fb950; }
+  .switch input:checked::after { transform: translateX(18px); }
+  .switch input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .paid-row .field { width: 170px; }
+  .p-totals .paid-stamp { color: #1a7f37; font-weight: 700; }
+  .p-totals .paid-stamp span:first-child { color: #1a7f37; }
   .list-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
   .filters input[type="search"] { flex: 1 1 260px; }
@@ -234,6 +248,12 @@
         <option value="invoice">Invoices only</option>
         <option value="estimate">Estimates only</option>
       </select>
+      <select id="paidFilter" aria-label="Paid or unpaid">
+        <option value="">Paid &amp; unpaid</option>
+        <option value="unpaid">Unpaid</option>
+        <option value="paid">Paid</option>
+      </select>
+      <button class="btn small" id="markShownPaid" type="button" hidden>Mark these paid</button>
       <button class="btn ghost small" id="clearFilters" type="button" hidden>Clear filters</button>
     </div>
     <p class="list-summary" id="listSummary" aria-live="polite"></p>
@@ -295,6 +315,7 @@
           <div class="grid2">
             <label class="field"><span>Client name</span><input id="clientName" data-f="clientName" list="clientNameList"></label>
             <label class="field"><span>Client email</span><input type="email" id="clientEmail" data-f="clientEmail" list="clientEmailList"></label>
+            <label class="field"><span>Contact person</span><input id="contactName" data-f="contactName" placeholder="Optional, shown under the client"></label>
             <datalist id="clientNameList"></datalist>
             <datalist id="clientEmailList"></datalist>
           </div>
@@ -320,6 +341,7 @@
           <legend>Fees and adjustments</legend>
           <div class="grid3">
             <label class="field"><span>Production fee ($)</span><input type="number" step="0.01" min="0" id="productionFee" data-f="productionFee" data-num></label>
+            <label class="field"><span>Fee name</span><input id="productionFeeLabel" data-f="productionFeeLabel" placeholder="Production fee"></label>
             <label class="field"><span>Tax rate (%)</span><input type="number" step="0.01" min="0" id="taxRate" data-f="taxRate" data-num></label>
             <label class="field"><span>Discount ($)</span><input type="number" step="0.01" min="0" id="discount" data-f="discount" data-num></label>
           </div>
@@ -327,6 +349,10 @@
 
         <fieldset>
           <legend>Advance and payments</legend>
+          <div class="paid-row" id="paidRow">
+            <label class="switch"><input type="checkbox" id="paid" data-f="paid" role="switch">Paid</label>
+            <label class="field" id="paidDateField"><span>Paid on</span><input type="date" id="paidDate" data-f="paidDate"></label>
+          </div>
           <div class="advance-row">
             <label class="field"><span>Advance due (%)</span><input type="number" step="1" min="0" max="100" id="advancePercent" data-f="advancePercent" data-num placeholder="0"></label>
             <p class="sub" id="advanceAmt">Leave at 0 for no advance line.</p>
@@ -338,6 +364,11 @@
         <fieldset>
           <legend>Terms</legend>
           <label class="field"><span>Payment terms</span><textarea id="terms" data-f="terms"></textarea></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Private notes</legend>
+          <label class="field"><span>Only you see these. They never appear on the invoice or PDF.</span><textarea id="privateNotes" data-f="privateNotes"></textarea></label>
         </fieldset>
       </form>
 
@@ -399,6 +430,10 @@
   }
 
   const isEstimate = (inv) => inv.docType === 'estimate';
+  // An invoice is paid when switched to Paid, or when recorded payments cover the total.
+  const isPaid = (inv) => !isEstimate(inv) && (Boolean(inv.paid) || (() => { const t = totals(inv); return t.total > 0 && t.payments.length > 0 && t.balance < 0.005; })());
+  const owed = (inv) => (isEstimate(inv) || isPaid(inv) ? 0 : Math.max(0, totals(inv).balance));
+  const feeLabel = (inv) => String(inv.productionFeeLabel || '').trim() || 'Production fee';
   const kindOf = (inv) => (isEstimate(inv) ? 'Estimate' : 'Invoice');
   const fmtShort = (iso) => {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
@@ -603,7 +638,7 @@
 
   function searchText(inv) {
     return [
-      inv.invoiceNumber, inv.clientName, inv.clientEmail, inv.jobName, inv.jobDescription, kindOf(inv),
+      inv.invoiceNumber, inv.clientName, inv.clientEmail, inv.contactName, inv.jobName, inv.jobDescription, inv.privateNotes, kindOf(inv),
       ...(inv.lineItems || []).flatMap((it) => [it.category, it.description, it.notes]),
       ...(inv.payments || []).map((pm) => pm.note),
     ].filter(Boolean).join(' ').toLowerCase();
@@ -624,11 +659,12 @@
 
   function filteredInvoices() {
     const words = $('searchBox').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const year = $('yearFilter').value, client = $('clientFilter').value, type = $('typeFilter').value;
+    const year = $('yearFilter').value, client = $('clientFilter').value, type = $('typeFilter').value, paid = $('paidFilter').value;
     return invoices.filter((inv) =>
       (!year || yearOf(inv) === year) &&
       (!client || clientKey(inv) === client) &&
       (!type || (type === 'estimate') === isEstimate(inv)) &&
+      (!paid || (!isEstimate(inv) && (paid === 'paid') === isPaid(inv))) &&
       (!words.length || (() => { const t = searchText(inv); return words.every((w) => t.includes(w)); })()));
   }
 
@@ -636,12 +672,14 @@
   function summarize(list) {
     const inv = list.filter((i) => !isEstimate(i)), est = list.filter(isEstimate);
     const billed = inv.reduce((sum, i) => sum + totals(i).total, 0);
-    return { invoices: inv.length, estimates: est.length, billed };
+    const unpaid = inv.reduce((sum, i) => sum + owed(i), 0);
+    return { invoices: inv.length, estimates: est.length, billed, unpaid };
   }
-  // "5 invoices · $16,225.00 · 1 estimate", leaving out whichever part is zero
+  // "5 invoices · $16,225.00 · $1,200.00 unpaid · 1 estimate", leaving out whichever part is zero
   function summaryText(sum, moneyHTML = money) {
     const parts = [];
     if (sum.invoices || !sum.estimates) parts.push(`${countLabel(sum.invoices, 'invoice')} · ${moneyHTML(sum.billed)}`);
+    if (sum.unpaid > 0.005) parts.push(`${money(sum.unpaid)} unpaid`);
     if (sum.estimates) parts.push(countLabel(sum.estimates, 'estimate'));
     return parts.join(' · ');
   }
@@ -649,7 +687,7 @@
   function renderList() {
     $('loadingState').hidden = true;
     refreshFilterOptions();
-    const filtering = Boolean($('searchBox').value.trim() || $('yearFilter').value || $('clientFilter').value || $('typeFilter').value);
+    const filtering = Boolean($('searchBox').value.trim() || $('yearFilter').value || $('clientFilter').value || $('typeFilter').value || $('paidFilter').value);
     $('clearFilters').hidden = !filtering;
 
     const rows = filteredInvoices().sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '') || String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
@@ -674,7 +712,7 @@
       html += `
       <tr>
         <td class="num">${esc(inv.invoiceNumber)}</td>
-        <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span></td>
+        <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
         <td class="num">${esc(inv.invoiceDate)}</td>
         <td>${esc(inv.clientName)}<div class="sub">${esc(inv.jobName)}</div></td>
         <td class="right num">${money(totals(inv).total)}${listBalance(inv)}</td>
@@ -687,23 +725,52 @@
       </tr>`;
     });
     $('invoiceRows').innerHTML = html;
+    const toMark = rows.filter((i) => !isEstimate(i) && !isPaid(i));
+    $('markShownPaid').hidden = $('paidFilter').value !== 'unpaid' || !toMark.length;
+    $('markShownPaid').textContent = `Mark ${toMark.length === 1 ? 'this' : 'these ' + toMark.length} paid`;
   }
 
-  ['searchBox', 'yearFilter', 'clientFilter', 'typeFilter'].forEach((id) =>
+  ['searchBox', 'yearFilter', 'clientFilter', 'typeFilter', 'paidFilter'].forEach((id) =>
     $(id).addEventListener(id === 'searchBox' ? 'input' : 'change', renderList));
+
+  // Marks every unpaid invoice in the current filtered list as paid (dated today unless already dated).
+  $('markShownPaid').addEventListener('click', async () => {
+    const list = filteredInvoices().filter((i) => !isEstimate(i) && !isPaid(i));
+    if (!list.length || !confirm(`Mark ${countLabel(list.length, 'invoice')} as paid?`)) return;
+    const btn = $('markShownPaid'); btn.disabled = true;
+    try {
+      for (const inv of list) await store.saveInvoice({ ...inv, paid: true, paidDate: inv.paidDate || '' });
+    } catch (err) {
+      alert('Some invoices could not be saved: ' + (err?.message || err) + '. Try again.');
+    }
+    btn.disabled = false;
+    renderList();
+  });
   $('clearFilters').addEventListener('click', () => {
-    $('searchBox').value = ''; $('yearFilter').value = ''; $('clientFilter').value = ''; $('typeFilter').value = '';
+    $('searchBox').value = ''; $('yearFilter').value = ''; $('clientFilter').value = ''; $('typeFilter').value = ''; $('paidFilter').value = '';
     renderList();
     $('searchBox').focus();
   });
 
   function listBalance(inv) {
     const t = totals(inv);
+    if (isEstimate(inv)) return '';
+    if (isPaid(inv)) return inv.paidDate ? `<div class="sub">Paid ${esc(fmtShort(inv.paidDate))}</div>` : '';
     if (!t.payments.length) return '';
-    return `<div class="sub">${Math.abs(t.balance) < 0.005 ? 'Paid in full' : 'Balance ' + money(t.balance)}</div>`;
+    return `<div class="sub">Balance ${money(t.balance)}</div>`;
   }
 
   $('invoiceRows').addEventListener('click', async (e) => {
+    const toggle = e.target.closest('[data-togglepaid]');
+    if (toggle) {
+      const inv = invoices.find((i) => i.id === toggle.dataset.togglepaid);
+      if (!inv) return;
+      toggle.disabled = true;
+      // Marking unpaid also clears the switch; payments that cover the total still count as paid.
+      const next = isPaid(inv) ? { ...inv, paid: false, paidDate: '' } : { ...inv, paid: true, paidDate: inv.paidDate || todayISO() };
+      try { await store.saveInvoice(next); renderList(); } catch (err) { toggle.disabled = false; toggle.textContent = 'Save failed'; }
+      return;
+    }
     const convert = e.target.closest('[data-convert]');
     if (convert) {
       const src = invoices.find((i) => i.id === convert.dataset.convert);
@@ -788,7 +855,8 @@
     current.payments = current.payments || [];
     current.docType = current.docType || 'invoice';
     dirty = isNew;
-    document.querySelectorAll('#form [data-f]').forEach((el) => { el.value = current[el.dataset.f] ?? ''; });
+    document.querySelectorAll('#form [data-f]').forEach((el) => { if (el.type === 'checkbox') el.checked = Boolean(current[el.dataset.f]); else el.value = current[el.dataset.f] ?? ''; });
+    renderPaidRow();
     $(isEstimate(current) ? 'typeEstimate' : 'typeInvoice').checked = true;
     setTitle(isNew);
     setStatus(isNew ? 'Not saved yet' : '');
@@ -806,9 +874,16 @@
 
   document.querySelectorAll('input[name="docType"]').forEach((r) => r.addEventListener('change', () => {
     current.docType = r.value;
+    renderPaidRow();
     setTitle(dirty && !invoices.some((i) => i.id === current.id));
     markDirty(); renderProof();
   }));
+
+  // The Paid switch only applies to invoices; its date shows once it's on.
+  function renderPaidRow() {
+    $('paidRow').hidden = isEstimate(current);
+    $('paidDateField').hidden = !current.paid;
+  }
 
   function renderPayments() {
     $('payments').innerHTML = current.payments.map((p, i) => `
@@ -849,7 +924,11 @@
   $('form').addEventListener('submit', (e) => e.preventDefault());
   $('form').addEventListener('input', (e) => {
     const el = e.target;
-    if (el.dataset.f) {
+    if (el.dataset.f === 'paid') {
+      current.paid = el.checked;
+      if (el.checked && !current.paidDate) $('paidDate').value = current.paidDate = todayISO();
+      renderPaidRow();
+    } else if (el.dataset.f) {
       current[el.dataset.f] = el.hasAttribute('data-num') ? num(el.value) : el.value;
     } else if (el.dataset.pk) {
       current.payments[+el.dataset.p][el.dataset.pk] = el.dataset.pk === 'amount' ? num(el.value) : el.value;
@@ -1026,6 +1105,7 @@
         <div>
           <p class="p-label">Bill to</p>
           <p style="font-weight:700">${esc(inv.clientName)}</p>
+          ${inv.contactName ? `<p>Attn: ${esc(inv.contactName)}</p>` : ''}
           <p class="p-muted">${esc(inv.clientEmail)}</p>
         </div>
         <dl>
@@ -1057,14 +1137,15 @@
       </div>
       <div class="p-totals">
         ${t.fee ? `<div><span>Services</span><span>${money(t.services)}</span></div>
-                   <div><span>Production fee</span><span>${money(t.fee)}</span></div>` : ''}
+                   <div><span>${esc(feeLabel(inv))}</span><span>${money(t.fee)}</span></div>` : ''}
         <div><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
         ${num(inv.taxRate) ? `<div><span>Tax (${esc(num(inv.taxRate))}%)</span><span>${money(t.tax)}</span></div>` : ''}
         ${t.discount ? `<div><span>Discount</span><span>${money(-t.discount)}</span></div>` : ''}
         <div class="grand ${t.payments.length || t.advancePct ? 'mid' : ''}"><span>${isEstimate(inv) ? 'Estimated total' : 'Total'} (USD)</span><span>${money(t.total)}</span></div>
         ${t.advancePct ? `<div class="advance"><span>Advance due (${esc(+t.advancePct.toFixed(2))}%)</span><span>${money(t.advance)}</span></div>` : ''}
         ${t.payments.map((p) => `<div class="paid"><span>${esc(paymentLabel(p))}</span><span>${money(-num(p.amount))}</span></div>`).join('')}
-        ${t.payments.length ? `<div class="grand"><span>Balance due (USD)</span><span>${money(t.balance)}</span></div>` : ''}
+        ${t.payments.length && !(inv.paid && !isEstimate(inv)) ? `<div class="grand"><span>Balance due (USD)</span><span>${money(t.balance)}</span></div>` : ''}
+        ${inv.paid && !isEstimate(inv) ? `<div class="paid-stamp"><span>Paid in full${inv.paidDate ? ' · ' + esc(fmtShort(inv.paidDate)) : ''}</span><span>${money(0)} due</span></div>` : ''}
       </div>`;
   }
 
@@ -1117,6 +1198,7 @@
     const W = doc.internal.pageSize.getWidth();
     const M = 18, R = W - M, CW = W - 2 * M;
     const t = totals(inv);
+    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
     let y = M;
 
     const font = (size, style = 'normal', grey = false) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(grey ? 102 : 17); };
@@ -1153,6 +1235,7 @@
     const metaTop = y;
     font(7, 'bold', true); doc.text('BILL TO', M, y); y += 4.5;
     para(inv.clientName, 10, 'bold', false, M, CW * 0.55);
+    if (inv.contactName) para('Attn: ' + inv.contactName, 9, 'normal', false, M, CW * 0.55);
     if (inv.clientEmail) para(inv.clientEmail, 9, 'normal', true, M, CW * 0.55);
     const metaY = metaTop + 3;
     // Values share a left edge, set by the wider of the two so the column still ends at the right margin.
@@ -1203,7 +1286,7 @@
     // Totals
     y += 14; // clear space between the last line item and the totals
     const rows = [];
-    if (t.fee) { rows.push(['Services', money(t.services)]); rows.push(['Production fee', money(t.fee)]); }
+    if (t.fee) { rows.push(['Services', money(t.services)]); rows.push([feeLabel(inv), money(t.fee)]); }
     rows.push(['Subtotal', money(t.subtotal)]);
     if (num(inv.taxRate)) rows.push([`Tax (${num(inv.taxRate)}%)`, money(t.tax)]);
     if (t.discount) rows.push(['Discount', money(-t.discount)]);
@@ -1233,9 +1316,18 @@
         font(9, 'bold'); doc.text(money(-num(p.amount)), R, y, { align: 'right' });
         y += 5.5 + (lines.length - 1) * lh(9);
       });
-      y += 0.5;
-      doc.setDrawColor(17); doc.setLineWidth(0.7); doc.line(TX, y - 2, R, y - 2); y += 5;
-      font(12, 'bold'); doc.text('Balance due (USD)', TX, y); doc.text(money(t.balance), R, y, { align: 'right' });
+      if (!paidInFull) {
+        y += 0.5;
+        doc.setDrawColor(17); doc.setLineWidth(0.7); doc.line(TX, y - 2, R, y - 2); y += 5;
+        font(12, 'bold'); doc.text('Balance due (USD)', TX, y); doc.text(money(t.balance), R, y, { align: 'right' });
+      }
+    }
+    if (paidInFull) {
+      y += 7;
+      font(10, 'bold'); doc.setTextColor(26, 127, 55);
+      doc.text(`Paid in full${inv.paidDate ? ' · ' + fmtShort(inv.paidDate) : ''}`, TX, y);
+      doc.text(`${money(0)} due`, R, y, { align: 'right' });
+      doc.setTextColor(17);
     }
 
     return y;
