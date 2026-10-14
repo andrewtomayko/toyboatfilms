@@ -733,6 +733,7 @@
         <td><div class="row-actions">
           <button class="btn small" type="button" data-edit="${esc(inv.id)}">Open</button>
           ${isEstimate(inv) ? `<button class="btn small" type="button" data-convert="${esc(inv.id)}">Make invoice</button>` : ''}
+          <button class="btn small" type="button" data-pdf="${esc(inv.id)}">PDF</button>
           <button class="btn small" type="button" data-copy="${esc(inv.id)}">Duplicate</button>
           <button class="btn small danger" type="button" data-del="${esc(inv.id)}">Delete</button>
         </div></td>
@@ -798,6 +799,16 @@
     if (convert) {
       const src = invoices.find((i) => i.id === convert.dataset.convert);
       return duplicateInvoice(src, { docType: 'invoice', payments: src?.payments || [], advancePercent: 0 }, `New invoice (from estimate ${src?.invoiceNumber})`);
+    }
+    const pdf = e.target.closest('[data-pdf]');
+    if (pdf) {
+      const inv = invoices.find((i) => i.id === pdf.dataset.pdf);
+      if (!inv) return;
+      pdf.disabled = true; pdf.textContent = '…';
+      try { (await buildPDF(inv)).save(pdfName(inv)); pdf.textContent = 'PDF'; }
+      catch (err) { pdf.textContent = 'PDF failed'; }
+      finally { pdf.disabled = false; }
+      return;
     }
     const copy = e.target.closest('[data-copy]');
     if (copy) return duplicateInvoice(invoices.find((i) => i.id === copy.dataset.copy));
@@ -1360,13 +1371,14 @@
     return y;
   }
 
+  // e.g. "Andrew Tomayko - Invoice 2625.pdf"
+  const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${inv.invoiceNumber || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+
   $('pdfBtn').addEventListener('click', async () => {
     const btn = $('pdfBtn'); btn.disabled = true;
-    // e.g. "Andrew Tomayko - Invoice 2625.pdf"
-    const filename = `Andrew Tomayko - ${kindOf(current)} ${current.invoiceNumber || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
     try {
       const doc = await buildPDF(current);
-      doc.save(filename);
+      doc.save(pdfName(current));
       setStatus('PDF downloaded');
     } catch (e) {
       setStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true);
