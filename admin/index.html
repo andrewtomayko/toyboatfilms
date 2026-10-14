@@ -136,6 +136,14 @@
     .inline{ display:flex; gap:8px; }
     .inline input{ flex:1; }
     .phone-still{ display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+    .about-photo{ display:grid; grid-template-columns:160px minmax(0,1fr) auto; gap:12px; align-items:center; padding:8px; border:1px solid var(--line); border-radius:8px; }
+    .about-photo img{ width:160px; aspect-ratio:2 / 1; object-fit:cover; border-radius:4px; background:#111; display:block; }
+    .about-photo .meta{ display:grid; gap:6px; min-width:0; }
+    .about-photo .meta label{ display:grid; gap:2px; font-size:12px; color:var(--muted); }
+    .about-photo input[type="range"]{ width:100%; }
+    .about-photo .tools{ display:flex; flex-direction:column; gap:2px; }
+    label.add-row{ display:block; text-align:center; }
+    @media (max-width: 560px){ .about-photo{ grid-template-columns:minmax(0,1fr) auto; } .about-photo img{ grid-column:1 / -1; width:100%; } }
     .phone-still img{ width:160px; aspect-ratio:16 / 9; object-fit:cover; border-radius:4px; background:#000; }
 
     /* ---------- site preview ---------- */
@@ -177,7 +185,7 @@
     <div class="testmode" id="testMode" hidden>Test mode: changes save to a test copy of your content, not your live site.</div>
     <div class="tabs" id="tabs" role="tablist" hidden>
       <button type="button" role="tab" data-tab="videos" aria-selected="true">Videos <span id="videoCount"></span></button>
-      <button type="button" role="tab" data-tab="homepage" aria-selected="false">Homepage text</button>
+      <button type="button" role="tab" data-tab="homepage" aria-selected="false">Homepage &amp; About</button>
     </div>
   </header>
 
@@ -253,6 +261,17 @@
         </select>
       </label>
       <p class="field-help">Applies to the whole grid. Each thumbnail keeps its own crop; check a few in the Videos tab after changing this.</p>
+
+      <h2>About page</h2>
+      <p class="field-help">The About popup, opened from “About” in the menu and “Meet Andrew” under the intro (toyboatfilms.com/#about). Open Site preview and click About to see your changes.</p>
+      <label class="field"><span>Heading</span><input data-site="aboutHeading" placeholder="Hello!"></label>
+      <label class="field"><span>Line under the heading (small capitals)</span><input data-site="aboutRole" placeholder="Director · Cinematographer · Sailor"></label>
+      <label class="field"><span>Text (a blank line starts a new paragraph)</span><textarea data-site="aboutText" rows="10"></textarea></label>
+      <div class="field"><span>Photos (visitors swipe through them; the first one shows first)</span>
+        <div class="rows" id="aboutPhotoRows"></div>
+        <label class="add-row">+ Add photos<input type="file" id="aboutPhotoFile" accept="image/*" multiple hidden></label>
+      </div>
+      <p class="field-help">Wide photos work best: the strip shows a wide crop, about twice as wide as it is tall. Use the slider to choose which part of each photo shows. The description is read aloud to people using screen readers.</p>
     </form>
   </section>
 
@@ -520,7 +539,7 @@
 
         <h3>Filters <span>Which buttons above the grid show this video</span></h3>
         <div class="chips">
-          ${(site.tags || []).map((t) => `<button class="chip" type="button" data-tag="${esc(t.id)}" aria-pressed="${(v.tags || []).includes(t.id)}">${esc(t.label)}</button>`).join("") || '<span class="field-help">No filters yet. Add them in the Homepage text tab.</span>'}
+          ${(site.tags || []).map((t) => `<button class="chip" type="button" data-tag="${esc(t.id)}" aria-pressed="${(v.tags || []).includes(t.id)}">${esc(t.label)}</button>`).join("") || '<span class="field-help">No filters yet. Add them in the Homepage &amp; About tab.</span>'}
         </div>
 
         <h3>Details <span>Under the title in the popup</span></h3>
@@ -764,7 +783,63 @@
       document.querySelectorAll("[data-site]").forEach((el) => { el.value = site[el.dataset.site] ?? SITE_DEFAULTS[el.dataset.site] ?? ""; });
       $("reelPosterImg").src = thumbSrc(site.reelPoster || "/Assets/reel-poster.jpg");
       applyGridShape();
+      renderAboutPhotoRows();
     }
+
+    // ---------- about photos: [{ src, alt, position }] in site.json; position is the crop ("50% 40%") ----------
+    const cropY = (p) => { const m = /\s(\d+(?:\.\d+)?)%\s*$/.exec(String(p.position || "")); return m ? +m[1] : 50; };
+    function renderAboutPhotoRows() {
+      const list = site.aboutPhotos || [];
+      $("aboutPhotoRows").innerHTML = list.length ? list.map((p, j) => `
+        <div class="about-photo">
+          <img src="${esc(thumbSrc(p.src))}" alt="" style="object-position:50% ${cropY(p)}%" data-ap-img="${j}">
+          <div class="meta">
+            <label>Description<input data-ap-alt="${j}" value="${esc(p.alt || "")}" placeholder="e.g. Andrew filming from the bow at sunset"></label>
+            <label>Which part shows (top ↔ bottom)<input type="range" min="0" max="100" step="1" data-ap-y="${j}" value="${cropY(p)}"></label>
+          </div>
+          <div class="tools">
+            <button class="icon-btn" type="button" data-ap-move="${j}" data-dir="-1" ${j === 0 ? "disabled" : ""} aria-label="Move earlier">↑</button>
+            <button class="icon-btn" type="button" data-ap-move="${j}" data-dir="1" ${j === list.length - 1 ? "disabled" : ""} aria-label="Move later">↓</button>
+            <button class="icon-btn" type="button" data-ap-del="${j}" aria-label="Remove photo">✕</button>
+          </div>
+        </div>`).join("") : '<p class="field-help">No photos yet.</p>';
+      $("aboutPhotoRows").querySelectorAll("[data-ap-img]").forEach((img) => rescueImage(img, list[+img.dataset.apImg].src));
+    }
+    $("aboutPhotoRows").addEventListener("input", (e) => {
+      const el = e.target, list = site.aboutPhotos || [];
+      if (el.dataset.apAlt != null) list[+el.dataset.apAlt].alt = el.value;
+      else if (el.dataset.apY != null) {
+        const j = +el.dataset.apY;
+        list[j].position = `50% ${el.value}%`;
+        $("aboutPhotoRows").querySelector(`[data-ap-img="${j}"]`).style.objectPosition = list[j].position;
+      } else return;
+      changed();
+    });
+    $("aboutPhotoRows").addEventListener("click", (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      const list = site.aboutPhotos || [];
+      if (b.dataset.apMove != null) {
+        const j = +b.dataset.apMove, k = j + +b.dataset.dir;
+        [list[j], list[k]] = [list[k], list[j]];
+      } else if (b.dataset.apDel != null) {
+        if (!confirm("Remove this photo from the About page?")) return;
+        list.splice(+b.dataset.apDel, 1);
+      } else return;
+      renderAboutPhotoRows(); changed();
+    });
+    $("aboutPhotoFile").addEventListener("change", async (e) => {
+      const files = [...e.target.files]; e.target.value = "";
+      for (const file of files) {
+        try {
+          const data = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+          const jpeg = await toJpeg(data);
+          const path = `/Assets/about-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}.jpg`;
+          pendingImages.set(path, jpeg);
+          (site.aboutPhotos ||= []).push({ src: path, alt: "", position: "50% 50%" });
+        } catch (err) { toast(err.message); }
+      }
+      renderAboutPhotoRows(); changed();
+    });
     $("siteForm").addEventListener("input", (e) => {
       const k = e.target.dataset.site; if (!k) return;
       site[k] = e.target.value;
@@ -814,7 +889,11 @@
     function draftForPreview() {
       return {
         type: "tb-draft",
-        site: { ...clone(site), ...(site.reelPoster ? { reelPoster: thumbSrc(site.reelPoster) } : {}) },
+        site: {
+          ...clone(site),
+          ...(site.reelPoster ? { reelPoster: thumbSrc(site.reelPoster) } : {}),
+          ...(site.aboutPhotos ? { aboutPhotos: site.aboutPhotos.map((p) => ({ ...p, src: thumbSrc(p.src) })) } : {}),
+        },
         videos: videos.map((v) => ({ ...clone(v), thumb: thumbSrc(v.thumb) })),
       };
     }
@@ -865,7 +944,7 @@
           btn.disabled = false;
           return;
         }
-        const used = new Set([...videos.map((v) => v.thumb), site.reelPoster]);
+        const used = new Set([...videos.map((v) => v.thumb), site.reelPoster, ...(site.aboutPhotos || []).map((p) => p.src)]);
         for (const [path, dataUrl] of pendingImages) {
           if (!used.has(path)) continue;
           setStatus("Uploading images…");
