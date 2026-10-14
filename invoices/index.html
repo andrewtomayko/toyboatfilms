@@ -1362,7 +1362,8 @@
 
   $('pdfBtn').addEventListener('click', async () => {
     const btn = $('pdfBtn'); btn.disabled = true;
-    const filename = `${kindOf(current)} ${current.invoiceNumber || 'draft'}${current.clientName ? ' - ' + current.clientName : ''}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+    // e.g. "Andrew Tomayko - Invoice 2625.pdf"
+    const filename = `Andrew Tomayko - ${kindOf(current)} ${current.invoiceNumber || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
     try {
       const doc = await buildPDF(current);
       doc.save(filename);
