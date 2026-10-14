@@ -704,7 +704,13 @@
     const filtering = Boolean($('searchBox').value.trim() || $('yearFilter').value || $('clientFilter').value || $('typeFilter').value || $('paidFilter').value);
     $('clearFilters').hidden = !filtering;
 
-    const rows = filteredInvoices().sort((a, b) => (b.invoiceDate || '').localeCompare(a.invoiceDate || '') || String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
+    // Newest year first; within a year, highest invoice number first (numbers like "PO-0561" go after, by date)
+    const numOf = (inv) => { const n = parseInt(String(inv.invoiceNumber || '').trim(), 10); return Number.isFinite(n) ? n : -1; };
+    const rows = filteredInvoices().sort((a, b) =>
+      yearOf(b).localeCompare(yearOf(a)) ||
+      numOf(b) - numOf(a) ||
+      (b.invoiceDate || '').localeCompare(a.invoiceDate || '') ||
+      String(b.invoiceNumber).localeCompare(String(a.invoiceNumber), undefined, { numeric: true }));
     const all = summarize(rows);
     $('listSummary').innerHTML = invoices.length
       ? `${filtering ? 'Showing ' : ''}${summaryText(all, (m) => `<b>${money(m)}</b> billed`)}${filtering ? ` <span>(of ${invoices.length} total)</span>` : ''}`
