@@ -141,7 +141,14 @@
     .gear-section{ border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:12px; }
     .gear-head{ display:flex; gap:6px; align-items:center; margin-bottom:8px; }
     .gear-head input{ flex:1; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
-    .row.gear-item{ grid-template-columns:64px minmax(0,1fr) auto; }
+    .row.gear-item{ grid-template-columns:18px 64px minmax(0,1fr) auto; }
+    .grip{ cursor:grab; color:var(--muted); user-select:none; text-align:center; font-size:14px; line-height:1; padding:6px 0; }
+    .grip:hover{ color:var(--text); }
+    .gear-head .grip{ padding:6px 4px; }
+    .dragging{ opacity:.4; }
+    .drop-before{ box-shadow:0 -2px 0 0 var(--text); }
+    .drop-after{ box-shadow:0 2px 0 0 var(--text); }
+    .gear-section.drop-into{ border-color:var(--text); }
     .row.gear-item input[type="number"]{ text-align:center; }
     .about-photo{ display:grid; grid-template-columns:160px minmax(0,1fr) auto; gap:12px; align-items:center; padding:8px; border:1px solid var(--line); border-radius:8px; }
     .about-photo img{ width:160px; aspect-ratio:2 / 1; object-fit:cover; border-radius:4px; background:#111; display:block; }
@@ -973,8 +980,9 @@
     function renderGear() {
       document.querySelectorAll("[data-gear]").forEach((el) => { el.value = gear[el.dataset.gear] ?? ""; });
       $("gearSections").innerHTML = gear.sections.map((sec, j) => `
-        <div class="gear-section">
+        <div class="gear-section" data-section="${j}">
           <div class="gear-head">
+            <span class="grip" title="Drag to reorder sections" aria-hidden="true">⋮⋮</span>
             <input data-gs="${j}" value="${esc(sec.name)}" placeholder="Section name (e.g. Camera)" aria-label="Section name">
             <button class="icon-btn" type="button" data-gs-move="${j}" data-dir="-1" ${j === 0 ? "disabled" : ""} aria-label="Move section up">↑</button>
             <button class="icon-btn" type="button" data-gs-move="${j}" data-dir="1" ${j === gear.sections.length - 1 ? "disabled" : ""} aria-label="Move section down">↓</button>
@@ -982,7 +990,8 @@
           </div>
           <div class="rows">
             ${(sec.items || []).map((it, k) => `
-              <div class="row gear-item">
+              <div class="row gear-item" data-item="${j}:${k}">
+                <span class="grip" title="Drag to reorder (or into another section)" aria-hidden="true">⋮⋮</span>
                 <input type="number" min="0" step="1" data-gq="${j}:${k}" value="${esc(it.qty ?? "")}" aria-label="Quantity">
                 <input data-gn="${j}:${k}" value="${esc(it.name)}" placeholder="Item" aria-label="Item">
                 <div class="tools">
@@ -996,6 +1005,67 @@
         </div>`).join("");
     }
     const gearPos = (v) => v.split(":").map(Number);
+
+    // Drag and drop: grab the ⋮⋮ handle to move an item (also into another section) or a whole section.
+    // Rows only become draggable while the handle is held, so typing and selecting text still work.
+    let drag = null;
+    const clearGearDrops = () => $("gearSections").querySelectorAll(".drop-before, .drop-after, .drop-into").forEach((el) => el.classList.remove("drop-before", "drop-after", "drop-into"));
+    $("gearSections").addEventListener("pointerdown", (e) => {
+      const grip = e.target.closest(".grip"); if (!grip) return;
+      const el = grip.closest("[data-item]") || grip.closest("[data-section]");
+      el.draggable = true;
+    });
+    $("gearSections").addEventListener("dragstart", (e) => {
+      const el = e.target.closest("[data-item], [data-section]"); if (!el || !el.draggable) return;
+      drag = el.dataset.item ? { type: "item", from: gearPos(el.dataset.item), el } : { type: "section", from: +el.dataset.section, el };
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", "");
+      requestAnimationFrame(() => el.classList.add("dragging"));
+    });
+    // Where would it land? Returns the element to mark and whether it goes before or after it.
+    function dropTarget(e) {
+      if (!drag) return null;
+      if (drag.type === "section") {
+        const sec = e.target.closest("[data-section]"); if (!sec) return null;
+        const r = sec.getBoundingClientRect();
+        return { el: sec, before: e.clientY < r.top + r.height / 2 };
+      }
+      const row = e.target.closest("[data-item]");
+      if (row) { const r = row.getBoundingClientRect(); return { el: row, before: e.clientY < r.top + r.height / 2 }; }
+      const sec = e.target.closest("[data-section]");
+      return sec ? { el: sec, into: true } : null;
+    }
+    $("gearSections").addEventListener("dragover", (e) => {
+      const t = dropTarget(e); if (!t) return;
+      e.preventDefault();
+      clearGearDrops();
+      t.el.classList.add(t.into ? "drop-into" : t.before ? "drop-before" : "drop-after");
+    });
+    $("gearSections").addEventListener("drop", (e) => {
+      const t = dropTarget(e); if (!t) return;
+      e.preventDefault();
+      const secs = gear.sections;
+      if (drag.type === "section") {
+        const from = drag.from; let to = +t.el.dataset.section + (t.before ? 0 : 1);
+        const [moved] = secs.splice(from, 1); if (from < to) to--;
+        secs.splice(to, 0, moved);
+      } else {
+        const [fj, fk] = drag.from;
+        const [moved] = secs[fj].items.splice(fk, 1);
+        if (t.into) (secs[+t.el.dataset.section].items ||= []).push(moved);
+        else {
+          let [tj, tk] = gearPos(t.el.dataset.item);
+          if (tj === fj && fk < tk) tk--;
+          secs[tj].items.splice(tk + (t.before ? 0 : 1), 0, moved);
+        }
+      }
+      drag = null; renderGear(); changed();
+    });
+    $("gearSections").addEventListener("dragend", () => {
+      clearGearDrops();
+      if (drag) { drag.el.classList.remove("dragging"); drag.el.draggable = false; drag = null; }
+      $("gearSections").querySelectorAll("[draggable=true]").forEach((el) => { el.draggable = false; });
+    });
     $("gearForm").addEventListener("input", (e) => {
       const el = e.target;
       if (el.dataset.gear) gear[el.dataset.gear] = el.value;
