@@ -43,6 +43,12 @@
     Cache-Control = "no-store"
     Referrer-Policy = "no-referrer"
 
+# The gear list is shared by link only: keep it out of search results
+[[headers]]
+  for = "/gear/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
 [[headers]]
   for = "/admin/*"
   [headers.values]

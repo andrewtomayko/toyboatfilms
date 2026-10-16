@@ -1,0 +1,196 @@
+{
+  "title": "Gear List",
+  "intro": "",
+  "updated": "2026-08-16",
+  "sections": [
+    {
+      "name": "Camera",
+      "items": [
+        {
+          "qty": 1,
+          "name": "Canon EOS C400 (6K)"
+        },
+        {
+          "qty": 1,
+          "name": "Canon EOS R5 (4K)"
+        },
+        {
+          "qty": 1,
+          "name": "Canon RF 24-105mm F2.8 L IS USM Z"
+        },
+        {
+          "qty": 1,
+          "name": "Canon 24-70mm 2.8 II USM"
+        },
+        {
+          "qty": 1,
+          "name": "Canon 16-35mm 2.8 II USM"
+        },
+        {
+          "qty": 1,
+          "name": "Canon 100mm 2.8 II Macro"
+        },
+        {
+          "qty": 1,
+          "name": "Nikkor 50mm 1.8"
+        },
+        {
+          "qty": 1,
+          "name": "Canon R to EF Adapter"
+        },
+        {
+          "qty": 1,
+          "name": "Canon R to EF Adapter with ND"
+        },
+        {
+          "qty": 1,
+          "name": "SmallHD 5\" Daylight-Viewable Monitor"
+        },
+        {
+          "qty": 3,
+          "name": "Core SWX NANO X Micro 98Wh Li-Ion Battery (V-Mount)"
+        },
+        {
+          "qty": 1,
+          "name": "Canon BP-A60N Battery Pack"
+        },
+        {
+          "qty": 3,
+          "name": "Anton Bauer NP-F774 7.2V, 4400mAh L-Series Li-Ion Battery (30Wh)"
+        },
+        {
+          "qty": 4,
+          "name": "Canon LP-E6NH Lithium-Ion Battery"
+        },
+        {
+          "qty": 1,
+          "name": "DJI Air 2S Drone"
+        }
+      ]
+    },
+    {
+      "name": "Camera Support",
+      "items": [
+        {
+          "qty": 1,
+          "name": "Sachtler Ace M Fluid Head 2-Stage Aluminum Tripod"
+        },
+        {
+          "qty": 1,
+          "name": "Ulanzi Zero F38 Quick Release Tripod"
+        },
+        {
+          "qty": 1,
+          "name": "Sakk Cine Saddle"
+        }
+      ]
+    },
+    {
+      "name": "Audio",
+      "items": [
+        {
+          "qty": 1,
+          "name": "Zoom H6 6-Input / 6-Track Portable Recorder"
+        },
+        {
+          "qty": 1,
+          "name": "Sennheiser MKH-416 Shotgun Mic"
+        },
+        {
+          "qty": 2,
+          "name": "Saramonic K9 Pro 2-Person UHF Wireless Lavs"
+        },
+        {
+          "qty": 1,
+          "name": "Shock Mount Shotgun Mic"
+        },
+        {
+          "qty": 1,
+          "name": "Boom Support Holder for C-Stands"
+        },
+        {
+          "qty": 1,
+          "name": "Deity V-Mic D4 Camera-Mount Shotgun"
+        },
+        {
+          "qty": 1,
+          "name": "Boom Arm Telescoping 3ft to 8ft"
+        },
+        {
+          "qty": 2,
+          "name": "25-Foot XLR - Mogami Gold Studio"
+        },
+        {
+          "qty": 1,
+          "name": "Auray Windshield for Shotgun"
+        }
+      ]
+    },
+    {
+      "name": "Grip/Electric",
+      "items": [
+        {
+          "qty": 1,
+          "name": "Aputure LS 300D II"
+        },
+        {
+          "qty": 1,
+          "name": "Aputure 200x S"
+        },
+        {
+          "qty": 1,
+          "name": "Aputure 120D II"
+        },
+        {
+          "qty": 1,
+          "name": "Aputure Light Dome SE 33.5-inch Softbox"
+        },
+        {
+          "qty": 3,
+          "name": "Matthews 40\" C-Stand with Sliding Leg, Grip Head, and Arm"
+        },
+        {
+          "qty": 3,
+          "name": "6-Foot Light Stands"
+        },
+        {
+          "qty": 1,
+          "name": "31\"x47\"/80x120cm Light Reflector"
+        },
+        {
+          "qty": 4,
+          "name": "Sand Bags"
+        },
+        {
+          "qty": 2,
+          "name": "25' Stinger"
+        },
+        {
+          "qty": 1,
+          "name": "3\" Gaff Tape"
+        }
+      ]
+    },
+    {
+      "name": "Bags and Cases",
+      "items": [
+        {
+          "qty": 1,
+          "name": "Manfrotto Pro Light LW-97W V2 Rolling Light Bag"
+        },
+        {
+          "qty": 1,
+          "name": "Pelican 1510 Case"
+        },
+        {
+          "qty": 1,
+          "name": "Sakk Gear Sakk Pack Backpack V2"
+        },
+        {
+          "qty": 1,
+          "name": "LowePro ProTactic 450 Backpack"
+        }
+      ]
+    }
+  ]
+}
