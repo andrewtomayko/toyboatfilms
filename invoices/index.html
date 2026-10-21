@@ -206,6 +206,57 @@
   .ledger tr.year-row td .sub { font-weight: 500; margin-left: 10px; }
   .ledger tbody tr.year-row:hover { background: none; }
 
+  /* Tabs and versions */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+  .tabs button { border: 0; background: none; padding: 10px 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+  .title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .version-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: -6px 0 18px; }
+  .version-bar select { width: auto; min-width: 240px; padding: 6px 10px; font-size: 13px; }
+  .banner.viewing { border-color: var(--muted); }
+  form[inert] { opacity: 0.55; }
+  .hint { font-size: 12px; color: var(--muted); margin: 0; }
+
+  /* Quote editor */
+  .tier-ed { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; background: color-mix(in srgb, var(--accent) 5%, var(--bg)); }
+  .tier-ed-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .tier-ed-head b { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .check { display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 600; }
+  .check input { width: auto; }
+  .phase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .phase-grid textarea { min-height: 130px; }
+
+  /* Quote presentation: A4 millimetres and points like the invoice sheet; harbor blue is the quote's accent */
+  .qsheet { --mm: calc(100cqw / 210); --pt: calc(var(--mm) * 0.3528); --q-accent: #1f4e6b; --q-tint: #edf3f7; background: var(--paper); color: var(--paper-ink); min-height: calc(297 * var(--mm)); padding: calc(18 * var(--mm)); box-shadow: 0 1px 2px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.12); font-family: Helvetica, Arial, sans-serif; font-size: calc(10 * var(--pt)); line-height: 1.35; overflow-wrap: anywhere; }
+  .qsheet p { margin: 0; }
+  .q-head { display: flex; justify-content: space-between; gap: calc(8 * var(--mm)); align-items: flex-start; }
+  .q-brand { display: flex; gap: calc(4 * var(--mm)); align-items: center; }
+  .q-brand img { max-height: calc(14 * var(--mm)); max-width: calc(42 * var(--mm)); }
+  .q-word { font-weight: 700; font-size: calc(15 * var(--pt)); line-height: 1.12; letter-spacing: 0.04em; white-space: pre-line; }
+  .q-kind { font-weight: 700; font-size: calc(20 * var(--pt)); text-align: right; letter-spacing: 0.04em; line-height: 1.1; }
+  .q-title { font-size: calc(12 * var(--pt)); text-align: right; }
+  .q-wave { display: block; width: 100%; height: calc(5 * var(--mm)); margin: calc(5 * var(--mm)) 0 calc(6 * var(--mm)); }
+  .q-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 0 calc(8 * var(--mm)); line-height: 1.5; }
+  .qsheet .q-h { font-weight: 700; font-size: calc(14 * var(--pt)); margin: calc(8 * var(--mm)) 0 calc(2.5 * var(--mm)); }
+  .q-sow { white-space: pre-wrap; font-size: calc(10.5 * var(--pt)); line-height: 1.42; }
+  .q-phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(8 * var(--mm)); margin-top: calc(9 * var(--mm)); }
+  .q-phases h4 { margin: 0 0 calc(2 * var(--mm)); font-size: calc(10.5 * var(--pt)); font-weight: 700; color: var(--q-accent); letter-spacing: 0.04em; text-transform: uppercase; }
+  .q-phases p { line-height: 1.45; }
+  .q-tiers { display: grid; gap: calc(6 * var(--mm)); }
+  .q-tier { position: relative; border: calc(0.3 * var(--mm)) solid #333; border-radius: calc(2.5 * var(--mm)); padding: calc(5 * var(--mm)); display: flex; flex-direction: column; min-width: 0; }
+  .q-tier.rec { border: calc(0.6 * var(--mm)) solid var(--q-accent); background: var(--q-tint); }
+  .q-badge { position: absolute; top: calc(-2.2 * var(--mm)); right: calc(5 * var(--mm)); background: var(--q-accent); color: #fff; font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.08em; padding: calc(0.8 * var(--mm)) calc(2 * var(--mm)); border-radius: 99px; }
+  .q-eyebrow { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.08em; color: var(--q-accent); text-transform: uppercase; }
+  .qsheet .q-tname { font-weight: 700; font-size: calc(12 * var(--pt)); margin-top: calc(1 * var(--mm)); }
+  .q-tsub { color: var(--paper-muted); font-size: calc(9 * var(--pt)); }
+  .qsheet .q-dl { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.06em; margin: calc(5 * var(--mm)) 0 calc(1.5 * var(--mm)); }
+  .q-tier ul { margin: 0; padding-left: calc(5 * var(--mm)); font-size: calc(9 * var(--pt)); line-height: 1.45; }
+  .qsheet .q-total { margin-top: auto; padding-top: calc(7 * var(--mm)); font-size: calc(12 * var(--pt)); font-weight: 700; }
+  .q-total span { color: var(--q-accent); }
+  .qsheet .q-note { font-size: calc(8.5 * var(--pt)); color: var(--paper-muted); margin-top: calc(0.8 * var(--mm)); }
+  .q-terms { white-space: pre-wrap; font-size: calc(9.5 * var(--pt)); line-height: 1.45; }
+  .qsheet .q-foot { text-align: right; color: var(--q-accent); margin-top: calc(14 * var(--mm)); font-size: calc(9.5 * var(--pt)); }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -238,6 +289,11 @@
   </section>
 
   <section id="listView">
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tabDocs" aria-selected="true">Invoices &amp; estimates</button>
+      <button type="button" role="tab" id="tabQuotes" aria-selected="false">Quotes</button>
+    </div>
+    <div id="docsPane">
     <div class="list-head">
       <h1>Invoices &amp; estimates</h1>
       <div class="list-actions">
@@ -271,18 +327,44 @@
       <div id="emptyState" class="empty" hidden><strong>No invoices or estimates yet</strong>Choose “New invoice” or “New estimate” to write your first one. It is saved here once you press Save.</div>
       <div id="loadingState" class="empty">Loading invoices…</div>
     </div>
+    </div>
+
+    <div id="quotesPane" hidden>
+      <div class="list-head">
+        <h1>Quotes</h1>
+        <p class="hint">Make a quote from any estimate with its “Make quote” button.</p>
+      </div>
+      <div class="ledger">
+        <table>
+          <thead><tr><th>No.</th><th>Date</th><th>Project · Prepared for</th><th class="right">Tiers</th><th></th></tr></thead>
+          <tbody id="quoteRows"></tbody>
+        </table>
+        <div id="quotesEmpty" class="empty" hidden><strong>No quotes yet</strong>Open Invoices &amp; estimates and press “Make quote” on an estimate.</div>
+      </div>
+    </div>
   </section>
 
   <!-- EDITOR VIEW -->
   <section id="editorView" hidden>
     <div class="editor-head">
-      <h1 id="editorTitle">Invoice</h1>
+      <div class="title-row"><h1 id="editorTitle">Invoice</h1><span class="chip est" id="revChip" hidden></span></div>
       <div class="editor-actions">
         <span class="status" id="status" role="status"></span>
         <button class="btn" id="cancelBtn" type="button">Back to list</button>
         <button class="btn" id="pdfBtn" type="button">Download PDF</button>
         <button class="btn primary" id="saveBtn" type="button">Save</button>
       </div>
+    </div>
+    <div class="version-bar">
+      <select id="versionSelect" aria-label="Version history"></select>
+      <button class="btn small" id="newVersionBtn" type="button">Start new version</button>
+    </div>
+    <div class="banner viewing" id="versionBanner" hidden>
+      <span id="versionBannerText"></span>
+      <span class="list-actions">
+        <button class="btn small" id="restoreVersionBtn" type="button">Restore this version</button>
+        <button class="btn small primary" id="backToCurrentBtn" type="button">Back to current</button>
+      </span>
     </div>
 
     <div class="editor">
@@ -384,6 +466,63 @@
       </div>
     </div>
   </section>
+
+  <!-- QUOTE VIEW -->
+  <section id="quoteView" hidden>
+    <div class="editor-head">
+      <div class="title-row"><h1 id="quoteTitle">Quote</h1></div>
+      <div class="editor-actions">
+        <span class="status" id="qStatus" role="status"></span>
+        <button class="btn" id="qBackBtn" type="button">Back to list</button>
+        <button class="btn" id="qPdfBtn" type="button">Download PDF</button>
+        <button class="btn primary" id="qSaveBtn" type="button">Save</button>
+      </div>
+    </div>
+    <div class="editor">
+      <form id="qform" autocomplete="off">
+        <fieldset>
+          <legend>Quote</legend>
+          <label class="field"><span>Project title (shown under QUOTE)</span><input id="q-title" data-q="title"></label>
+          <div class="grid2">
+            <label class="field"><span>Quote number</span><input id="q-number" data-q="quoteNumber"></label>
+            <label class="field"><span>Date</span><input type="date" id="q-date" data-q="date"></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>People</legend>
+          <div class="grid2">
+            <label class="field"><span>Producer</span><input id="q-producer" data-q="producer"></label>
+            <label class="field"><span>Producer contact (phone or email)</span><input id="q-contact" data-q="contact"></label>
+            <label class="field"><span>Prepared for</span><input id="q-for" data-q="preparedFor" list="clientNameList"></label>
+            <label class="field"><span>Company</span><input id="q-company" data-q="company" list="clientNameList"></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Statement of work</legend>
+          <label class="field"><span>What you'll make and why</span><textarea id="q-sow" data-q="statement" rows="7"></textarea></label>
+        </fieldset>
+        <fieldset>
+          <legend>Scope</legend>
+          <p class="hint">Three columns, one item per line.</p>
+          <div class="phase-grid" id="qPhases"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Tiers</legend>
+          <div class="items" id="qTiers"></div>
+          <button class="add" type="button" id="qAddTier">Add tier</button>
+        </fieldset>
+        <fieldset>
+          <legend>Terms and footer</legend>
+          <label class="field"><span>Terms</span><textarea id="q-terms" data-q="terms" rows="6"></textarea></label>
+          <label class="field"><span>Website (bottom of page)</span><input id="q-site" data-q="website"></label>
+        </fieldset>
+      </form>
+      <div class="proof-col">
+        <div class="proof-label">Quote · A4 width</div>
+        <div class="proof"><div class="qsheet" id="qsheet"></div></div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -399,6 +538,10 @@
   };
 
   let invoices = [];          // [{id, ...fields}]
+  let quotes = [];            // quote presentations, kept separately from invoices
+  let currentQuote = null;
+  let qDirty = false;
+  let viewing = null;         // archived version number being viewed in the invoice editor
   let settings = { ...DEFAULT_COMPANY, logo: null };
   let current = null;         // invoice being edited
   let dirty = false;
@@ -454,6 +597,13 @@
     return m ? new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
   };
   const paymentLabel = (p) => ['Payment received', fmtShort(p.date), String(p.note || '').trim()].filter(Boolean).join(' · ');
+
+  // Version shown with the document number once a document has more than one version, e.g. "2624 v2".
+  const rev = (inv) => Math.max(1, parseInt(inv.rev, 10) || 1);
+  const docNumber = (inv) => `${inv.invoiceNumber || ''}${rev(inv) > 1 ? ' v' + rev(inv) : ''}`;
+  const moneyWhole = (n) => '$' + Math.round(n).toLocaleString('en-US');
+  const lines = (txt) => String(txt || '').split('\n').map((l) => l.trim()).filter(Boolean);
+  const TIER_WORDS = ['One', 'Two', 'Three', 'Four'];
 
   function nextInvoiceNumber() {
     const nums = invoices.map((i) => parseInt(i.invoiceNumber, 10)).filter(Number.isFinite);
@@ -511,8 +661,9 @@
         try {
           const data = await api('GET');
           invoices = (data.invoices || []).map((i) => ({ ...i, id: String(i.id) }));
+          quotes = (data.quotes || []).map((q) => ({ ...q, id: String(q.id) }));
           if (data.settings) settings = { ...DEFAULT_COMPANY, ...data.settings };
-          renderList();
+          renderList(); renderQuotes();
         } catch (e) { showListError(e); }
       },
       async saveInvoice(inv) {
@@ -533,6 +684,28 @@
         await api('PUT', '?settings=1', s);
         settings = { ...settings, ...s };
       },
+      // Earlier versions of an invoice or estimate, newest first.
+      async listVersions(id) {
+        const data = await api('GET', '?versions=' + encodeURIComponent(id));
+        return (data.versions || []).sort((a, b) => rev(b) - rev(a));
+      },
+      async saveVersion(id, body) {
+        await api('PUT', `?id=${encodeURIComponent(id)}&rev=${rev(body)}`, JSON.parse(JSON.stringify(body)));
+      },
+      async saveQuote(q) {
+        const { id, ...body } = q;
+        const clean = JSON.parse(JSON.stringify(body));
+        await api('PUT', '?quote=' + encodeURIComponent(id), clean);
+        const saved = { ...clean, id };
+        const i = quotes.findIndex((x) => x.id === id);
+        if (i >= 0) quotes[i] = saved; else quotes.push(saved);
+        renderQuotes();
+      },
+      async deleteQuote(id) {
+        await api('DELETE', '?quote=' + encodeURIComponent(id));
+        quotes = quotes.filter((x) => x.id !== id);
+        renderQuotes();
+      },
     };
   }
 
@@ -540,6 +713,7 @@
     $('loginView').hidden = false;
     $('listView').hidden = true;
     $('editorView').hidden = true;
+    $('quoteView').hidden = true;
     ACCOUNT_CONTROLS.forEach((id) => { $(id).hidden = true; });
     $('storageNote').textContent = 'Logged out';
   }
@@ -570,12 +744,17 @@
                     { category: 'Post-Production', description: 'Edit and color', rate: 95, hours: 10 + 5 * yi, unit: 'hour', notes: 'Two rounds of revisions' }],
       });
     })));
+    const versions = {};
     return {
       shared: false,
-      async start() { invoices = demo; renderList(); },
+      async start() { invoices = demo; renderList(); renderQuotes(); },
       async saveInvoice(inv) { const i = invoices.findIndex((x) => x.id === inv.id); if (i >= 0) invoices[i] = inv; else invoices.push(inv); renderList(); },
-      async deleteInvoice(id) { invoices = invoices.filter((x) => x.id !== id); renderList(); },
+      async deleteInvoice(id) { invoices = invoices.filter((x) => x.id !== id); delete versions[id]; renderList(); },
       async saveSettings(s) { settings = { ...settings, ...s }; },
+      async listVersions(id) { return [...(versions[id] || [])].sort((a, b) => rev(b) - rev(a)); },
+      async saveVersion(id, body) { versions[id] = (versions[id] || []).filter((v) => rev(v) !== rev(body)).concat([JSON.parse(JSON.stringify(body))]); },
+      async saveQuote(q) { const i = quotes.findIndex((x) => x.id === q.id); if (i >= 0) quotes[i] = q; else quotes.push(q); renderQuotes(); },
+      async deleteQuote(id) { quotes = quotes.filter((x) => x.id !== id); renderQuotes(); },
     };
   }
 
@@ -593,7 +772,7 @@
     }
     identity.on('init', (user) => (user ? connect() : showLogin()));
     identity.on('login', () => { identity.close(); connect(); });
-    identity.on('logout', () => { invoices = []; current = null; showLogin(); });
+    identity.on('logout', () => { invoices = []; quotes = []; current = null; currentQuote = null; showLogin(); });
   }
   $('loginBtn').addEventListener('click', () => identity.open('login'));
   $('logoutBtn').addEventListener('click', () => identity.logout());
@@ -606,7 +785,7 @@
   }
 
   $('backupBtn').addEventListener('click', () => {
-    const data = { format: 'toyboat-invoices-backup', version: 1, exportedAt: new Date().toISOString(), settings: pickCompany(settings), invoices };
+    const data = { format: 'toyboat-invoices-backup', version: 1, exportedAt: new Date().toISOString(), settings: pickCompany(settings), invoices, quotes };
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
     a.download = `Toy Boat invoices backup ${todayISO()}.json`;
@@ -629,7 +808,9 @@
     try {
       if (data.settings) await store.saveSettings(pickCompany({ ...DEFAULT_COMPANY, ...data.settings }));
       for (const inv of incoming) await store.saveInvoice({ ...inv, id: String(inv.id) });
-      banner(`Imported ${incoming.length} invoices and estimates.`);
+      const inQuotes = Array.isArray(data.quotes) ? data.quotes.filter((q) => q && q.id) : [];
+      for (const q of inQuotes) await store.saveQuote({ ...q, id: String(q.id) });
+      banner(`Imported ${incoming.length} invoices and estimates${inQuotes.length ? ` and ${countLabel(inQuotes.length, 'quote')}` : ''}.`);
     } catch (err) {
       banner('Import stopped: ' + (err?.message || err) + '. Anything already imported is safe; you can run it again.');
     }
@@ -731,14 +912,15 @@
       }
       html += `
       <tr data-row="${esc(inv.id)}" title="Double-click to open">
-        <td class="num">${esc(inv.invoiceNumber)}</td>
+        <td class="num">${esc(docNumber(inv))}</td>
         <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
         <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
         <td><b>${esc(inv.jobName)}</b><div class="sub">${esc(inv.clientName)}</div></td>
         <td class="right num">${money(totals(inv).total)}${listBalance(inv)}</td>
         <td><div class="row-actions">
           <button class="btn small" type="button" data-edit="${esc(inv.id)}">Open</button>
-          ${isEstimate(inv) ? `<button class="btn small" type="button" data-convert="${esc(inv.id)}">Make invoice</button>` : ''}
+          ${isEstimate(inv) ? `<button class="btn small" type="button" data-quote="${esc(inv.id)}">Make quote</button>
+          <button class="btn small" type="button" data-convert="${esc(inv.id)}">Make invoice</button>` : ''}
           <button class="btn small" type="button" data-pdf="${esc(inv.id)}">PDF</button>
           <button class="btn small" type="button" data-copy="${esc(inv.id)}">Duplicate</button>
           <button class="btn small danger" type="button" data-del="${esc(inv.id)}">Delete</button>
@@ -801,6 +983,8 @@
       try { await store.saveInvoice(next); renderList(); } catch (err) { toggle.disabled = false; toggle.textContent = 'Save failed'; }
       return;
     }
+    const mq = e.target.closest('[data-quote]');
+    if (mq) return openQuote(quoteFromEstimate(invoices.find((i) => i.id === mq.dataset.quote)), true);
     const convert = e.target.closest('[data-convert]');
     if (convert) {
       const src = invoices.find((i) => i.id === convert.dataset.convert);
@@ -836,7 +1020,7 @@
   function duplicateInvoice(src, overrides = {}, title) {
     if (!src) return;
     const copy = JSON.parse(JSON.stringify(src));
-    openEditor({ ...copy, payments: [], ...JSON.parse(JSON.stringify(overrides)), id: 'inv-' + Date.now().toString(36), invoiceNumber: nextInvoiceNumber(), invoiceDate: todayISO() }, true);
+    openEditor({ ...copy, payments: [], rev: 1, ...JSON.parse(JSON.stringify(overrides)), id: 'inv-' + Date.now().toString(36), invoiceNumber: nextInvoiceNumber(), invoiceDate: todayISO() }, true);
     $('editorTitle').textContent = title || `New ${kindOf(current).toLowerCase()} (copy of ${src.invoiceNumber})`;
   }
 
@@ -894,20 +1078,25 @@
     current.lineItems = current.lineItems || [];
     current.payments = current.payments || [];
     current.docType = current.docType || 'invoice';
+    current.rev = rev(current);
     dirty = isNew;
+    setViewing(null);
     document.querySelectorAll('#form [data-f]').forEach((el) => { if (el.type === 'checkbox') el.checked = Boolean(current[el.dataset.f]); else el.value = current[el.dataset.f] ?? ''; });
     renderPaidRow();
     $(isEstimate(current) ? 'typeEstimate' : 'typeInvoice').checked = true;
     setTitle(isNew);
     setStatus(isNew ? 'Not saved yet' : '');
     renderClientLists(); renderItems(); renderPayments(); renderLogo(); renderProof();
-    $('listView').hidden = true; $('editorView').hidden = false;
+    renderVersions();
+    $('listView').hidden = true; $('quoteView').hidden = true; $('editorView').hidden = false;
     window.scrollTo(0, 0);
   }
 
   function setTitle(isNew) {
     const kind = kindOf(current);
     $('editorTitle').textContent = isNew ? `New ${kind.toLowerCase()}` : `${kind} ${current.invoiceNumber}`;
+    $('revChip').textContent = 'v' + rev(current);
+    $('revChip').hidden = false;
     $('numLabel').textContent = `${kind} number`;
     $('dateLabel').textContent = `${kind} date`;
   }
@@ -946,7 +1135,76 @@
     renderPayments(); markDirty(); renderProof();
   });
 
+  // ---------- versions ----------
+  // "Start new version" files the last saved copy as vN in the history and keeps editing as vN+1.
+  let versionCache = [];
+  async function renderVersions() {
+    const id = current.id, saved = invoices.find((i) => i.id === id);
+    $('newVersionBtn').disabled = !saved;
+    $('newVersionBtn').title = saved ? `Keep v${rev(saved)} in the history and keep editing as v${rev(saved) + 1}` : 'Save this document first';
+    const sel = $('versionSelect');
+    const head = `<option value="">Version history: v${rev(saved || current)} is current</option>`;
+    sel.innerHTML = head;
+    if (!saved) return;
+    try { versionCache = await store.listVersions(id); } catch { versionCache = []; }
+    if (!current || current.id !== id) return;
+    sel.innerHTML = head + versionCache.map((v) =>
+      `<option value="${rev(v)}">Open v${rev(v)} · ${esc(fmtShort((v.archivedAt || '').slice(0, 10)))} · ${money(totals(v).total)}</option>`).join('');
+    sel.value = viewing ? String(viewing) : '';
+  }
+
+  function setViewing(n) {
+    viewing = n;
+    $('form').inert = Boolean(n);
+    $('versionBanner').hidden = !n;
+    $('saveBtn').hidden = Boolean(n);
+    $('newVersionBtn').hidden = Boolean(n);
+  }
+
+  $('versionSelect').addEventListener('change', () => {
+    const n = parseInt($('versionSelect').value, 10);
+    const id = current.id;
+    const saved = invoices.find((i) => i.id === id);
+    if (!n) return openEditor(saved || current);
+    const v = versionCache.find((x) => rev(x) === n);
+    if (!v) return;
+    openEditor({ ...v, id });
+    setViewing(n);
+    $('versionSelect').value = String(n);
+    $('versionBannerText').textContent = `You're looking at v${n}${v.archivedAt ? ', filed ' + fmtShort(v.archivedAt.slice(0, 10)) : ''}. It's read-only: download its PDF, or restore it to keep editing from here.`;
+    $('restoreVersionBtn').textContent = `Restore as v${rev(saved || current)}`;
+  });
+  $('backToCurrentBtn').addEventListener('click', () => openEditor(invoices.find((i) => i.id === current.id)));
+  $('restoreVersionBtn').addEventListener('click', () => {
+    const from = viewing;
+    const saved = invoices.find((i) => i.id === current.id);
+    const { archivedAt, ...body } = current;
+    openEditor({ ...body, rev: rev(saved || current) });
+    markDirty();
+    setStatus(`Restored v${from} content. Save to make it current.`);
+  });
+
+  $('newVersionBtn').addEventListener('click', async () => {
+    const saved = invoices.find((i) => i.id === current.id);
+    if (!saved) return;
+    const btn = $('newVersionBtn'); btn.disabled = true;
+    try {
+      const { id, ...body } = saved;
+      await store.saveVersion(id, { ...body, rev: rev(saved), archivedAt: new Date().toISOString() });
+      current.rev = rev(saved) + 1;
+      await store.saveInvoice({ ...current });
+      dirty = false;
+      setTitle(false);
+      setStatus(`Now editing v${current.rev}. v${rev(saved)} is in the version history.`);
+      renderProof();
+      renderVersions();
+    } catch (e) {
+      setStatus('Could not start a new version: ' + (e?.message || e?.code || 'error'), true);
+    } finally { btn.disabled = false; }
+  });
+
   function closeEditor() {
+    setViewing(null);
     current = null;
     $('editorView').hidden = true; $('listView').hidden = false;
     $('cancelBtn').textContent = 'Back to list';
@@ -1146,7 +1404,7 @@
           ${inv.contactName ? `<p class="p-sm">Attn: ${esc(inv.contactName)}</p>` : ''}
           ${inv.clientEmail ? `<p class="p-sm p-muted">${esc(inv.clientEmail)}</p>` : ''}
         </div>
-        <div><p class="p-caps">${kindOf(inv)} no.</p><p class="p-val">${esc(inv.invoiceNumber)}</p></div>
+        <div><p class="p-caps">${kindOf(inv)} no.</p><p class="p-val">${esc(docNumber(inv))}</p></div>
         <div><p class="p-caps">Date</p><p class="p-val">${esc(fmtDate(inv.invoiceDate))}</p></div>
       </div>
       ${inv.jobName || inv.jobDescription ? `<div class="p-job">
@@ -1197,6 +1455,7 @@
       dirty = false;
       setTitle(false);
       setStatus('Saved');
+      renderVersions();
     } catch (e) {
       setStatus('Not saved: ' + (e?.code === 'quota_exceeded' ? 'storage is full. Delete old invoices and try again.' : (e?.message || e?.code || 'error')), true);
     } finally { btn.disabled = false; }
@@ -1290,7 +1549,7 @@
     if (inv.contactName) para('Attn: ' + inv.contactName, 8.5, 'normal', 17, M, NX - M - 4);
     if (inv.clientEmail) para(inv.clientEmail, 8.5, 'normal', 102, M, NX - M - 4);
     const billBottom = y;
-    y = valTop; para(inv.invoiceNumber, 10, 'bold', 17, NX, DX - NX - 4);
+    y = valTop; para(docNumber(inv), 10, 'bold', 17, NX, DX - NX - 4);
     y = valTop; para(fmtDate(inv.invoiceDate), 10, 'bold', 17, DX, R - DX);
     y = Math.max(billBottom, valTop + lh(10)) + 6;
     hline(M, R, 0.2, 200);
@@ -1378,7 +1637,7 @@
   }
 
   // e.g. "Andrew Tomayko - Invoice 2625.pdf"
-  const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${inv.invoiceNumber || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+  const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${docNumber(inv) || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
 
   $('pdfBtn').addEventListener('click', async () => {
     const btn = $('pdfBtn'); btn.disabled = true;
@@ -1389,6 +1648,410 @@
     } catch (e) {
       setStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true);
     } finally { btn.disabled = false; }
+  });
+
+  // ---------- tabs ----------
+  function showTab(which) {
+    const q = which === 'quotes';
+    $('tabDocs').setAttribute('aria-selected', String(!q));
+    $('tabQuotes').setAttribute('aria-selected', String(q));
+    $('docsPane').hidden = q; $('quotesPane').hidden = !q;
+    try { localStorage.setItem('toyboat_tab', which); } catch {}
+  }
+  $('tabDocs').addEventListener('click', () => showTab('docs'));
+  $('tabQuotes').addEventListener('click', () => showTab('quotes'));
+  try { if (localStorage.getItem('toyboat_tab') === 'quotes') showTab('quotes'); } catch {}
+
+  // ---------- quotes: list ----------
+  function renderQuotes() {
+    const rows = [...quotes].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    $('quotesEmpty').hidden = rows.length > 0;
+    $('quoteRows').innerHTML = rows.map((q) => {
+      const amounts = (q.tiers || []).map((t) => num(t.total)).filter(Boolean);
+      const range = amounts.length > 1 ? `${moneyWhole(Math.min(...amounts))}–${moneyWhole(Math.max(...amounts))}` : amounts.length ? moneyWhole(amounts[0]) : '';
+      const n = (q.tiers || []).length;
+      return `<tr data-qrow="${esc(q.id)}" title="Double-click to open">
+        <td class="num">${esc(q.quoteNumber)}</td>
+        <td class="list-date">${esc(fmtLong(q.date))}</td>
+        <td><b>${esc(q.title)}</b><div class="sub">${esc(q.preparedFor || q.company)}</div></td>
+        <td class="right num">${range}<div class="sub">${n} tier${n === 1 ? '' : 's'}</div></td>
+        <td><div class="row-actions">
+          <button class="btn small" type="button" data-qopen="${esc(q.id)}">Open</button>
+          <button class="btn small" type="button" data-qpdf="${esc(q.id)}">PDF</button>
+          <button class="btn small" type="button" data-qcopy="${esc(q.id)}">Duplicate</button>
+          <button class="btn small danger" type="button" data-qdel="${esc(q.id)}">Delete</button>
+        </div></td></tr>`;
+    }).join('');
+  }
+
+  $('quoteRows').addEventListener('dblclick', (e) => {
+    if (e.target.closest('button')) return;
+    const row = e.target.closest('[data-qrow]');
+    if (row) { getSelection()?.removeAllRanges(); openQuote(quotes.find((q) => q.id === row.dataset.qrow)); }
+  });
+  $('quoteRows').addEventListener('click', async (e) => {
+    const open = e.target.closest('[data-qopen]');
+    if (open) return openQuote(quotes.find((q) => q.id === open.dataset.qopen));
+    const pdf = e.target.closest('[data-qpdf]');
+    if (pdf) {
+      const q = quotes.find((x) => x.id === pdf.dataset.qpdf);
+      if (!q) return;
+      pdf.disabled = true; pdf.textContent = '…';
+      try { (await buildQuotePDF(q)).save(quotePdfName(q)); pdf.textContent = 'PDF'; }
+      catch { pdf.textContent = 'PDF failed'; }
+      finally { pdf.disabled = false; }
+      return;
+    }
+    const copy = e.target.closest('[data-qcopy]');
+    if (copy) {
+      const src = quotes.find((q) => q.id === copy.dataset.qcopy);
+      if (!src) return;
+      openQuote({ ...JSON.parse(JSON.stringify(src)), id: 'quo-' + Date.now().toString(36), date: todayISO() }, true);
+      $('quoteTitle').textContent = `New quote (copy of ${src.quoteNumber})`;
+      return;
+    }
+    const del = e.target.closest('[data-qdel]');
+    if (!del) return;
+    if (!del.classList.contains('armed')) {
+      del.classList.add('armed'); del.textContent = 'Confirm delete';
+      setTimeout(() => { if (del.isConnected) { del.classList.remove('armed'); del.textContent = 'Delete'; } }, 4000);
+      return;
+    }
+    del.disabled = true;
+    try { await store.deleteQuote(del.dataset.qdel); } catch { del.disabled = false; del.textContent = 'Delete failed'; }
+  });
+
+  // A quote starts from an estimate, then lives on its own: editing one never changes the other.
+  function quoteFromEstimate(est) {
+    if (!est) return null;
+    const isPost = (it) => /post/i.test(it.category || '');
+    const short = (it) => String(it.description || it.category || '').split(' — ')[0].trim();
+    return {
+      id: 'quo-' + Date.now().toString(36),
+      sourceId: est.id,
+      quoteNumber: est.invoiceNumber || '',
+      date: todayISO(),
+      title: est.jobName || '',
+      producer: 'Andrew Tomayko',
+      contact: '',
+      preparedFor: est.contactName || est.clientName || '',
+      company: est.contactName ? est.clientName || '' : '',
+      statement: est.jobDescription || '',
+      phases: [
+        { title: 'Pre-Production', items: 'Concepting\nScheduling\nGear Rentals\nProd. Coordinating' },
+        { title: 'Production', items: [...new Set(est.lineItems.filter((it) => !isPost(it)).map(short))].join('\n') },
+        { title: 'Post-Production', items: [...new Set(est.lineItems.filter(isPost).map(short))].join('\n') || 'Video Editorial\nAudio Mixing\nColor Processing' },
+      ],
+      tiers: [{ name: est.jobName || 'Option One', subtitle: '', deliverables: '', total: Math.round(totals(est).total), note: '', recommended: false }],
+      terms: 'Compensation to Toy Boat Films will be made in two payments as follows:\n1) (50%) due upon execution of the agreement.\n2) (50%) due upon final delivery of the project.\n\nAny change to scope requires written approval by both parties and will be billed at final invoice.\nDigital delivery via secure download links.',
+      website: settings.companyWebsite || 'toyboatfilms.com',
+    };
+  }
+
+  // ---------- quotes: editor ----------
+  function openQuote(q, isNew = false) {
+    if (!q) return;
+    currentQuote = JSON.parse(JSON.stringify(q));
+    currentQuote.phases = currentQuote.phases || [];
+    while (currentQuote.phases.length < 3) currentQuote.phases.push({ title: '', items: '' });
+    currentQuote.tiers = currentQuote.tiers || [];
+    qDirty = isNew;
+    document.querySelectorAll('#qform [data-q]').forEach((el) => { el.value = currentQuote[el.dataset.q] ?? ''; });
+    $('quoteTitle').textContent = isNew ? 'New quote' : `Quote ${currentQuote.quoteNumber}`;
+    qStatus(isNew ? 'Not saved yet' : '');
+    renderClientLists(); renderPhaseEditors(); renderTierEditors(); renderQuoteSheet();
+    $('listView').hidden = true; $('editorView').hidden = true; $('quoteView').hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  function qStatus(text, isError = false) { $('qStatus').textContent = text; $('qStatus').classList.toggle('error', isError); }
+  function qMark() { qDirty = true; qStatus('Unsaved changes'); }
+  addEventListener('beforeunload', (e) => { if (currentQuote && qDirty) e.preventDefault(); });
+
+  function renderPhaseEditors() {
+    $('qPhases').innerHTML = currentQuote.phases.slice(0, 3).map((ph, i) => `
+      <div class="field">
+        <input id="ph-${i}-title" data-ph="${i}" data-phk="title" value="${esc(ph.title)}" aria-label="Column ${i + 1} heading" style="font-weight:700">
+        <textarea id="ph-${i}-items" data-ph="${i}" data-phk="items" aria-label="Column ${i + 1} items">${esc(ph.items)}</textarea>
+      </div>`).join('');
+  }
+
+  function renderTierEditors() {
+    $('qTiers').innerHTML = currentQuote.tiers.map((t, i) => `
+      <div class="tier-ed">
+        <div class="tier-ed-head">
+          <b>Tier ${TIER_WORDS[i] || i + 1}</b>
+          <span class="list-actions">
+            <label class="check"><input type="checkbox" id="t-${i}-rec" data-t="${i}" data-tk="recommended" ${t.recommended ? 'checked' : ''}>Recommended</label>
+            <button class="btn small ghost danger" type="button" data-trm="${i}">Remove</button>
+          </span>
+        </div>
+        <div class="grid2">
+          <label class="field"><span>Name</span><input id="t-${i}-name" data-t="${i}" data-tk="name" value="${esc(t.name)}" placeholder="One Day Shoot"></label>
+          <label class="field"><span>Subtitle</span><input id="t-${i}-sub" data-t="${i}" data-tk="subtitle" value="${esc(t.subtitle)}"></label>
+        </div>
+        <label class="field"><span>Deliverables (one per line)</span><textarea id="t-${i}-dl" data-t="${i}" data-tk="deliverables" rows="4">${esc(t.deliverables)}</textarea></label>
+        <div class="grid2">
+          <label class="field"><span>Total ($)</span><input type="number" step="1" min="0" id="t-${i}-total" data-t="${i}" data-tk="total" value="${esc(t.total)}"></label>
+          <label class="field"><span>Note under total</span><input id="t-${i}-note" data-t="${i}" data-tk="note" value="${esc(t.note)}" placeholder="Optional"></label>
+        </div>
+      </div>`).join('');
+    $('qAddTier').hidden = currentQuote.tiers.length >= 4;
+  }
+
+  $('qform').addEventListener('submit', (e) => e.preventDefault());
+  $('qform').addEventListener('input', (e) => {
+    const el = e.target;
+    if (el.dataset.q) currentQuote[el.dataset.q] = el.value;
+    else if (el.dataset.phk) currentQuote.phases[+el.dataset.ph][el.dataset.phk] = el.value;
+    else if (el.dataset.tk) {
+      const t = currentQuote.tiers[+el.dataset.t];
+      t[el.dataset.tk] = el.type === 'checkbox' ? el.checked : el.dataset.tk === 'total' ? num(el.value) : el.value;
+    } else return;
+    qMark(); renderQuoteSheet();
+  });
+  $('qTiers').addEventListener('click', (e) => {
+    const rm = e.target.closest('[data-trm]');
+    if (!rm) return;
+    currentQuote.tiers.splice(+rm.dataset.trm, 1);
+    renderTierEditors(); qMark(); renderQuoteSheet();
+  });
+  $('qAddTier').addEventListener('click', () => {
+    currentQuote.tiers.push({ name: '', subtitle: '', deliverables: '', total: 0, note: '', recommended: false });
+    renderTierEditors(); qMark(); renderQuoteSheet();
+    $(`t-${currentQuote.tiers.length - 1}-name`)?.focus();
+  });
+
+  $('qSaveBtn').addEventListener('click', async () => {
+    const btn = $('qSaveBtn'); btn.disabled = true; qStatus('Saving…');
+    try {
+      await store.saveQuote({ ...currentQuote });
+      qDirty = false;
+      $('quoteTitle').textContent = `Quote ${currentQuote.quoteNumber}`;
+      qStatus('Saved');
+    } catch (e) {
+      qStatus('Not saved: ' + (e?.message || e?.code || 'error'), true);
+    } finally { btn.disabled = false; }
+  });
+  $('qBackBtn').addEventListener('click', () => {
+    const btn = $('qBackBtn');
+    if (qDirty && btn.dataset.armed !== '1') {
+      btn.dataset.armed = '1'; btn.textContent = 'Discard changes?';
+      setTimeout(() => { btn.dataset.armed = ''; btn.textContent = 'Back to list'; }, 4000);
+      return;
+    }
+    btn.dataset.armed = '';
+    currentQuote = null; qDirty = false;
+    $('quoteView').hidden = true; $('listView').hidden = false;
+    showTab('quotes');
+  });
+
+  // Company name stacked into two lines for the wordmark, e.g. "TOY BOAT / FILMS".
+  function wordmark(name) {
+    const w = String(name || '').toUpperCase().split(/\s+/).filter(Boolean);
+    if (w.length < 2) return w.join(' ');
+    const cut = Math.ceil(w.length / 2);
+    return w.slice(0, cut).join(' ') + '\n' + w.slice(cut).join(' ');
+  }
+
+  // A gentle wave, echoing the logo, used as the header divider on screen and in the PDF.
+  function wavePoints(width, height, waves = 9, steps = 180) {
+    const pts = [];
+    for (let i = 0; i <= steps; i++) pts.push([(i / steps) * width, height / 2 + Math.sin((i / steps) * Math.PI * 2 * waves) * height * 0.32]);
+    return pts;
+  }
+  const wavePath = (w, h) => wavePoints(w, h).map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' ');
+
+  function renderQuoteSheet() {
+    const q = currentQuote;
+    const logo = settings.logo ? `<img src="${esc(settings.logo)}" alt="">` : '';
+    const meta = (label, value) => (value ? `<p><b>${label}</b> ${esc(value)}</p>` : '');
+    const tiers = q.tiers;
+    $('qsheet').innerHTML = `
+      <div class="q-head">
+        <div class="q-brand">${logo}<p class="q-word">${esc(wordmark(settings.companyName || 'Toy Boat Films'))}</p></div>
+        <div><p class="q-kind">QUOTE</p><p class="q-title">${esc(q.title)}</p></div>
+      </div>
+      <svg class="q-wave" viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden="true"><path d="${wavePath(400, 12)}" fill="none" stroke="#1f4e6b" stroke-width="1.4" vector-effect="non-scaling-stroke"/></svg>
+      <div class="q-meta">
+        <div>${meta('Producer:', q.producer)}${meta('c:', q.contact)}${meta('Quote Number:', q.quoteNumber)}</div>
+        <div>${meta('Prepared For:', q.preparedFor)}${meta('Company:', q.company)}${meta('Date:', fmtDate(q.date))}</div>
+      </div>
+      ${q.statement ? `<p class="q-h">STATEMENT OF WORK</p><p class="q-sow">${esc(q.statement)}</p>` : ''}
+      <div class="q-phases">
+        ${q.phases.slice(0, 3).map((ph) => `<div><h4>${esc(ph.title)}</h4>${lines(ph.items).map((l) => `<p>${esc(l)}</p>`).join('')}</div>`).join('')}
+      </div>
+      ${tiers.length ? `<p class="q-h">TIERS</p>
+      <div class="q-tiers" style="grid-template-columns: repeat(${tiers.length}, minmax(0, 1fr))">
+        ${tiers.map((t, i) => `
+          <div class="q-tier ${t.recommended ? 'rec' : ''}">
+            ${t.recommended ? '<span class="q-badge">RECOMMENDED</span>' : ''}
+            <p class="q-eyebrow">Tier ${TIER_WORDS[i] || i + 1}</p>
+            <p class="q-tname">${esc(t.name)}</p>
+            ${t.subtitle ? `<p class="q-tsub">${esc(t.subtitle)}</p>` : ''}
+            ${lines(t.deliverables).length ? `<p class="q-dl">DELIVERABLES</p><ul>${lines(t.deliverables).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+            <p class="q-total">TOTAL: <span>${moneyWhole(num(t.total))}</span></p>
+            ${t.note ? `<p class="q-note">${esc(t.note)}</p>` : ''}
+          </div>`).join('')}
+      </div>` : ''}
+      ${q.terms ? `<p class="q-h" style="font-size:calc(11.5 * var(--pt))">TERMS</p><p class="q-terms">${esc(q.terms)}</p>` : ''}
+      ${q.website ? `<p class="q-foot">${esc(q.website)}</p>` : ''}`;
+  }
+
+  // ---------- quotes: PDF ----------
+  async function buildQuotePDF(q) {
+    const { jsPDF } = window.jspdf;
+    const W = 210, A4_H = 297, M = 18;
+    const scratch = new jsPDF({ unit: 'mm', format: [W, 5000] });
+    const height = Math.max(A4_H, Math.ceil(await drawQuote(scratch, q) + M));
+    const doc = new jsPDF({ unit: 'mm', format: [W, height] });
+    await drawQuote(doc, q);
+    return doc;
+  }
+
+  async function drawQuote(doc, q) {
+    const W = doc.internal.pageSize.getWidth();
+    const M = 18, R = W - M, CW = W - 2 * M;
+    const ACC = [31, 78, 107], INK = [17, 17, 17], GREY = [102, 102, 102];
+    const lh = (pt, k = 1.4) => pt * 0.3528 * k;
+    const font = (size, style = 'normal', color = INK) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(...color); };
+    const phases = (q.phases || []).slice(0, 3);
+    let y = M;
+
+    // Header: logo + stacked wordmark on the left, QUOTE and project title on the right
+    const top = y;
+    let x = M, brandH = 0;
+    if (settings.logo) {
+      const sz = await imageSize(settings.logo);
+      if (sz) {
+        const h = 14, w = Math.min(42, h * sz.w / sz.h), hh = w * sz.h / sz.w;
+        doc.addImage(settings.logo, settings.logo.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG', M, top, w, hh);
+        x = M + w + 4; brandH = hh;
+      }
+    }
+    const wm = wordmark(settings.companyName || 'Toy Boat Films').split('\n');
+    font(15, 'bold');
+    const wmH = wm.length * lh(15, 1.12);
+    const wmTop = top + Math.max(0, (brandH - wmH) / 2);
+    wm.forEach((ln, i) => doc.text(ln, x, wmTop + lh(15, 1.12) * (i + 0.78)));
+    font(20, 'bold'); doc.text('QUOTE', R, top + 6.6, { align: 'right' });
+    font(12, 'normal');
+    const tl = doc.splitTextToSize(String(q.title || ''), 80);
+    tl.forEach((ln, i) => doc.text(ln, R, top + 12.5 + i * lh(12, 1.25), { align: 'right' }));
+    y = Math.max(top + brandH, wmTop + wmH, top + 12.5 + (tl.length - 1) * lh(12, 1.25) + 1.5) + 5;
+
+    // Wave divider
+    doc.setDrawColor(...ACC); doc.setLineWidth(0.45);
+    const pts = wavePoints(CW, 5);
+    for (let i = 1; i < pts.length; i++) doc.line(M + pts[i - 1][0], y + pts[i - 1][1], M + pts[i][0], y + pts[i][1]);
+    y += 12;
+
+    // Meta: two columns of bold label + value
+    const metaCol = (rows, cx) => {
+      let yy = y;
+      rows.filter(([, v]) => v).forEach(([label, v]) => {
+        font(10, 'bold'); doc.text(label, cx, yy);
+        const lw = doc.getTextWidth(label + ' ');
+        font(10, 'normal'); doc.text(String(v), cx + lw, yy);
+        yy += lh(10, 1.5);
+      });
+      return yy;
+    };
+    const m1 = metaCol([['Producer:', q.producer], ['c:', q.contact], ['Quote Number:', q.quoteNumber]], M);
+    const m2 = metaCol([['Prepared For:', q.preparedFor], ['Company:', q.company], ['Date:', fmtDate(q.date)]], M + CW / 2 + 4);
+    y = Math.max(m1, m2);
+
+    const heading = (text, size = 14) => { y += 8; font(size, 'bold'); doc.text(text, M, y); y += lh(size, 0.9); };
+    const para = (text, size, width = CW, cx = M, color = INK, k = 1.42) => {
+      font(size, 'normal', color);
+      String(text || '').split('\n').forEach((p) => {
+        (p.trim() ? doc.splitTextToSize(p, width) : ['']).forEach((ln) => { y += lh(size, k); doc.text(ln, cx, y - lh(size, k) * 0.28); });
+      });
+    };
+
+    if (q.statement) { heading('STATEMENT OF WORK'); para(q.statement, 10.5); }
+
+    // Scope columns
+    y += 9;
+    const gap = 8, colW = (CW - 2 * gap) / 3;
+    let colBottom = y;
+    phases.forEach((ph, i) => {
+      const cx = M + i * (colW + gap);
+      let yy = y;
+      font(10.5, 'bold', ACC); doc.text(String(ph.title || '').toUpperCase(), cx, yy);
+      yy += 2;
+      font(10, 'normal');
+      lines(ph.items).forEach((l) => doc.splitTextToSize(l, colW).forEach((ln) => { yy += lh(10, 1.45); doc.text(ln, cx, yy - 1); }));
+      colBottom = Math.max(colBottom, yy);
+    });
+    y = colBottom;
+
+    // Tier cards: lay each one out first so every card shares the tallest height
+    const tiers = q.tiers || [];
+    if (tiers.length) {
+      heading('TIERS');
+      y += 3;
+      const tg = 6, cw = (CW - tg * (tiers.length - 1)) / tiers.length, pad = 5, inner = cw - 2 * pad;
+      const layouts = tiers.map((t) => {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+        const name = doc.splitTextToSize(String(t.name || ''), inner);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+        const sub = t.subtitle ? doc.splitTextToSize(t.subtitle, inner) : [];
+        const bullets = lines(t.deliverables).map((l) => doc.splitTextToSize(l, inner - 3.5));
+        doc.setFontSize(8.5);
+        const note = t.note ? doc.splitTextToSize(t.note, inner) : [];
+        let h = pad + 4 + 2 + name.length * lh(12, 1.2) + sub.length * lh(9, 1.35);
+        if (bullets.length) h += 6 + 4 + bullets.reduce((sum, b) => sum + b.length * lh(9, 1.4), 0);
+        return { t, name, sub, bullets, note, bodyH: h };
+      });
+      const maxNote = Math.max(0, ...layouts.map((l) => l.note.length));
+      const cardH = Math.max(...layouts.map((l) => l.bodyH)) + 10 + lh(12, 1.2) + maxNote * lh(8.5, 1.35) + pad;
+      layouts.forEach((L, i) => {
+        const cx = M + i * (cw + tg);
+        if (L.t.recommended) {
+          doc.setFillColor(237, 243, 247); doc.setDrawColor(...ACC); doc.setLineWidth(0.6);
+          doc.roundedRect(cx, y, cw, cardH, 2.5, 2.5, 'FD');
+          // Badge sits on the card's top edge so it never collides with the tier label.
+          font(6.5, 'bold', [255, 255, 255]);
+          const bw = doc.getTextWidth('RECOMMENDED') + 4;
+          doc.setFillColor(...ACC); doc.roundedRect(cx + cw - pad - bw, y - 2.2, bw, 4.4, 2.2, 2.2, 'F');
+          doc.text('RECOMMENDED', cx + cw - pad - bw / 2, y + 0.9, { align: 'center' });
+        } else {
+          doc.setDrawColor(51); doc.setLineWidth(0.3);
+          doc.roundedRect(cx, y, cw, cardH, 2.5, 2.5, 'S');
+        }
+        let yy = y + pad + 2.6;
+        font(7.5, 'bold', ACC); doc.text(`TIER ${(TIER_WORDS[i] || String(i + 1)).toUpperCase()}`, cx + pad, yy);
+        yy += 2;
+        font(12, 'bold'); L.name.forEach((ln) => { yy += lh(12, 1.2); doc.text(ln, cx + pad, yy - 1); });
+        font(9, 'normal', GREY); L.sub.forEach((ln) => { yy += lh(9, 1.35); doc.text(ln, cx + pad, yy - 0.8); });
+        if (L.bullets.length) {
+          yy += 6; font(7.5, 'bold'); doc.text('DELIVERABLES', cx + pad, yy); yy += 1.5;
+          font(9, 'normal');
+          L.bullets.forEach((b) => b.forEach((ln, j) => { yy += lh(9, 1.4); if (!j) doc.text('•', cx + pad, yy - 1); doc.text(ln, cx + pad + 3.5, yy - 1); }));
+        }
+        let ty = y + cardH - pad - maxNote * lh(8.5, 1.35) - 1;
+        font(12, 'bold'); doc.text('TOTAL:', cx + pad, ty);
+        const tw = doc.getTextWidth('TOTAL: ');
+        font(12, 'bold', ACC); doc.text(moneyWhole(num(L.t.total)), cx + pad + tw, ty);
+        font(8.5, 'normal', GREY); L.note.forEach((ln) => { ty += lh(8.5, 1.35); doc.text(ln, cx + pad, ty); });
+      });
+      y += cardH;
+    }
+
+    if (q.terms) { heading('TERMS', 11.5); para(q.terms, 9.5, CW, M, INK, 1.45); }
+    if (q.website) { y += 14; font(9.5, 'normal', ACC); doc.text(String(q.website), R, y, { align: 'right' }); }
+    return y;
+  }
+
+  // e.g. "Andrew Tomayko - Quote 2624.pdf"
+  const quotePdfName = (q) => `Andrew Tomayko - Quote ${q.quoteNumber || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+
+  $('qPdfBtn').addEventListener('click', async () => {
+    const btn = $('qPdfBtn'); btn.disabled = true;
+    try { (await buildQuotePDF(currentQuote)).save(quotePdfName(currentQuote)); qStatus('PDF downloaded'); }
+    catch (e) { qStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true); }
+    finally { btn.disabled = false; }
   });
 
   startAuth();

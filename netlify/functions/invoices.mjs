@@ -4,10 +4,14 @@
 // context.clientContext.user). Set INVOICES_ALLOWED_EMAILS in Netlify to a comma-separated list to
 // restrict it further. Data lives in Netlify Blobs, never in the Git repo (which is public).
 //
-//   GET                      -> { invoices: [...], settings }
-//   PUT    ?id=<id>  {...}   -> save one invoice or estimate
-//   DELETE ?id=<id>          -> delete one
-//   PUT    ?settings=1 {...} -> save company details and logo
+//   GET                          -> { invoices: [...], quotes: [...], settings }
+//   PUT    ?id=<id>  {...}       -> save one invoice or estimate
+//   DELETE ?id=<id>              -> delete one (and its version history)
+//   PUT    ?settings=1 {...}     -> save company details and logo
+//   GET    ?versions=<id>        -> { versions: [...] } earlier versions of one invoice or estimate
+//   PUT    ?id=<id>&rev=<n> {...}-> file version n of that document in its history
+//   PUT    ?quote=<id> {...}     -> save one quote presentation
+//   DELETE ?quote=<id>           -> delete one quote
 
 import { connectLambda, getStore } from "@netlify/blobs";
 
@@ -46,11 +50,19 @@ export const handler = async (event, context) => {
   const q = event.queryStringParameters || {};
 
   try {
+    const readAll = async (prefix) => {
+      const { blobs } = await store.list({ prefix });
+      return (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
+    };
+
+    if (event.httpMethod === "GET" && q.versions) {
+      if (!ID.test(q.versions)) return reply(400, { error: "Missing or invalid id." });
+      return reply(200, { versions: await readAll(`ver/${q.versions}/`) });
+    }
+
     if (event.httpMethod === "GET") {
-      const { blobs } = await store.list({ prefix: "inv/" });
-      const invoices = (await Promise.all(blobs.map((b) => store.get(b.key, { type: "json" })))).filter(Boolean);
-      const settings = await store.get("settings", { type: "json" });
-      return reply(200, { invoices, settings });
+      const [invoices, quotes, settings] = await Promise.all([readAll("inv/"), readAll("quote/"), store.get("settings", { type: "json" })]);
+      return reply(200, { invoices, quotes, settings });
     }
 
     if (event.httpMethod === "PUT" && q.settings) {
@@ -58,7 +70,27 @@ export const handler = async (event, context) => {
       return reply(200, { ok: true });
     }
 
+    if (q.quote !== undefined) {
+      if (!ID.test(q.quote)) return reply(400, { error: "Missing or invalid quote id." });
+      if (event.httpMethod === "PUT") {
+        await store.setJSON(`quote/${q.quote}`, { ...readBody(event), id: q.quote });
+        return reply(200, { ok: true });
+      }
+      if (event.httpMethod === "DELETE") {
+        await store.delete(`quote/${q.quote}`);
+        return reply(200, { ok: true });
+      }
+      return reply(405, { error: "Method not allowed." });
+    }
+
     if (!ID.test(q.id || "")) return reply(400, { error: "Missing or invalid id." });
+
+    if (event.httpMethod === "PUT" && q.rev !== undefined) {
+      const rev = Number(q.rev);
+      if (!Number.isInteger(rev) || rev < 1 || rev > 999) return reply(400, { error: "Invalid version number." });
+      await store.setJSON(`ver/${q.id}/${rev}`, { ...readBody(event), rev });
+      return reply(200, { ok: true });
+    }
 
     if (event.httpMethod === "PUT") {
       await store.setJSON(`inv/${q.id}`, { ...readBody(event), id: q.id });
@@ -67,6 +99,8 @@ export const handler = async (event, context) => {
 
     if (event.httpMethod === "DELETE") {
       await store.delete(`inv/${q.id}`);
+      const { blobs } = await store.list({ prefix: `ver/${q.id}/` });
+      await Promise.all(blobs.map((b) => store.delete(b.key)));
       return reply(200, { ok: true });
     }
 
