@@ -276,6 +276,10 @@
   .proof-show select { width: auto; padding: 5px 9px; font-size: 13px; }
   .proof-show[hidden] { display: none; }
   #sheetQuote { margin-bottom: 24px; }
+  .pdf-name { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 6px; background: var(--field); padding-right: 10px; }
+  .pdf-name input { border: 0; background: transparent; width: 280px; max-width: 46vw; padding: 9px 4px 9px 11px; box-shadow: none !important; }
+  .pdf-name:focus-within { border-color: var(--accent); }
+  .pdf-name span { color: var(--muted); font-size: 13px; }
   .proof-show { flex-wrap: wrap; }
   .proof-show .check { font-weight: 500; color: var(--muted); }
   /* Options on the paper proof */
@@ -385,6 +389,7 @@
       <div class="editor-actions">
         <span class="status" id="status" role="status"></span>
         <button class="btn" id="cancelBtn" type="button">Back to list</button>
+        <label class="pdf-name" title="File name for the PDF. Remembered for this job."><input id="pdfName" aria-label="PDF file name" spellcheck="false"><span>.pdf</span></label>
         <button class="btn" id="pdfBtn" type="button">Download PDF</button>
         <button class="btn primary" id="saveBtn" type="button">Save</button>
       </div>
@@ -514,6 +519,7 @@
       <div class="editor-actions">
         <span class="status" id="qStatus" role="status"></span>
         <button class="btn" id="qBackBtn" type="button">Back to list</button>
+        <label class="pdf-name" title="File name for the PDF. Remembered for this quote."><input id="qPdfName" aria-label="PDF file name" spellcheck="false"><span>.pdf</span></label>
         <button class="btn" id="qPdfBtn" type="button">Download PDF</button>
         <button class="btn primary" id="qSaveBtn" type="button">Save</button>
       </div>
@@ -1087,7 +1093,7 @@
       const inv = invoices.find((i) => i.id === pdf.dataset.pdf);
       if (!inv) return;
       pdf.disabled = true; pdf.textContent = '…';
-      try { (await buildPDF(inv)).save(pdfName(inv)); pdf.textContent = 'PDF'; }
+      try { (await buildPDF(inv)).save(invoiceFileName(inv)); pdf.textContent = 'PDF'; }
       catch (err) { pdf.textContent = 'PDF failed'; }
       finally { pdf.disabled = false; }
       return;
@@ -1180,6 +1186,7 @@
     setTitle(isNew);
     setStatus(isNew ? 'Not saved yet' : '');
     editScope = 'shared';
+    $('pdfName').value = current.pdfFileName || '';
     renderClientLists(); renderOptions(); renderItems(); renderPayments(); renderLogo(); renderProof();
     renderVersions();
     $('listView').hidden = true; $('quoteView').hidden = true; $('editorView').hidden = false;
@@ -1658,6 +1665,7 @@
 
   function renderProof() {
     if (hasOptions(current)) renderOptionTotals();
+    renderPdfName();
     // The quote prints as page 1, so the preview shows it above the estimate.
     const showQuote = isEstimate(current) && quoteGoesFirst(current);
     $('sheetQuote').hidden = !showQuote;
@@ -1690,6 +1698,7 @@
   // ---------- save / cancel ----------
   $('saveBtn').addEventListener('click', async () => {
     const btn = $('saveBtn'); btn.disabled = true; setStatus('Saving…');
+    current.pdfFileName = cleanFileName($('pdfName').value);
     try {
       await store.saveInvoice({ ...current });
       // Remember the business details for the next new invoice.
@@ -1960,12 +1969,33 @@
   // e.g. "Andrew Tomayko - Invoice 2625.pdf"
   const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${docNumber(inv) || 'draft'}${(optionsOf(inv).find((o) => o.id === inv.printOption) || {}).name ? ' ' + optionsOf(inv).find((o) => o.id === inv.printOption).name : ''}.pdf`.replace(/[\\/:*?"<>|]/g, '');
 
+  // A name typed in the box next to Download PDF, without ".pdf" or characters files can't use.
+  const cleanFileName = (v) => String(v || '').trim().replace(/\.pdf$/i, '').replace(/[\\/:*?"<>|]/g, '').trim();
+  const invoiceFileName = (inv) => (cleanFileName(inv.pdfFileName) ? cleanFileName(inv.pdfFileName) + '.pdf' : pdfName(inv));
+  const quoteFileName = (q) => (cleanFileName(q.pdfFileName) ? cleanFileName(q.pdfFileName) + '.pdf' : quotePdfName(q));
+  function renderPdfName() {
+    $('pdfName').placeholder = pdfName(current).replace(/\.pdf$/, '');
+  }
+
+  // Remember the name used for this job: stored on the saved copy only, so unsaved edits stay unsaved.
+  async function rememberFileName(list, saveFn, doc, typed) {
+    doc.pdfFileName = typed;
+    const saved = list.find((x) => x.id === doc.id);
+    if (saved && (saved.pdfFileName || '') !== typed) {
+      try { await saveFn({ ...saved, pdfFileName: typed }); } catch {}
+    }
+  }
+
   $('pdfBtn').addEventListener('click', async () => {
     const btn = $('pdfBtn'); btn.disabled = true;
     try {
       const doc = await buildPDF(current);
-      doc.save(pdfName(current));
-      setStatus('PDF downloaded');
+      const typed = cleanFileName($('pdfName').value);
+      $('pdfName').value = typed;
+      const name = typed ? typed + '.pdf' : pdfName(current);
+      doc.save(name);
+      await rememberFileName(invoices, (x) => store.saveInvoice(x), current, typed);
+      setStatus(`Downloaded ${name}`);
     } catch (e) {
       setStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true);
     } finally { btn.disabled = false; }
@@ -2018,7 +2048,7 @@
       const q = quotes.find((x) => x.id === pdf.dataset.qpdf);
       if (!q) return;
       pdf.disabled = true; pdf.textContent = '…';
-      try { (await buildQuotePDF(q)).save(quotePdfName(q)); pdf.textContent = 'PDF'; }
+      try { (await buildQuotePDF(q)).save(quoteFileName(q)); pdf.textContent = 'PDF'; }
       catch { pdf.textContent = 'PDF failed'; }
       finally { pdf.disabled = false; }
       return;
@@ -2083,6 +2113,8 @@
     document.querySelectorAll('#qform [data-q]').forEach((el) => { el.value = currentQuote[el.dataset.q] ?? ''; });
     $('quoteTitle').textContent = isNew ? 'New quote' : `Quote ${currentQuote.quoteNumber}`;
     qStatus(isNew ? 'Not saved yet' : '');
+    $('qPdfName').value = currentQuote.pdfFileName || '';
+    $('qPdfName').placeholder = quotePdfName(currentQuote).replace(/\.pdf$/, '');
     renderClientLists(); renderPhaseEditors(); renderTierEditors(); renderQuoteSheet();
     $('listView').hidden = true; $('editorView').hidden = true; $('quoteView').hidden = false;
     window.scrollTo(0, 0);
@@ -2148,6 +2180,7 @@
 
   $('qSaveBtn').addEventListener('click', async () => {
     const btn = $('qSaveBtn'); btn.disabled = true; qStatus('Saving…');
+    currentQuote.pdfFileName = cleanFileName($('qPdfName').value);
     try {
       await store.saveQuote({ ...currentQuote });
       qDirty = false;
@@ -2396,7 +2429,15 @@
 
   $('qPdfBtn').addEventListener('click', async () => {
     const btn = $('qPdfBtn'); btn.disabled = true;
-    try { (await buildQuotePDF(currentQuote)).save(quotePdfName(currentQuote)); qStatus('PDF downloaded'); }
+    try {
+      const doc = await buildQuotePDF(currentQuote);
+      const typed = cleanFileName($('qPdfName').value);
+      $('qPdfName').value = typed;
+      const name = typed ? typed + '.pdf' : quotePdfName(currentQuote);
+      doc.save(name);
+      await rememberFileName(quotes, (x) => store.saveQuote(x), currentQuote, typed);
+      qStatus(`Downloaded ${name}`);
+    }
     catch (e) { qStatus('PDF could not be created: ' + (e?.message || e?.code || 'error'), true); }
     finally { btn.disabled = false; }
   });
