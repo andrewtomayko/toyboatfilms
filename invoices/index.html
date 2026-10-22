@@ -1632,7 +1632,7 @@
       </div>
       ${(inv.lineItems || []).length ? `<p class="p-section">Included in every option</p>
       <div class="p-items" style="margin-top:0">${proofItemsHTML(inv.lineItems, false)}</div>` : ''}
-      ${os.map((o) => `<p class="p-section">${esc(o.name || 'Option')}${o.summary ? ' · ' + esc(o.summary) : ''}</p>
+      ${os.map((o) => `<p class="p-section">${esc(o.name || 'Option')}</p>
       <div class="p-items" style="margin-top:0">${proofItemsHTML(o.lineItems || [], false)}
         <div class="p-cat-total"><span>${esc(o.name || 'Option')} estimated total, with shared items</span><span>${money(optionTotal(inv, o))}</span></div>
       </div>`).join('')}
@@ -1897,7 +1897,7 @@
     };
     if ((inv.lineItems || []).length) { section('Included in every option'); drawGroups(doc, inv.lineItems, false, ctx); }
     os.forEach((o) => {
-      section(`${o.name || 'Option'}${o.summary ? ' · ' + o.summary : ''}`.slice(0, 90));
+      section(String(o.name || 'Option')); // the summary is already in the comparison table
       drawGroups(doc, o.lineItems || [], false, ctx);
       ctx.y += 2.4;
       font(8.5, 'bold'); const amt = money(optionTotal(inv, o));
