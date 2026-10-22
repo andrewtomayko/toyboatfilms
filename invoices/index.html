@@ -242,14 +242,20 @@
   .q-phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(8 * var(--mm)); margin-top: calc(9 * var(--mm)); }
   .q-phases h4 { margin: 0 0 calc(2 * var(--mm)); font-size: calc(10.5 * var(--pt)); font-weight: 700; color: var(--q-accent); letter-spacing: 0.04em; text-transform: uppercase; }
   .q-phases p { line-height: 1.45; }
-  .q-tiers { display: grid; gap: calc(6 * var(--mm)); }
-  .q-tier { position: relative; border: calc(0.3 * var(--mm)) solid #333; border-radius: calc(2.5 * var(--mm)); padding: calc(5 * var(--mm)); display: flex; flex-direction: column; min-width: 0; }
-  .q-tier.rec { border: calc(0.6 * var(--mm)) solid var(--q-accent); background: var(--q-tint); }
+  /* Each tier gets a header band that deepens from pale to harbor blue, so the steps read at a glance. */
+  .q-tiers { display: grid; grid-template-rows: auto 1fr; column-gap: calc(6 * var(--mm)); }
+  .q-tier { position: relative; display: grid; grid-row: span 2; grid-template-rows: subgrid; border: calc(0.3 * var(--mm)) solid #c8c8c8; border-radius: calc(2.5 * var(--mm)); min-width: 0; background: #fff; }
+  .q-tier.rec { border: calc(0.8 * var(--mm)) solid var(--q-accent); }
+  .q-band { background: var(--band); color: var(--band-ink); padding: calc(5 * var(--mm)); border-radius: calc(2.2 * var(--mm)) calc(2.2 * var(--mm)) 0 0; }
+  .q-band .q-eyebrow { color: var(--band-eye); }
+  .q-band .q-tsub { color: var(--band-sub); }
+  .q-body { padding: 0 calc(5 * var(--mm)) calc(5 * var(--mm)); display: flex; flex-direction: column; }
   .q-badge { position: absolute; top: calc(-2.2 * var(--mm)); right: calc(5 * var(--mm)); background: var(--q-accent); color: #fff; font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.08em; padding: calc(0.8 * var(--mm)) calc(2 * var(--mm)); border-radius: 99px; }
   .q-eyebrow { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.08em; color: var(--q-accent); text-transform: uppercase; }
   .qsheet .q-tname { font-weight: 700; font-size: calc(12 * var(--pt)); margin-top: calc(1 * var(--mm)); }
   .q-tsub { color: var(--paper-muted); font-size: calc(9 * var(--pt)); }
   .qsheet .q-dl { font-size: calc(7.5 * var(--pt)); font-weight: 700; letter-spacing: 0.06em; margin: calc(5 * var(--mm)) 0 calc(1.5 * var(--mm)); }
+  .q-badge.on-dark { background: #fff; color: var(--q-accent); }
   .q-tier ul { margin: 0; padding-left: calc(5 * var(--mm)); font-size: calc(9 * var(--pt)); line-height: 1.45; }
   .qsheet .q-total { margin-top: auto; padding-top: calc(7 * var(--mm)); font-size: calc(12 * var(--pt)); font-weight: 700; }
   .q-total span { color: var(--q-accent); }
@@ -1890,19 +1896,35 @@
       ${tiers.length ? `<p class="q-h">TIERS</p>
       <div class="q-tiers" style="grid-template-columns: repeat(${tiers.length}, minmax(0, 1fr))">
         ${tiers.map((t, i) => `
-          <div class="q-tier ${t.recommended ? 'rec' : ''}">
-            ${t.recommended ? '<span class="q-badge">RECOMMENDED</span>' : ''}
-            <p class="q-eyebrow">Tier ${TIER_WORDS[i] || i + 1}</p>
-            <p class="q-tname">${esc(t.name)}</p>
-            ${t.subtitle ? `<p class="q-tsub">${esc(t.subtitle)}</p>` : ''}
-            ${lines(t.deliverables).length ? `<p class="q-dl">DELIVERABLES</p><ul>${lines(t.deliverables).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
-            <p class="q-total">TOTAL: <span>${moneyWhole(num(t.total))}</span></p>
-            ${t.note ? `<p class="q-note">${esc(t.note)}</p>` : ''}
+          <div class="q-tier ${t.recommended ? 'rec' : ''}" style="${(({ bg, ink, sub, eye }) => `--band:${rgb(bg)};--band-ink:${rgb(ink)};--band-sub:${rgb(sub)};--band-eye:${rgb(eye)}`)(tierShade(i, tiers.length))}">
+            ${t.recommended ? `<span class="q-badge${tierShade(i, tiers.length).dark ? ' on-dark' : ''}">RECOMMENDED</span>` : ''}
+            <div class="q-band">
+              <p class="q-eyebrow">Tier ${TIER_WORDS[i] || i + 1}</p>
+              <p class="q-tname">${esc(t.name)}</p>
+              ${t.subtitle ? `<p class="q-tsub">${esc(t.subtitle)}</p>` : ''}
+            </div>
+            <div class="q-body">
+              ${lines(t.deliverables).length ? `<p class="q-dl">DELIVERABLES</p><ul>${lines(t.deliverables).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+              <p class="q-total">TOTAL: <span>${moneyWhole(num(t.total))}</span></p>
+              ${t.note ? `<p class="q-note">${esc(t.note)}</p>` : ''}
+            </div>
           </div>`).join('')}
       </div>` : ''}
       ${q.terms ? `<p class="q-h" style="font-size:calc(11.5 * var(--pt))">TERMS</p><p class="q-terms">${esc(q.terms)}</p>` : ''}
       ${q.website ? `<p class="q-foot">${esc(q.website)}</p>` : ''}`;
   }
+
+  // Band colors for tier i of n: pale tint for the first, deep harbor blue for the last.
+  function tierShade(i, n) {
+    // Three stops (pale, clear mid blue, deep harbor blue), blended for two or four tiers.
+    const stops = [[226, 236, 243], [140, 178, 203], [31, 78, 107]];
+    const t = (n > 1 ? i / (n - 1) : 0) * (stops.length - 1);
+    const k = Math.min(stops.length - 2, Math.floor(t)), f = t - k;
+    const bg = stops[k].map((c, j) => Math.round(c + (stops[k + 1][j] - c) * f));
+    const dark = t > 1.5;
+    return { bg, dark, ink: dark ? [255, 255, 255] : [17, 17, 17], sub: dark ? [214, 228, 237] : [38, 52, 64], eye: dark ? [214, 228, 237] : [24, 62, 86] };
+  }
+  const rgb = (c) => `rgb(${c.join(',')})`;
 
   // ---------- quotes: PDF ----------
   async function buildQuotePDF(q) {
@@ -2006,33 +2028,38 @@
         const bullets = lines(t.deliverables).map((l) => doc.splitTextToSize(l, inner - 3.5));
         doc.setFontSize(8.5);
         const note = t.note ? doc.splitTextToSize(t.note, inner) : [];
-        let h = pad + 4 + 2 + name.length * lh(12, 1.2) + sub.length * lh(9, 1.35);
-        if (bullets.length) h += 6 + 4 + bullets.reduce((sum, b) => sum + b.length * lh(9, 1.4), 0);
-        return { t, name, sub, bullets, note, bodyH: h };
+        const headH = pad + 2.6 + 2 + name.length * lh(12, 1.2) + sub.length * lh(9, 1.35) + pad - 1;
+        const bodyH = bullets.length ? 5 + 4 + bullets.reduce((sum, b) => sum + b.length * lh(9, 1.4), 0) : 0;
+        return { t, name, sub, bullets, note, headH, bodyH };
       });
       const maxNote = Math.max(0, ...layouts.map((l) => l.note.length));
-      const cardH = Math.max(...layouts.map((l) => l.bodyH)) + 10 + lh(12, 1.2) + maxNote * lh(8.5, 1.35) + pad;
+      const bandH = Math.max(...layouts.map((l) => l.headH));
+      const cardH = bandH + Math.max(...layouts.map((l) => l.bodyH)) + 10 + lh(12, 1.2) + maxNote * lh(8.5, 1.35) + pad;
       layouts.forEach((L, i) => {
-        const cx = M + i * (cw + tg);
+        const cx = M + i * (cw + tg), shade = tierShade(i, layouts.length), r = 2.5;
+        // White card, then a header band with rounded top corners and a square bottom edge
+        doc.setFillColor(255, 255, 255); doc.roundedRect(cx, y, cw, cardH, r, r, 'F');
+        doc.setFillColor(...shade.bg); doc.roundedRect(cx, y, cw, bandH + r, r, r, 'F');
+        doc.setFillColor(255, 255, 255); doc.rect(cx, y + bandH, cw, r + 0.2, 'F');
+        if (L.t.recommended) { doc.setDrawColor(...ACC); doc.setLineWidth(0.8); }
+        else { doc.setDrawColor(200); doc.setLineWidth(0.3); }
+        doc.roundedRect(cx, y, cw, cardH, r, r, 'S');
         if (L.t.recommended) {
-          doc.setFillColor(237, 243, 247); doc.setDrawColor(...ACC); doc.setLineWidth(0.6);
-          doc.roundedRect(cx, y, cw, cardH, 2.5, 2.5, 'FD');
           // Badge sits on the card's top edge so it never collides with the tier label.
           font(6.5, 'bold', [255, 255, 255]);
           const bw = doc.getTextWidth('RECOMMENDED') + 4;
-          doc.setFillColor(...ACC); doc.roundedRect(cx + cw - pad - bw, y - 2.2, bw, 4.4, 2.2, 2.2, 'F');
+          doc.setFillColor(...(shade.dark ? [255, 255, 255] : ACC)); doc.roundedRect(cx + cw - pad - bw, y - 2.2, bw, 4.4, 2.2, 2.2, 'F');
+          if (shade.dark) doc.setTextColor(...ACC);
           doc.text('RECOMMENDED', cx + cw - pad - bw / 2, y + 0.9, { align: 'center' });
-        } else {
-          doc.setDrawColor(51); doc.setLineWidth(0.3);
-          doc.roundedRect(cx, y, cw, cardH, 2.5, 2.5, 'S');
         }
         let yy = y + pad + 2.6;
-        font(7.5, 'bold', ACC); doc.text(`TIER ${(TIER_WORDS[i] || String(i + 1)).toUpperCase()}`, cx + pad, yy);
+        font(7.5, 'bold', shade.eye); doc.text(`TIER ${(TIER_WORDS[i] || String(i + 1)).toUpperCase()}`, cx + pad, yy);
         yy += 2;
-        font(12, 'bold'); L.name.forEach((ln) => { yy += lh(12, 1.2); doc.text(ln, cx + pad, yy - 1); });
-        font(9, 'normal', GREY); L.sub.forEach((ln) => { yy += lh(9, 1.35); doc.text(ln, cx + pad, yy - 0.8); });
+        font(12, 'bold', shade.ink); L.name.forEach((ln) => { yy += lh(12, 1.2); doc.text(ln, cx + pad, yy - 1); });
+        font(9, 'normal', shade.sub); L.sub.forEach((ln) => { yy += lh(9, 1.35); doc.text(ln, cx + pad, yy - 0.8); });
+        yy = y + bandH;
         if (L.bullets.length) {
-          yy += 6; font(7.5, 'bold'); doc.text('DELIVERABLES', cx + pad, yy); yy += 1.5;
+          yy += 5; font(7.5, 'bold'); doc.text('DELIVERABLES', cx + pad, yy); yy += 1.5;
           font(9, 'normal');
           L.bullets.forEach((b) => b.forEach((ln, j) => { yy += lh(9, 1.4); if (!j) doc.text('•', cx + pad, yy - 1); doc.text(ln, cx + pad + 3.5, yy - 1); }));
         }
