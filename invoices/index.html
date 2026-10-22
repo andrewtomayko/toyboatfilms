@@ -655,6 +655,7 @@
   }
 
   function netlifyStore() {
+    const filedThisVisit = {};
     return {
       shared: true,
       async start() {
@@ -684,13 +685,18 @@
         await api('PUT', '?settings=1', s);
         settings = { ...settings, ...s };
       },
-      // Earlier versions of an invoice or estimate, newest first.
+      // Earlier versions of an invoice or estimate, newest first. Netlify's storage can take a
+      // minute to list a version that was just filed, so versions saved this visit are merged in.
       async listVersions(id) {
         const data = await api('GET', '?versions=' + encodeURIComponent(id));
-        return (data.versions || []).sort((a, b) => rev(b) - rev(a));
+        const byRev = new Map((data.versions || []).map((v) => [rev(v), v]));
+        (filedThisVisit[id] || []).forEach((v) => { if (!byRev.has(rev(v))) byRev.set(rev(v), v); });
+        return [...byRev.values()].sort((a, b) => rev(b) - rev(a));
       },
       async saveVersion(id, body) {
-        await api('PUT', `?id=${encodeURIComponent(id)}&rev=${rev(body)}`, JSON.parse(JSON.stringify(body)));
+        const clean = JSON.parse(JSON.stringify(body));
+        await api('PUT', `?id=${encodeURIComponent(id)}&rev=${rev(clean)}`, clean);
+        filedThisVisit[id] = (filedThisVisit[id] || []).concat([clean]);
       },
       async saveQuote(q) {
         const { id, ...body } = q;
