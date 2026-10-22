@@ -275,6 +275,7 @@
   .proof-show { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
   .proof-show select { width: auto; padding: 5px 9px; font-size: 13px; }
   .proof-show[hidden] { display: none; }
+  #sheetQuote { margin-bottom: 24px; }
   .proof-show { flex-wrap: wrap; }
   .proof-show .check { font-weight: 500; color: var(--muted); }
   /* Options on the paper proof */
@@ -501,7 +502,7 @@
           <label class="proof-show"><span class="sub">Show</span><select id="printOption" aria-label="Which option to show and print"></select></label>
           <label class="check" id="quoteFirstWrap" hidden><input type="checkbox" id="quoteFirst">Quote as first page of the PDF</label>
         </div>
-        <div class="proof"><div class="sheet" id="sheet"></div></div>
+        <div class="proof"><div class="qsheet" id="sheetQuote" hidden></div><div class="sheet" id="sheet"></div></div>
       </div>
     </div>
   </section>
@@ -547,6 +548,8 @@
         </fieldset>
         <fieldset>
           <legend>Tiers</legend>
+          <label class="field"><span>Heading above each tier's list</span><input id="q-listlabel" data-q="tierListLabel" placeholder="Deliverables" list="tierListLabels"></label>
+          <datalist id="tierListLabels"><option value="Deliverables"></option><option value="Includes"></option><option value="What you get"></option></datalist>
           <div class="items" id="qTiers"></div>
           <button class="add" type="button" id="qAddTier">Add tier</button>
         </fieldset>
@@ -1382,7 +1385,7 @@
     $('quoteFirst').checked = current.quoteFirst !== false;
     $('quoteFirstWrap').title = q ? `Puts quote ${q.quoteNumber || ''} (${q.title || 'untitled'}) in front of the estimate` : '';
   }
-  $('quoteFirst').addEventListener('change', () => { current.quoteFirst = $('quoteFirst').checked; markDirty(); });
+  $('quoteFirst').addEventListener('change', () => { current.quoteFirst = $('quoteFirst').checked; markDirty(); renderProof(); });
 
   $('optBar').addEventListener('click', (e) => {
     const tab = e.target.closest('[data-scope]');
@@ -1655,6 +1658,10 @@
 
   function renderProof() {
     if (hasOptions(current)) renderOptionTotals();
+    // The quote prints as page 1, so the preview shows it above the estimate.
+    const showQuote = isEstimate(current) && quoteGoesFirst(current);
+    $('sheetQuote').hidden = !showQuote;
+    $('sheetQuote').innerHTML = showQuote ? quoteSheetHTML(syncQuoteTotals(linkedQuote(current), current)) : '';
     const view = printView(current);
     if (view.all) return renderAllOptionsProof();
     const inv = view.inv, t = totals(inv), groups = groupItems(inv.lineItems);
@@ -2107,7 +2114,7 @@
           <label class="field"><span>Name</span><input id="t-${i}-name" data-t="${i}" data-tk="name" value="${esc(t.name)}" placeholder="One Day Shoot"></label>
           <label class="field"><span>Subtitle</span><input id="t-${i}-sub" data-t="${i}" data-tk="subtitle" value="${esc(t.subtitle)}"></label>
         </div>
-        <label class="field"><span>Deliverables (one per line)</span><textarea id="t-${i}-dl" data-t="${i}" data-tk="deliverables" rows="4">${esc(t.deliverables)}</textarea></label>
+        <label class="field"><span>List items (one per line)</span><textarea id="t-${i}-dl" data-t="${i}" data-tk="deliverables" rows="4">${esc(t.deliverables)}</textarea></label>
         <div class="grid2">
           <label class="field"><span>Total ($)</span><input type="number" step="1" min="0" id="t-${i}-total" data-t="${i}" data-tk="total" value="${esc(t.total)}"></label>
           <label class="field"><span>Note under total</span><input id="t-${i}-note" data-t="${i}" data-tk="note" value="${esc(t.note)}" placeholder="Optional"></label>
@@ -2179,12 +2186,14 @@
   }
   const wavePath = (w, h) => wavePoints(w, h).map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' ');
 
-  function renderQuoteSheet() {
-    const q = currentQuote;
+  function renderQuoteSheet() { $('qsheet').innerHTML = quoteSheetHTML(currentQuote); }
+
+  function quoteSheetHTML(q) {
     const logo = settings.logo ? `<img src="${esc(settings.logo)}" alt="">` : '';
     const meta = (label, value) => (value ? `<p><b>${label}</b> ${esc(value)}</p>` : '');
-    const tiers = q.tiers;
-    $('qsheet').innerHTML = `
+    const tiers = q.tiers || [];
+    const listHead = esc(String(q.tierListLabel || 'Deliverables').toUpperCase());
+    return `
       <div class="q-head">
         <div class="q-brand">${logo}<p class="q-word">${esc(wordmark(settings.companyName || 'Toy Boat Films'))}</p></div>
         <div><p class="q-kind">QUOTE</p><p class="q-title">${esc(q.title)}</p></div>
@@ -2196,7 +2205,7 @@
       </div>
       ${q.statement ? `<p class="q-h">STATEMENT OF WORK</p><p class="q-sow">${esc(q.statement)}</p>` : ''}
       <div class="q-phases">
-        ${q.phases.slice(0, 3).map((ph) => `<div><h4>${esc(ph.title)}</h4>${lines(ph.items).map((l) => `<p>${esc(l)}</p>`).join('')}</div>`).join('')}
+        ${(q.phases || []).slice(0, 3).map((ph) => `<div><h4>${esc(ph.title)}</h4>${lines(ph.items).map((l) => `<p>${esc(l)}</p>`).join('')}</div>`).join('')}
       </div>
       ${tiers.length ? `<p class="q-h">TIERS</p>
       <div class="q-tiers" style="grid-template-columns: repeat(${tiers.length}, minmax(0, 1fr))">
@@ -2209,7 +2218,7 @@
               ${t.subtitle ? `<p class="q-tsub">${esc(t.subtitle)}</p>` : ''}
             </div>
             <div class="q-body">
-              ${lines(t.deliverables).length ? `<p class="q-dl">DELIVERABLES</p><ul>${lines(t.deliverables).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+              ${lines(t.deliverables).length ? `<p class="q-dl">${listHead}</p><ul>${lines(t.deliverables).map((l) => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
               <p class="q-total">TOTAL: <span>${moneyWhole(num(t.total))}</span></p>
               ${t.note ? `<p class="q-note">${esc(t.note)}</p>` : ''}
             </div>
@@ -2364,7 +2373,7 @@
         font(9, 'normal', shade.sub); L.sub.forEach((ln) => { yy += lh(9, 1.35); doc.text(ln, cx + pad, yy - 0.8); });
         yy = y + bandH;
         if (L.bullets.length) {
-          yy += 5; font(7.5, 'bold'); doc.text('DELIVERABLES', cx + pad, yy); yy += 1.5;
+          yy += 5; font(7.5, 'bold'); doc.text(String(q.tierListLabel || 'Deliverables').toUpperCase(), cx + pad, yy); yy += 1.5;
           font(9, 'normal');
           L.bullets.forEach((b) => b.forEach((ln, j) => { yy += lh(9, 1.4); if (!j) doc.text('•', cx + pad, yy - 1); doc.text(ln, cx + pad + 3.5, yy - 1); }));
         }
