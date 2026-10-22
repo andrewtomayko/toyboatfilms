@@ -263,6 +263,31 @@
   .q-terms { white-space: pre-wrap; font-size: calc(9.5 * var(--pt)); line-height: 1.45; }
   .qsheet .q-foot { text-align: right; color: var(--q-accent); margin-top: calc(14 * var(--mm)); font-size: calc(9.5 * var(--pt)); }
 
+  /* Estimate options (tiers): tabs above the line items */
+  .opt-bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .opt-tab { border: 1px solid var(--line); background: var(--surface); padding: 7px 13px; border-radius: 999px; font-weight: 600; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .opt-tab:hover { color: var(--ink); border-color: var(--ink); }
+  .opt-tab[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .opt-tab .num { font-weight: 500; margin-left: 6px; opacity: 0.75; }
+  .opt-tab.opt-add { border-style: dashed; }
+  .opt-meta { border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px; }
+  .opt-meta-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .proof-show { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .proof-show select { width: auto; padding: 5px 9px; font-size: 13px; }
+  .proof-show[hidden] { display: none; }
+  /* Options on the paper proof */
+  .p-options { margin-top: calc(7 * var(--mm)); }
+  .p-opt-row { display: grid; grid-template-columns: minmax(0, 1fr) calc(30 * var(--mm)) calc(30 * var(--mm)); gap: calc(4 * var(--mm)); padding-block: calc(2.4 * var(--mm)); border-bottom: calc(0.15 * var(--mm)) solid #e1e1e1; align-items: baseline; }
+  .p-opt-row.head { border-bottom: calc(0.4 * var(--mm)) solid #111; padding-block: 0 calc(1.5 * var(--mm)); }
+  .p-opt-row.head .p-caps { margin: 0; }
+  .p-opt-row .r { text-align: right; font-weight: 700; white-space: nowrap; }
+  .p-opt-name { font-size: calc(9.5 * var(--pt)); font-weight: 700; }
+  .p-opt-rec { font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.1em; color: #1f4e6b; margin-left: calc(2 * var(--mm)); }
+  .p-opt-sum { font-size: calc(8.5 * var(--pt)); color: var(--paper-muted); }
+  .p-section { font-size: calc(8 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: calc(9 * var(--mm)) !important; padding: calc(1.6 * var(--mm)) calc(2.5 * var(--mm)); background: #eef1f3; }
+  .p-option-line { font-size: calc(9 * var(--pt)); margin-top: calc(2 * var(--mm)) !important; }
+  .p-option-line b { font-weight: 700; }
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
@@ -423,6 +448,8 @@
 
         <fieldset>
           <legend>Line items</legend>
+          <div class="opt-bar" id="optBar" role="tablist" aria-label="Options"></div>
+          <div class="opt-meta" id="optMeta" hidden></div>
           <div class="items" id="items"></div>
           <div class="add-section">
             <input id="newCategory" list="categoryList" placeholder="Pick or type a category (Production, Crew, Travel…)" aria-label="New category">
@@ -468,6 +495,7 @@
 
       <div class="proof-col">
         <div class="proof-label">Proof · A4 width, grows with line items</div>
+        <label class="proof-show" id="proofShow" hidden><span class="sub">Show</span><select id="printOption" aria-label="Which option to show and print"></select></label>
         <div class="proof"><div class="sheet" id="sheet"></div></div>
       </div>
     </div>
@@ -571,8 +599,32 @@
     ? 'Flat rate'
     : `${money(num(it.rate))} × ${qtyText(num(it.hours))} ${unitLabel(it.unit, num(it.hours))}`;
 
+  // ---------- estimate options (tiers) ----------
+  // An estimate can offer several options. inv.lineItems are shared by every option; each option in
+  // inv.options adds its own line items. A single option "flattened" works like an ordinary estimate.
+  const optionsOf = (inv) => (Array.isArray(inv.options) ? inv.options : []);
+  const hasOptions = (inv) => optionsOf(inv).length > 0;
+  const withOption = (inv, o) => {
+    const { options, printOption, ...rest } = inv;
+    return { ...rest, lineItems: [...(inv.lineItems || []), ...((o && o.lineItems) || [])], optionName: o ? o.name : '', optionSummary: o ? o.summary : '' };
+  };
+  // The option a single total stands for: the one picked to print, else the recommended one, else the first.
+  const pickOption = (inv) => {
+    const os = optionsOf(inv);
+    return os.find((o) => o.id === inv.printOption) || os.find((o) => o.recommended) || os[0];
+  };
+  const optionTotal = (inv, o) => totals(withOption(inv, o)).total;
+  const optionRange = (inv) => {
+    const ts = optionsOf(inv).map((o) => optionTotal(inv, o));
+    const lo = Math.min(...ts), hi = Math.max(...ts);
+    return lo === hi ? money(lo) : `${money(lo)}–${money(hi)}`;
+  };
+  const totalLabel = (inv) => (hasOptions(inv) ? optionRange(inv) : money(totals(inv).total));
+  const newOptionId = () => 'opt-' + Math.random().toString(36).slice(2, 8);
+
   function totals(inv) {
-    const services = inv.lineItems.reduce((s, it) => s + lineAmount(it), 0);
+    if (hasOptions(inv)) return totals(withOption(inv, pickOption(inv)));
+    const services = (inv.lineItems || []).reduce((s, it) => s + lineAmount(it), 0);
     const fee = num(inv.productionFee);
     const subtotal = services + fee;
     const tax = subtotal * num(inv.taxRate) / 100;
@@ -847,6 +899,7 @@
     return [
       inv.invoiceNumber, inv.clientName, inv.clientEmail, inv.contactName, inv.jobName, inv.jobDescription, inv.privateNotes, kindOf(inv),
       ...(inv.lineItems || []).flatMap((it) => [it.category, it.description, it.notes]),
+      ...optionsOf(inv).flatMap((o) => [o.name, o.summary, ...(o.lineItems || []).flatMap((it) => [it.category, it.description, it.notes])]),
       ...(inv.payments || []).map((pm) => pm.note),
     ].filter(Boolean).join(' ').toLowerCase();
   }
@@ -928,7 +981,7 @@
         <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
         <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
         <td><b>${esc(inv.jobName)}</b><div class="sub">${esc(inv.clientName)}</div></td>
-        <td class="right num">${money(totals(inv).total)}${listBalance(inv)}</td>
+        <td class="right num">${hasOptions(inv) ? `${optionRange(inv)}<div class="sub">${countLabel(optionsOf(inv).length, 'option')}</div>` : money(totals(inv).total)}${listBalance(inv)}</td>
         <td><div class="row-actions">
           <button class="btn small" type="button" data-edit="${esc(inv.id)}">Open</button>
           ${isEstimate(inv) ? `<button class="btn small" type="button" data-quote="${esc(inv.id)}">Make quote</button>
@@ -997,9 +1050,28 @@
     }
     const mq = e.target.closest('[data-quote]');
     if (mq) return openQuote(quoteFromEstimate(invoices.find((i) => i.id === mq.dataset.quote)), true);
+    // An estimate with options asks which option the client picked before making the invoice.
+    const convertOpt = e.target.closest('[data-convert-opt]');
+    if (convertOpt) {
+      const src = invoices.find((i) => i.id === convertOpt.dataset.convertOpt);
+      const o = optionsOf(src).find((x) => x.id === convertOpt.dataset.opt);
+      if (!src || !o) return;
+      renderList(); // put the row's usual buttons back
+      const flat = withOption(src, o);
+      delete flat.optionName; delete flat.optionSummary;
+      return duplicateInvoice({ ...flat, jobName: [src.jobName, o.name].filter(Boolean).join(' · ') },
+        { docType: 'invoice', payments: src.payments || [], advancePercent: 0, rev: 1 }, `New invoice (from estimate ${src.invoiceNumber}, ${o.name})`);
+    }
     const convert = e.target.closest('[data-convert]');
     if (convert) {
       const src = invoices.find((i) => i.id === convert.dataset.convert);
+      if (src && hasOptions(src)) {
+        const cell = convert.closest('.row-actions');
+        cell.innerHTML = `<span class="sub">Invoice which option?</span>` + optionsOf(src).map((o) =>
+          `<button class="btn small" type="button" data-convert-opt="${esc(src.id)}" data-opt="${esc(o.id)}">${esc(o.name || 'Option')}</button>`).join('') +
+          `<button class="btn small ghost" type="button" data-cancel-convert>Cancel</button>`;
+        return;
+      }
       return duplicateInvoice(src, { docType: 'invoice', payments: src?.payments || [], advancePercent: 0 }, `New invoice (from estimate ${src?.invoiceNumber})`);
     }
     const pdf = e.target.closest('[data-pdf]');
@@ -1012,6 +1084,7 @@
       finally { pdf.disabled = false; }
       return;
     }
+    if (e.target.closest('[data-cancel-convert]')) return renderList();
     const copy = e.target.closest('[data-copy]');
     if (copy) return duplicateInvoice(invoices.find((i) => i.id === copy.dataset.copy));
     const edit = e.target.closest('[data-edit]');
@@ -1098,7 +1171,8 @@
     $(isEstimate(current) ? 'typeEstimate' : 'typeInvoice').checked = true;
     setTitle(isNew);
     setStatus(isNew ? 'Not saved yet' : '');
-    renderClientLists(); renderItems(); renderPayments(); renderLogo(); renderProof();
+    editScope = 'shared';
+    renderClientLists(); renderOptions(); renderItems(); renderPayments(); renderLogo(); renderProof();
     renderVersions();
     $('listView').hidden = true; $('quoteView').hidden = true; $('editorView').hidden = false;
     window.scrollTo(0, 0);
@@ -1115,6 +1189,7 @@
 
   document.querySelectorAll('input[name="docType"]').forEach((r) => r.addEventListener('change', () => {
     current.docType = r.value;
+    renderOptions();
     renderPaidRow();
     setTitle(dirty && !invoices.some((i) => i.id === current.id));
     markDirty(); renderProof();
@@ -1161,7 +1236,7 @@
     try { versionCache = await store.listVersions(id); } catch { versionCache = []; }
     if (!current || current.id !== id) return;
     sel.innerHTML = head + versionCache.map((v) =>
-      `<option value="${rev(v)}">Open v${rev(v)} · ${esc(fmtShort((v.archivedAt || '').slice(0, 10)))} · ${money(totals(v).total)}</option>`).join('');
+      `<option value="${rev(v)}">Open v${rev(v)} · ${esc(fmtShort((v.archivedAt || '').slice(0, 10)))} · ${totalLabel(v)}</option>`).join('');
     sel.value = viewing ? String(viewing) : '';
   }
 
@@ -1243,13 +1318,105 @@
     } else if (el.dataset.pk) {
       current.payments[+el.dataset.p][el.dataset.pk] = el.dataset.pk === 'amount' ? num(el.value) : el.value;
     } else if (el.dataset.k != null) {
-      const it = current.lineItems[+el.dataset.i];
+      const it = editItems()[+el.dataset.i];
       it[el.dataset.k] = (el.dataset.k === 'rate' || el.dataset.k === 'hours') ? num(el.value) : el.value;
       const tot = el.closest('.item')?.querySelector('.item-total b');
       if (tot) tot.textContent = money(lineAmount(it));
       const catTot = el.closest('.cat')?.querySelector('.cat-total');
       if (catTot) catTot.textContent = money(categoryTotal(it.category));
     } else return;
+    if (el.dataset.k != null && hasOptions(current)) renderOptionTotals();
+    markDirty(); renderProof();
+  });
+  function renderOptionTotals() {
+    $('optBar').querySelectorAll('[data-scope] .num').forEach((n) => {
+      const x = optionsOf(current).find((y) => y.id === n.parentElement.dataset.scope);
+      if (x) n.textContent = money(optionTotal(current, x));
+    });
+  }
+
+  // The editor works on the shared line items or on one option's, chosen with the option tabs.
+  let editScope = 'shared';
+  const scopedOption = () => (editScope === 'shared' ? null : optionsOf(current).find((o) => o.id === editScope) || null);
+  const editItems = () => { const o = scopedOption(); return o ? (o.lineItems = o.lineItems || []) : current.lineItems; };
+  const setEditItems = (list) => { const o = scopedOption(); if (o) o.lineItems = list; else current.lineItems = list; };
+
+  function renderOptions() {
+    const est = isEstimate(current), os = optionsOf(current);
+    if (!os.some((o) => o.id === editScope)) editScope = 'shared';
+    $('optBar').hidden = !est;
+    $('optBar').innerHTML = !est ? '' : os.length
+      ? `<button class="opt-tab" type="button" role="tab" data-scope="shared" aria-selected="${editScope === 'shared'}">Shared by all</button>` +
+        os.map((o) => `<button class="opt-tab" type="button" role="tab" data-scope="${esc(o.id)}" aria-selected="${editScope === o.id}">${esc(o.name || 'Option')}${o.recommended ? ' ★' : ''}<span class="num">${money(optionTotal(current, o))}</span></button>`).join('') +
+        `<button class="opt-tab opt-add" type="button" data-addopt>+ Add option</button>`
+      : `<button class="opt-tab opt-add" type="button" data-addopt>+ Offer options (tiers)</button><span class="sub">Build two or more versions of this job, each with its own scope and price.</span>`;
+    const o = scopedOption();
+    $('optMeta').hidden = !est || !os.length;
+    $('optMeta').innerHTML = !o
+      ? `<p class="sub" style="margin:0">Line items here are part of every option. Pick an option above to add what's different about it.</p>`
+      : `<div class="grid2">
+          <label class="field"><span>Option name</span><input id="opt-name" data-o="name" value="${esc(o.name)}" placeholder="Studio"></label>
+          <label class="field"><span>One-line summary</span><input id="opt-summary" data-o="summary" value="${esc(o.summary)}" placeholder="3 cameras, podcast mics, light kit"></label>
+        </div>
+        <div class="opt-meta-actions">
+          <label class="check"><input type="checkbox" id="opt-rec" data-o="recommended" ${o.recommended ? 'checked' : ''}>Recommended</label>
+          <span class="list-actions">
+            <button class="btn small" type="button" data-dupopt>Duplicate option</button>
+            <button class="btn small ghost danger" type="button" data-rmopt>Remove option</button>
+          </span>
+        </div>`;
+    // Proof "Show" picker: all options, or one of them
+    $('proofShow').hidden = !est || !os.length;
+    $('printOption').innerHTML = `<option value="">All options</option>` + os.map((x) => `<option value="${esc(x.id)}">${esc(x.name || 'Option')}</option>`).join('');
+    $('printOption').value = os.some((x) => x.id === current.printOption) ? current.printOption : '';
+  }
+
+  $('optBar').addEventListener('click', (e) => {
+    const tab = e.target.closest('[data-scope]');
+    if (tab) { editScope = tab.dataset.scope; renderOptions(); renderItems(); return; }
+    if (!e.target.closest('[data-addopt]')) return;
+    current.options = optionsOf(current);
+    const o = { id: newOptionId(), name: `Option ${current.options.length + 1}`, summary: '', recommended: false, lineItems: [] };
+    current.options.push(o);
+    editScope = o.id;
+    renderOptions(); renderItems(); markDirty(); renderProof();
+    $('opt-name')?.select();
+  });
+  $('optMeta').addEventListener('input', (e) => {
+    const o = scopedOption(), k = e.target.dataset.o;
+    if (!o || !k) return;
+    if (k === 'recommended') { optionsOf(current).forEach((x) => { x.recommended = false; }); o.recommended = e.target.checked; }
+    else o[k] = e.target.value;
+    // Keep focus in the field: refresh the tab labels without rebuilding the inputs.
+    $('optBar').querySelectorAll('[data-scope]').forEach((b) => {
+      const x = optionsOf(current).find((y) => y.id === b.dataset.scope);
+      if (x) b.innerHTML = `${esc(x.name || 'Option')}${x.recommended ? ' ★' : ''}<span class="num">${money(optionTotal(current, x))}</span>`;
+    });
+    $('printOption').querySelectorAll('option').forEach((op) => { const x = optionsOf(current).find((y) => y.id === op.value); if (x) op.textContent = x.name || 'Option'; });
+    markDirty(); renderProof();
+  });
+  $('optMeta').addEventListener('click', (e) => {
+    const o = scopedOption();
+    if (!o) return;
+    if (e.target.closest('[data-dupopt]')) {
+      const copy = { ...JSON.parse(JSON.stringify(o)), id: newOptionId(), name: `${o.name || 'Option'} copy`, recommended: false };
+      current.options.splice(current.options.indexOf(o) + 1, 0, copy);
+      editScope = copy.id;
+    } else if (e.target.closest('[data-rmopt]')) {
+      const btn = e.target.closest('[data-rmopt]');
+      if (!btn.classList.contains('armed')) {
+        btn.classList.add('armed'); btn.textContent = 'Remove it and its lines?';
+        setTimeout(() => { if (btn.isConnected) { btn.classList.remove('armed'); btn.textContent = 'Remove option'; } }, 4000);
+        return;
+      }
+      current.options = optionsOf(current).filter((x) => x !== o);
+      if (current.printOption === o.id) current.printOption = '';
+      editScope = 'shared';
+    } else return;
+    renderOptions(); renderItems(); markDirty(); renderProof();
+  });
+  $('printOption').addEventListener('change', () => {
+    current.printOption = $('printOption').value;
     markDirty(); renderProof();
   });
 
@@ -1264,7 +1431,7 @@
     });
     return groups;
   }
-  const categoryTotal = (name) => current.lineItems.filter((it) => (it.category || '') === name).reduce((s, it) => s + lineAmount(it), 0);
+  const categoryTotal = (name) => editItems().filter((it) => (it.category || '') === name).reduce((s, it) => s + lineAmount(it), 0);
 
   // Every category used on any saved invoice, plus a few common ones.
   function rememberedCategories() {
@@ -1275,9 +1442,9 @@
   }
 
   function renderItems() {
-    const used = new Set(current.lineItems.map((it) => (it.category || '').toLowerCase()));
+    const used = new Set(editItems().map((it) => (it.category || '').toLowerCase()));
     $('categoryList').innerHTML = rememberedCategories().filter((c) => !used.has(c.toLowerCase())).map((c) => `<option value="${esc(c)}"></option>`).join('');
-    $('items').innerHTML = groupItems(current.lineItems).map((g, gi) => `
+    $('items').innerHTML = groupItems(editItems()).map((g, gi) => `
       <section class="cat">
         <div class="cat-head">
           <input class="cat-name" id="cat-${gi}" list="categoryList" data-cat="${esc(g.category)}" value="${esc(g.category)}" placeholder="Category" aria-label="Category name">
@@ -1312,12 +1479,12 @@
   // Add a line at the end of a category, copying the rate and unit of the line above it.
   function addToCategory(name) {
     let at = -1;
-    current.lineItems.forEach((it, i) => { if ((it.category || '') === name) at = i; });
-    const prev = current.lineItems[at];
+    editItems().forEach((it, i) => { if ((it.category || '') === name) at = i; });
+    const prev = editItems()[at];
     const item = { category: name, description: '', rate: prev ? prev.rate : 100, hours: 1, unit: prev ? prev.unit : 'hour', notes: '' };
-    const idx = at >= 0 ? at + 1 : current.lineItems.length;
-    current.lineItems.splice(idx, 0, item);
-    renderItems(); markDirty(); renderProof();
+    const idx = at >= 0 ? at + 1 : editItems().length;
+    editItems().splice(idx, 0, item);
+    renderItems(); renderOptionTotals(); markDirty(); renderProof();
     $(`li-${idx}-desc`)?.focus();
   }
 
@@ -1326,18 +1493,18 @@
     const rm = e.target.closest('[data-rm]');
     const addto = e.target.closest('[data-addto]');
     const rmcat = e.target.closest('[data-rmcat]');
-    if (addto) return addToCategory(groupItems(current.lineItems)[+addto.dataset.addto].category);
+    if (addto) return addToCategory(groupItems(editItems())[+addto.dataset.addto].category);
     if (rmcat) {
       if (!rmcat.classList.contains('armed')) {
         rmcat.classList.add('armed'); rmcat.textContent = 'Remove all its lines?';
         setTimeout(() => { if (rmcat.isConnected) { rmcat.classList.remove('armed'); rmcat.textContent = 'Remove category'; } }, 4000);
         return;
       }
-      const name = groupItems(current.lineItems)[+rmcat.dataset.rmcat].category;
-      current.lineItems = current.lineItems.filter((it) => (it.category || '') !== name);
+      const name = groupItems(editItems())[+rmcat.dataset.rmcat].category;
+      setEditItems(editItems().filter((it) => (it.category || '') !== name));
     }
-    else if (dup) { const i = +dup.dataset.dup; current.lineItems.splice(i + 1, 0, { ...current.lineItems[i] }); }
-    else if (rm) { current.lineItems.splice(+rm.dataset.rm, 1); }
+    else if (dup) { const i = +dup.dataset.dup; editItems().splice(i + 1, 0, { ...editItems()[i] }); }
+    else if (rm) { editItems().splice(+rm.dataset.rm, 1); }
     else return;
     renderItems(); markDirty(); renderProof();
   });
@@ -1348,17 +1515,17 @@
     if (!el) return;
     const from = el.dataset.cat, to = el.value.trim();
     if (!to || to === from) { el.value = from; return; }
-    const match = current.lineItems.find((it) => (it.category || '').toLowerCase() === to.toLowerCase() && (it.category || '') !== from);
-    current.lineItems.forEach((it) => { if ((it.category || '') === from) it.category = match ? match.category : to; });
+    const match = editItems().find((it) => (it.category || '').toLowerCase() === to.toLowerCase() && (it.category || '') !== from);
+    editItems().forEach((it) => { if ((it.category || '') === from) it.category = match ? match.category : to; });
     // Keep merged lines together: stable sort by each category's first position.
-    const order = groupItems(current.lineItems).map((g) => g.category);
-    current.lineItems.sort((a, b) => order.indexOf(a.category || '') - order.indexOf(b.category || ''));
+    const order = groupItems(editItems()).map((g) => g.category);
+    editItems().sort((a, b) => order.indexOf(a.category || '') - order.indexOf(b.category || ''));
     renderItems(); markDirty(); renderProof();
   });
 
   $('addSection').addEventListener('click', () => {
     const typed = $('newCategory').value.trim() || 'Post-Production';
-    const existing = current.lineItems.find((it) => (it.category || '').toLowerCase() === typed.toLowerCase());
+    const existing = editItems().find((it) => (it.category || '').toLowerCase() === typed.toLowerCase());
     $('newCategory').value = '';
     addToCategory(existing ? existing.category : typed);
   });
@@ -1391,13 +1558,35 @@
   });
 
   // ---------- proof ----------
-  function renderProof() {
-    const inv = current, t = totals(inv), groups = groupItems(inv.lineItems);
-    $('advanceAmt').innerHTML = t.advancePct ? `Advance due: <b>${money(t.advance)}</b> of ${money(t.total)}` : 'Leave at 0 for no advance line.';
+  // Line items as they appear on the paper, grouped by category.
+  function proofItemsHTML(list, catTotals) {
+    const groups = groupItems(list);
+    return groups.map((g) => `
+          <div class="p-cat">
+            ${g.category ? `<p class="p-cat-name">${esc(g.category)}</p>` : ''}
+            ${g.items.map(({ it }) => `
+              <div class="p-item">
+                <div class="d">
+                  <p class="t">${esc(it.description || rateLine(it))}</p>
+                  ${it.description ? `<p class="rate">${esc(rateLine(it))}</p>` : ''}
+                  ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
+                </div>
+                <div class="amt">${money(lineAmount(it))}</div>
+              </div>`).join('')}
+            ${catTotals && groups.length > 1 ? `<div class="p-cat-total"><span>${esc(g.category || 'Other')} total</span><span>${money(g.items.reduce((s, { it }) => s + lineAmount(it), 0))}</span></div>` : ''}
+          </div>`).join('');
+  }
+
+  // What the proof and PDF show: the whole estimate, one option of it, or every option side by side.
+  function printView(inv) {
+    if (!hasOptions(inv)) return { inv, all: false };
+    const o = optionsOf(inv).find((x) => x.id === inv.printOption);
+    return o ? { inv: withOption(inv, o), all: false } : { inv, all: true };
+  }
+
+  function proofHeadHTML(inv) {
     const logo = settings.logo ? `<img class="p-logo" src="${esc(settings.logo)}" alt="">` : '';
-    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
-    const row = (label, value, cls = 'row') => `<div class="${cls}"><span>${label}</span><span>${value}</span></div>`;
-    $('sheet').innerHTML = `
+    return `
       ${logo}
       <div class="p-head">
         <div>
@@ -1423,23 +1612,45 @@
         <p class="p-caps">Project</p>
         ${inv.jobName ? `<p class="p-project">${esc(inv.jobName)}</p>` : ''}
         ${inv.jobDescription ? `<p class="p-desc">${esc(inv.jobDescription)}</p>` : ''}
-      </div>` : ''}
+        ${inv.optionName ? `<p class="p-option-line"><b>Option: ${esc(inv.optionName)}</b>${inv.optionSummary ? ' · ' + esc(inv.optionSummary) : ''}</p>` : ''}
+      </div>` : ''}`;
+  }
+
+  // Every option side by side: a comparison table, the shared items, then each option's own items.
+  function renderAllOptionsProof() {
+    const inv = current, os = optionsOf(inv), adv = Math.min(100, Math.max(0, num(inv.advancePercent)));
+    $('advanceAmt').innerHTML = adv ? `Advance due: <b>${adv}%</b> of the option chosen` : 'Leave at 0 for no advance line.';
+    $('sheet').innerHTML = proofHeadHTML(inv) + `
+      <div class="p-options">
+        <div class="p-opt-row head"><p class="p-caps">Options</p><p class="p-caps" style="text-align:right">Estimated total</p><p class="p-caps" style="text-align:right">${adv ? `Advance (${adv}%)` : ''}</p></div>
+        ${os.map((o) => { const tt = optionTotal(inv, o); return `
+          <div class="p-opt-row">
+            <div><p><span class="p-opt-name">${esc(o.name || 'Option')}</span>${o.recommended ? '<span class="p-opt-rec">RECOMMENDED</span>' : ''}</p>${o.summary ? `<p class="p-opt-sum">${esc(o.summary)}</p>` : ''}</div>
+            <p class="r">${money(tt)}</p>
+            <p class="r">${adv ? money(tt * adv / 100) : ''}</p>
+          </div>`; }).join('')}
+      </div>
+      ${(inv.lineItems || []).length ? `<p class="p-section">Included in every option</p>
+      <div class="p-items" style="margin-top:0">${proofItemsHTML(inv.lineItems, false)}</div>` : ''}
+      ${os.map((o) => `<p class="p-section">${esc(o.name || 'Option')}${o.summary ? ' · ' + esc(o.summary) : ''}</p>
+      <div class="p-items" style="margin-top:0">${proofItemsHTML(o.lineItems || [], false)}
+        <div class="p-cat-total"><span>${esc(o.name || 'Option')} estimated total, with shared items</span><span>${money(optionTotal(inv, o))}</span></div>
+      </div>`).join('')}
+      ${inv.terms ? `<div class="p-terms"><p class="p-caps">Terms</p><p class="v">${esc(inv.terms)}</p></div>` : ''}`;
+  }
+
+  function renderProof() {
+    if (hasOptions(current)) renderOptionTotals();
+    const view = printView(current);
+    if (view.all) return renderAllOptionsProof();
+    const inv = view.inv, t = totals(inv), groups = groupItems(inv.lineItems);
+    $('advanceAmt').innerHTML = t.advancePct ? `Advance due: <b>${money(t.advance)}</b> of ${money(t.total)}` : 'Leave at 0 for no advance line.';
+    const paidInFull = Boolean(inv.paid) && !isEstimate(inv);
+    const row = (label, value, cls = 'row') => `<div class="${cls}"><span>${label}</span><span>${value}</span></div>`;
+    $('sheet').innerHTML = proofHeadHTML(inv) + `
       <div class="p-items">
         <div class="p-items-head"><p class="p-caps">Description</p><p class="p-caps">Amount</p></div>
-        ${groups.map((g) => `
-          <div class="p-cat">
-            ${g.category ? `<p class="p-cat-name">${esc(g.category)}</p>` : ''}
-            ${g.items.map(({ it }) => `
-              <div class="p-item">
-                <div class="d">
-                  <p class="t">${esc(it.description || rateLine(it))}</p>
-                  ${it.description ? `<p class="rate">${esc(rateLine(it))}</p>` : ''}
-                  ${it.notes ? `<p class="notes">${esc(it.notes)}</p>` : ''}
-                </div>
-                <div class="amt">${money(lineAmount(it))}</div>
-              </div>`).join('')}
-            ${groups.length > 1 ? `<div class="p-cat-total"><span>${esc(g.category || 'Other')} total</span><span>${money(g.items.reduce((s, { it }) => s + lineAmount(it), 0))}</span></div>` : ''}
-          </div>`).join('')}
+        ${proofItemsHTML(inv.lineItems, true)}
       </div>
       <div class="p-totals">
         ${t.fee ? row('Services', money(t.services)) + row(esc(feeLabel(inv)), money(t.fee)) : ''}
@@ -1491,7 +1702,8 @@
 
   // One continuous page, A4 wide, as tall as the invoice needs (never shorter than A4).
   // Lay out once on a scratch page to measure, then draw for real at that height.
-  async function buildPDF(inv) {
+  async function buildPDF(source) {
+    const inv = printView(source).inv;
     const { jsPDF } = window.jspdf;
     const W = 210, A4_H = 297, M = 18;
     const scratch = new jsPDF({ unit: 'mm', format: [W, 5000] });
@@ -1572,36 +1784,19 @@
       label('Project'); y += LABEL_H;
       if (inv.jobName) para(inv.jobName, 12, 'bold');
       if (inv.jobDescription) { y += 1.5; para(inv.jobDescription, 9, 'normal', 51); }
+      if (inv.optionName) { y += 2; para(`Option: ${inv.optionName}${inv.optionSummary ? ' · ' + inv.optionSummary : ''}`, 9, 'bold'); }
     }
+
+    // Every option side by side (an estimate with options, printing all of them)
+    const ctx = { get y() { return y; }, set y(v) { y = v; }, M, R, CW, font, lh, base, hline, para, caps, label, LABEL_H };
+    if (hasOptions(inv)) return drawAllOptions(doc, inv, ctx);
 
     // Line items
     y += 7;
     label('Description'); label('Amount', R, 'right');
     y += lh(6.5) + 1.5;
     hline(M, R, 0.4, 17);
-    const amtW = 30, descW = CW - amtW - 6;
-    const groups = groupItems(inv.lineItems);
-    groups.forEach((g) => {
-      y += 4.5;
-      if (g.category) { caps(g.category, 7.5, M, 'left', 17); y += lh(7.5) + 0.5; }
-      g.items.forEach(({ it }) => {
-        y += 2.4;
-        const rowTop = y;
-        font(9.5, 'bold'); doc.text(money(lineAmount(it)), R, base(9.5), { align: 'right' });
-        para(it.description || rateLine(it), 9.5, 'bold', 17, M, descW);
-        if (it.description) para(rateLine(it), 8.5, 'normal', 102, M, descW);
-        if (it.notes) { y += 1; para(it.notes, 8, 'normal', 102, M, descW); }
-        y = Math.max(y, rowTop + lh(9.5)) + 2.4;
-        hline(M, R, 0.15, 225);
-      });
-      if (groups.length > 1) {
-        y += 2.4;
-        font(8.5, 'bold'); const amt = money(g.items.reduce((s, { it }) => s + lineAmount(it), 0));
-        doc.text(amt, R, base(8.5), { align: 'right' });
-        font(8.5, 'normal', 102); doc.text(`${g.category || 'Other'} total`, R - doc.getTextWidth(amt) - 6 - 0.5, base(8.5), { align: 'right' });
-        y += lh(8.5);
-      }
-    });
+    drawGroups(doc, inv.lineItems, true, ctx);
 
     // Totals, a column on the right
     y += 9;
@@ -1648,8 +1843,78 @@
     return y;
   }
 
+  // Line items grouped by category, top at ctx.y; returns the new y.
+  function drawGroups(doc, list, catTotals, ctx) {
+    const { M, R, CW, font, lh, base, hline, caps, para } = ctx;
+    const amtW = 30, descW = CW - amtW - 6;
+    const groups = groupItems(list);
+    groups.forEach((g) => {
+      ctx.y += 4.5;
+      if (g.category) { caps(g.category, 7.5, M, 'left', 17); ctx.y += lh(7.5) + 0.5; }
+      g.items.forEach(({ it }) => {
+        ctx.y += 2.4;
+        const rowTop = ctx.y;
+        font(9.5, 'bold'); doc.text(money(lineAmount(it)), R, base(9.5), { align: 'right' });
+        para(it.description || rateLine(it), 9.5, 'bold', 17, M, descW);
+        if (it.description) para(rateLine(it), 8.5, 'normal', 102, M, descW);
+        if (it.notes) { ctx.y += 1; para(it.notes, 8, 'normal', 102, M, descW); }
+        ctx.y = Math.max(ctx.y, rowTop + lh(9.5)) + 2.4;
+        hline(M, R, 0.15, 225);
+      });
+      if (catTotals && groups.length > 1) {
+        ctx.y += 2.4;
+        font(8.5, 'bold'); const amt = money(g.items.reduce((s, { it }) => s + lineAmount(it), 0));
+        doc.text(amt, R, base(8.5), { align: 'right' });
+        font(8.5, 'normal', 102); doc.text(`${g.category || 'Other'} total`, R - doc.getTextWidth(amt) - 6 - 0.5, base(8.5), { align: 'right' });
+        ctx.y += lh(8.5);
+      }
+    });
+  }
+
+  // PDF version of the all-options proof: comparison table, shared items, then each option.
+  function drawAllOptions(doc, inv, ctx) {
+    const { M, R, CW, font, lh, base, hline, caps, label, para } = ctx;
+    const os = optionsOf(inv), adv = Math.min(100, Math.max(0, num(inv.advancePercent)));
+    const TOT = R - 34, ADV = R;
+    ctx.y += 7;
+    label('Options'); caps('Estimated total', 6.5, TOT, 'right'); if (adv) caps(`Advance (${adv}%)`, 6.5, ADV, 'right');
+    ctx.y += lh(6.5) + 1.5; hline(M, R, 0.4, 17);
+    os.forEach((o) => {
+      ctx.y += 2.4;
+      const top = ctx.y, tt = optionTotal(inv, o), name = String(o.name || 'Option');
+      font(9.5, 'bold'); doc.text(money(tt), TOT, base(9.5), { align: 'right' });
+      if (adv) doc.text(money(tt * adv / 100), ADV, base(9.5), { align: 'right' });
+      doc.text(name, M, base(9.5));
+      if (o.recommended) { const w = doc.getTextWidth(name); font(6.5, 'bold'); doc.setTextColor(31, 78, 107); doc.text('RECOMMENDED', M + w + 3, base(9.5)); }
+      ctx.y += lh(9.5);
+      if (o.summary) para(o.summary, 8.5, 'normal', 102, M, TOT - M - 40);
+      ctx.y = Math.max(ctx.y, top + lh(9.5)) + 2.4; hline(M, R, 0.15, 225);
+    });
+    const section = (text) => {
+      ctx.y += 9;
+      doc.setFillColor(238, 241, 243); doc.rect(M, ctx.y, CW, lh(8) + 3.2, 'F');
+      ctx.y += 1.6; caps(text, 8, M + 2.5, 'left', 17); ctx.y += lh(8) + 1.6;
+    };
+    if ((inv.lineItems || []).length) { section('Included in every option'); drawGroups(doc, inv.lineItems, false, ctx); }
+    os.forEach((o) => {
+      section(`${o.name || 'Option'}${o.summary ? ' · ' + o.summary : ''}`.slice(0, 90));
+      drawGroups(doc, o.lineItems || [], false, ctx);
+      ctx.y += 2.4;
+      font(8.5, 'bold'); const amt = money(optionTotal(inv, o));
+      doc.text(amt, R, base(8.5), { align: 'right' });
+      font(8.5, 'normal', 102); doc.text(`${o.name || 'Option'} estimated total, with shared items`, R - doc.getTextWidth(amt) - 6.5, base(8.5), { align: 'right' });
+      ctx.y += lh(8.5);
+    });
+    if (inv.terms) {
+      ctx.y += 12; hline(M, R, 0.2, 200); ctx.y += 5;
+      label('Terms'); ctx.y += ctx.LABEL_H;
+      para(inv.terms, 8.5, 'normal', 51);
+    }
+    return ctx.y;
+  }
+
   // e.g. "Andrew Tomayko - Invoice 2625.pdf"
-  const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${docNumber(inv) || 'draft'}.pdf`.replace(/[\\/:*?"<>|]/g, '');
+  const pdfName = (inv) => `Andrew Tomayko - ${kindOf(inv)} ${docNumber(inv) || 'draft'}${(optionsOf(inv).find((o) => o.id === inv.printOption) || {}).name ? ' ' + optionsOf(inv).find((o) => o.id === inv.printOption).name : ''}.pdf`.replace(/[\\/:*?"<>|]/g, '');
 
   $('pdfBtn').addEventListener('click', async () => {
     const btn = $('pdfBtn'); btn.disabled = true;
@@ -1737,6 +2002,7 @@
   function quoteFromEstimate(est) {
     if (!est) return null;
     const isPost = (it) => /post/i.test(it.category || '');
+    const allItems = [...(est.lineItems || []), ...optionsOf(est).flatMap((o) => o.lineItems || [])];
     const short = (it) => String(it.description || it.category || '').split(' — ')[0].trim();
     return {
       id: 'quo-' + Date.now().toString(36),
@@ -1751,10 +2017,12 @@
       statement: est.jobDescription || '',
       phases: [
         { title: 'Pre-Production', items: 'Concepting\nScheduling\nGear Rentals\nProd. Coordinating' },
-        { title: 'Production', items: [...new Set(est.lineItems.filter((it) => !isPost(it)).map(short))].join('\n') },
-        { title: 'Post-Production', items: [...new Set(est.lineItems.filter(isPost).map(short))].join('\n') || 'Video Editorial\nAudio Mixing\nColor Processing' },
+        { title: 'Production', items: [...new Set(allItems.filter((it) => !isPost(it)).map(short))].join('\n') },
+        { title: 'Post-Production', items: [...new Set(allItems.filter(isPost).map(short))].join('\n') || 'Video Editorial\nAudio Mixing\nColor Processing' },
       ],
-      tiers: [{ name: est.jobName || 'Option One', subtitle: '', deliverables: '', total: Math.round(totals(est).total), note: '', recommended: false }],
+      tiers: hasOptions(est)
+        ? optionsOf(est).map((o) => ({ name: o.name || 'Option', subtitle: o.summary || '', deliverables: '', total: Math.round(optionTotal(est, o)), note: '', recommended: Boolean(o.recommended) }))
+        : [{ name: est.jobName || 'Option One', subtitle: '', deliverables: '', total: Math.round(totals(est).total), note: '', recommended: false }],
       terms: 'Compensation to Toy Boat Films will be made in two payments as follows:\n1) (50%) due upon execution of the agreement.\n2) (50%) due upon final delivery of the project.\n\nAny change to scope requires written approval by both parties and will be billed at final invoice.\nDigital delivery via secure download links.',
       website: settings.companyWebsite || 'toyboatfilms.com',
     };

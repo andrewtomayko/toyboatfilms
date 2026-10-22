@@ -10,6 +10,7 @@
 //   PUT    ?settings=1 {...}     -> save company details and logo
 //   GET    ?versions=<id>        -> { versions: [...] } earlier versions of one invoice or estimate
 //   PUT    ?id=<id>&rev=<n> {...}-> file version n of that document in its history
+//   DELETE ?id=<id>&rev=<n>      -> remove version n from that history
 //   PUT    ?quote=<id> {...}     -> save one quote presentation
 //   DELETE ?quote=<id>           -> delete one quote
 
@@ -94,6 +95,13 @@ export const handler = async (event, context) => {
 
     if (event.httpMethod === "PUT") {
       await store.setJSON(`inv/${q.id}`, { ...readBody(event), id: q.id });
+      return reply(200, { ok: true });
+    }
+
+    if (event.httpMethod === "DELETE" && q.rev !== undefined) {
+      const rev = Number(q.rev);
+      if (!Number.isInteger(rev) || rev < 1 || rev > 999) return reply(400, { error: "Invalid version number." });
+      await store.delete(`ver/${q.id}/${rev}`);
       return reply(200, { ok: true });
     }
 
