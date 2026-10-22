@@ -275,6 +275,8 @@
   .proof-show { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
   .proof-show select { width: auto; padding: 5px 9px; font-size: 13px; }
   .proof-show[hidden] { display: none; }
+  .proof-show { flex-wrap: wrap; }
+  .proof-show .check { font-weight: 500; color: var(--muted); }
   /* Options on the paper proof */
   .p-options { margin-top: calc(7 * var(--mm)); }
   .p-opt-row { display: grid; grid-template-columns: minmax(0, 1fr) calc(30 * var(--mm)) calc(30 * var(--mm)); gap: calc(4 * var(--mm)); padding-block: calc(2.4 * var(--mm)); border-bottom: calc(0.15 * var(--mm)) solid #e1e1e1; align-items: baseline; }
@@ -495,7 +497,10 @@
 
       <div class="proof-col">
         <div class="proof-label">Proof · A4 width, grows with line items</div>
-        <label class="proof-show" id="proofShow" hidden><span class="sub">Show</span><select id="printOption" aria-label="Which option to show and print"></select></label>
+        <div class="proof-show" id="proofShow" hidden>
+          <label class="proof-show"><span class="sub">Show</span><select id="printOption" aria-label="Which option to show and print"></select></label>
+          <label class="check" id="quoteFirstWrap" hidden><input type="checkbox" id="quoteFirst">Quote as first page of the PDF</label>
+        </div>
         <div class="proof"><div class="sheet" id="sheet"></div></div>
       </div>
     </div>
@@ -1369,7 +1374,15 @@
     $('proofShow').hidden = !est || !os.length;
     $('printOption').innerHTML = `<option value="">All options</option>` + os.map((x) => `<option value="${esc(x.id)}">${esc(x.name || 'Option')}</option>`).join('');
     $('printOption').value = os.some((x) => x.id === current.printOption) ? current.printOption : '';
+    renderQuoteFirst();
   }
+  function renderQuoteFirst() {
+    const q = linkedQuote(current);
+    $('quoteFirstWrap').hidden = !(isEstimate(current) && hasOptions(current) && !current.printOption && q);
+    $('quoteFirst').checked = current.quoteFirst !== false;
+    $('quoteFirstWrap').title = q ? `Puts quote ${q.quoteNumber || ''} (${q.title || 'untitled'}) in front of the estimate` : '';
+  }
+  $('quoteFirst').addEventListener('change', () => { current.quoteFirst = $('quoteFirst').checked; markDirty(); });
 
   $('optBar').addEventListener('click', (e) => {
     const tab = e.target.closest('[data-scope]');
@@ -1417,6 +1430,7 @@
   });
   $('printOption').addEventListener('change', () => {
     current.printOption = $('printOption').value;
+    renderQuoteFirst();
     markDirty(); renderProof();
   });
 
@@ -1702,13 +1716,36 @@
 
   // One continuous page, A4 wide, as tall as the invoice needs (never shorter than A4).
   // Lay out once on a scratch page to measure, then draw for real at that height.
+  // The quote made from an estimate (newest first), if there is one.
+  const linkedQuote = (inv) => [...quotes].filter((q) => q.sourceId === inv.id).sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || null;
+  // The quote goes in front of the all-options estimate unless that's switched off.
+  const quoteGoesFirst = (inv) => hasOptions(inv) && !inv.printOption && inv.quoteFirst !== false && Boolean(linkedQuote(inv));
+  // On the combined PDF, each tier's total comes from the option with the same name, so the pages always agree.
+  function syncQuoteTotals(q, inv) {
+    const copy = JSON.parse(JSON.stringify(q));
+    copy.tiers = (copy.tiers || []).map((t) => {
+      const o = optionsOf(inv).find((x) => (x.name || '').trim().toLowerCase() === (t.name || '').trim().toLowerCase());
+      return o ? { ...t, total: Math.round(optionTotal(inv, o)) } : t;
+    });
+    return copy;
+  }
+
   async function buildPDF(source) {
     const inv = printView(source).inv;
     const { jsPDF } = window.jspdf;
     const W = 210, A4_H = 297, M = 18;
-    const scratch = new jsPDF({ unit: 'mm', format: [W, 5000] });
-    const height = Math.max(A4_H, Math.ceil(await drawInvoice(scratch, inv) + M));
-    const doc = new jsPDF({ unit: 'mm', format: [W, height] });
+    const measure = async (draw, data) => Math.max(A4_H, Math.ceil(await draw(new jsPDF({ unit: 'mm', format: [W, 5000] }), data) + M));
+    const height = await measure(drawInvoice, inv);
+    if (!quoteGoesFirst(source)) {
+      const doc = new jsPDF({ unit: 'mm', format: [W, height] });
+      await drawInvoice(doc, inv);
+      return doc;
+    }
+    // Page 1: the quote. Page 2: every option side by side.
+    const q = syncQuoteTotals(linkedQuote(source), source);
+    const doc = new jsPDF({ unit: 'mm', format: [W, await measure(drawQuote, q)] });
+    await drawQuote(doc, q);
+    doc.addPage([W, height], 'portrait');
     await drawInvoice(doc, inv);
     return doc;
   }
