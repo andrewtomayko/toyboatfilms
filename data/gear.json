@@ -1,7 +1,7 @@
 {
   "title": "Gear List",
   "intro": "",
-  "updated": "2026-10-17",
+  "updated": "2026-10-22",
   "sections": [
     {
       "name": "Camera",
@@ -140,6 +140,10 @@
         {
           "qty": 1,
           "name": "Aputure 120D II"
+        },
+        {
+          "qty": 1,
+          "name": "Amaran Ace 25c"
         },
         {
           "qty": 1,
