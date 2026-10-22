@@ -293,6 +293,12 @@
   .p-opt-sum { font-size: calc(8.5 * var(--pt)); color: var(--paper-muted); }
   .p-section { font-size: calc(8 * var(--pt)); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: calc(9 * var(--mm)) !important; padding: calc(1.6 * var(--mm)) calc(2.5 * var(--mm)); background: #eef1f3; }
   .p-option-line { font-size: calc(9 * var(--pt)); margin-top: calc(2 * var(--mm)) !important; }
+  /* Each option in the all-options view: a box outlined in its quote tier color, with a big name band */
+  .p-opt-box { margin-top: calc(9 * var(--mm)); border: calc(0.6 * var(--mm)) solid var(--band-line); border-radius: calc(2.5 * var(--mm)); overflow: hidden; }
+  .p-opt-band { background: var(--band); color: var(--band-ink); padding: calc(2.6 * var(--mm)) calc(4 * var(--mm)); display: flex; justify-content: space-between; align-items: center; gap: calc(4 * var(--mm)); }
+  .p-opt-big { font-size: calc(15 * var(--pt)); font-weight: 700; line-height: 1.2; }
+  .p-opt-band .tag { font-size: calc(6.5 * var(--pt)); font-weight: 700; letter-spacing: 0.1em; }
+  .p-opt-body { padding: 0 calc(4 * var(--mm)) calc(3 * var(--mm)); }
   .p-option-line b { font-weight: 700; }
 
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -1656,10 +1662,13 @@
       </div>
       ${(inv.lineItems || []).length ? `<p class="p-section">Included in every option</p>
       <div class="p-items" style="margin-top:0">${proofItemsHTML(inv.lineItems, false)}</div>` : ''}
-      ${os.map((o) => `<p class="p-section">${esc(o.name || 'Option')}</p>
-      <div class="p-items" style="margin-top:0">${proofItemsHTML(o.lineItems || [], false)}
-        <div class="p-cat-total"><span>${esc(o.name || 'Option')} estimated total, with shared items</span><span>${money(optionTotal(inv, o))}</span></div>
-      </div>`).join('')}
+      ${os.map((o, i) => { const sh = tierShade(i, os.length); return `
+      <div class="p-opt-box" style="--band:${rgb(sh.bg)};--band-ink:${rgb(sh.ink)};--band-line:${rgb(tierLine(sh))}">
+        <div class="p-opt-band"><span class="p-opt-big">${esc(o.name || 'Option')}</span>${o.recommended ? '<span class="tag">RECOMMENDED</span>' : ''}</div>
+        <div class="p-opt-body"><div class="p-items" style="margin-top:0">${proofItemsHTML(o.lineItems || [], false)}
+          <div class="p-cat-total"><span>${esc(o.name || 'Option')} estimated total, with shared items</span><span>${money(optionTotal(inv, o))}</span></div>
+        </div></div>
+      </div>`; }).join('')}
       ${inv.terms ? `<div class="p-terms"><p class="p-caps">Terms</p><p class="v">${esc(inv.terms)}</p></div>` : ''}`;
   }
 
@@ -1965,14 +1974,26 @@
       ctx.y += 1.6; caps(text, 8, M + 2.5, 'left', 17); ctx.y += lh(8) + 1.6;
     };
     if ((inv.lineItems || []).length) { section('Included in every option'); drawGroups(doc, inv.lineItems, false, ctx); }
-    os.forEach((o) => {
-      section(String(o.name || 'Option')); // the summary is already in the comparison table
-      drawGroups(doc, o.lineItems || [], false, ctx);
+    // Each option: a box outlined in its quote tier color, opening with a band that carries the name in large type
+    os.forEach((o, i) => {
+      const sh = tierShade(i, os.length), r = 2.5, pad = 4, bandH = 11, name = String(o.name || 'Option');
+      ctx.y += 9;
+      const top = ctx.y;
+      doc.setFillColor(...sh.bg); doc.roundedRect(M, top, CW, bandH + r, r, r, 'F');
+      doc.setFillColor(255, 255, 255); doc.rect(M, top + bandH, CW, r + 0.2, 'F');
+      const bl = top + bandH / 2 + 15 * 0.3528 * 0.36;
+      font(15, 'bold'); doc.setTextColor(...sh.ink); doc.text(name, M + pad, bl);
+      if (o.recommended) { font(6.5, 'bold'); doc.setTextColor(...sh.ink); doc.text('RECOMMENDED', R - pad, bl - 1, { align: 'right' }); }
+      ctx.y = top + bandH;
+      const inner = Object.create(ctx); // same y, drawn inside the box
+      inner.M = M + pad; inner.R = R - pad; inner.CW = CW - 2 * pad;
+      drawGroups(doc, o.lineItems || [], false, inner);
       ctx.y += 2.4;
       font(8.5, 'bold'); const amt = money(optionTotal(inv, o));
-      doc.text(amt, R, base(8.5), { align: 'right' });
-      font(8.5, 'normal', 102); doc.text(`${o.name || 'Option'} estimated total, with shared items`, R - doc.getTextWidth(amt) - 6.5, base(8.5), { align: 'right' });
-      ctx.y += lh(8.5);
+      doc.text(amt, R - pad, base(8.5), { align: 'right' });
+      font(8.5, 'normal', 102); doc.text(`${name} estimated total, with shared items`, R - pad - doc.getTextWidth(amt) - 6.5, base(8.5), { align: 'right' });
+      ctx.y += lh(8.5) + 3;
+      doc.setDrawColor(...tierLine(sh)); doc.setLineWidth(0.6); doc.roundedRect(M, top, CW, ctx.y - top, r, r, 'S');
     });
     if (inv.terms) {
       ctx.y += 12; hline(M, R, 0.2, 200); ctx.y += 5;
@@ -2288,6 +2309,7 @@
     return { bg, dark, ink: dark ? [255, 255, 255] : [17, 17, 17], sub: dark ? [214, 228, 237] : [38, 52, 64], eye: dark ? [214, 228, 237] : [24, 62, 86] };
   }
   const rgb = (c) => `rgb(${c.join(',')})`;
+  const tierLine = (shade) => (shade.dark ? shade.bg : shade.bg.map((c, j) => Math.round(c + ([31, 78, 107][j] - c) * 0.45)));
 
   // ---------- quotes: PDF ----------
   async function buildQuotePDF(q) {
