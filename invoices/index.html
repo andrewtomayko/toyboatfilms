@@ -1732,6 +1732,22 @@
 
   // One continuous page, A4 wide, as tall as the invoice needs (never shorter than A4).
   // Lay out once on a scratch page to measure, then draw for real at that height.
+  // The PDF's built-in fonts only have the Windows-1252 characters. Anything else (an arrow, an emoji,
+  // a Japanese name) makes jsPDF garble the whole line, so swap those characters before they reach it.
+  const PDF_SWAPS = { '↔': '–', '⇄': '–', '→': '->', '←': '<-', '⇒': '=>', '≈': '~', '≤': '<=', '≥': '>=', '≠': '!=', '−': '-', '✓': 'v', '✔': 'v', '★': '*', '☆': '*', ' ': ' ', ' ': ' ', ' ': ' ', '​': '' };
+  const CP1252_EXTRA = '€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ';
+  const pdfText = (v) => (Array.isArray(v) ? v.map(pdfText) : typeof v !== 'string' ? v
+    : [...v.normalize('NFC')].map((ch) => (ch in PDF_SWAPS ? PDF_SWAPS[ch]
+      : (ch.charCodeAt(0) < 256 || CP1252_EXTRA.includes(ch)) ? ch : '')).join(''));
+  function SafeText(opts) {
+    const doc = new window.jspdf.jsPDF(opts);
+    ['text', 'splitTextToSize', 'getTextWidth'].forEach((fn) => {
+      const orig = doc[fn].bind(doc);
+      doc[fn] = (t, ...rest) => orig(pdfText(t), ...rest);
+    });
+    return doc;
+  }
+
   // The quote made from an estimate (newest first), if there is one.
   const linkedQuote = (inv) => [...quotes].filter((q) => q.sourceId === inv.id).sort((a, b) => (b.date || '').localeCompare(a.date || ''))[0] || null;
   // The quote goes in front of the all-options estimate unless that's switched off.
@@ -1748,7 +1764,7 @@
 
   async function buildPDF(source) {
     const inv = printView(source).inv;
-    const { jsPDF } = window.jspdf;
+    const jsPDF = SafeText; // jsPDF that only prints characters its fonts have
     const W = 210, A4_H = 297, M = 18;
     const measure = async (draw, data) => Math.max(A4_H, Math.ceil(await draw(new jsPDF({ unit: 'mm', format: [W, 5000] }), data) + M));
     const height = await measure(drawInvoice, inv);
@@ -2275,7 +2291,7 @@
 
   // ---------- quotes: PDF ----------
   async function buildQuotePDF(q) {
-    const { jsPDF } = window.jspdf;
+    const jsPDF = SafeText; // jsPDF that only prints characters its fonts have
     const W = 210, A4_H = 297, M = 18;
     const scratch = new jsPDF({ unit: 'mm', format: [W, 5000] });
     const height = Math.max(A4_H, Math.ceil(await drawQuote(scratch, q) + M));
