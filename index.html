@@ -1338,7 +1338,13 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         `${String(i + 1).padStart(2, "0")} / ${String(videos.length).padStart(2, "0")}`;
       document.getElementById("playerTitle").textContent = v.title || "";
 
-      const meta = detailsOf(v);
+      // Same lines, in the same order, as the film's own page
+      const types = filtersOf(v).map(id => tagList.find(t => t.id === id).label);
+      const meta = [
+        ...detailsOf(v),
+        ...(v.location ? [{ label: "Location", value: v.location }] : []),
+        ...(types.length ? [{ label: "Type", value: types.join(", ") }] : []),
+      ];
       const metaEl = document.getElementById("playerMeta");
       metaEl.innerHTML = meta.map(d =>
         `<li>${d.label ? `<span class="label">${esc(d.label)}:</span>` : ""}${esc(d.value)}</li>`).join("");
@@ -1359,31 +1365,35 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       player.scrollTop = 0;
     }
 
+    // While the popup is open the address bar shows the film's own page (built by scripts/build-pages.mjs),
+    // so copying or sharing it gives the real page. Reloading it loads that page.
+    const workURL = slug => "/work/" + slug + "/";
+
     function openPlayer(i, fromEl) {
       returnFocus = fromEl || document.activeElement;
-      history.pushState({ tbVideo: true }, "", "#video/" + videos[i].slug);
-      syncFromHash();
+      history.pushState({ tbVideo: true }, "", workURL(videos[i].slug));
+      syncFromURL();
     }
 
     function closePlayer() {
       if (history.state && history.state.tbVideo) {
         history.back();
       } else {
-        history.replaceState(null, "", location.pathname + location.search);
-        syncFromHash();
+        history.replaceState(null, "", "/" + (activeFilter ? "?filter=" + encodeURIComponent(activeFilter) : ""));
+        syncFromURL();
       }
     }
 
     function step(dir) {
       const i = (current + dir + videos.length) % videos.length;
       // Keep the existing state: only a popup opened from the grid may close with history.back()
-      history.replaceState(history.state, "", "#video/" + videos[i].slug);
+      history.replaceState(history.state, "", workURL(videos[i].slug));
       showVideo(i);
     }
 
-    // The address bar is the source of truth, so links to a specific video can be shared
-    function syncFromHash() {
-      const m = location.hash.match(/^#video\/(.+)$/);
+    // The address bar is the source of truth. Older #video/<slug> links still open the popup.
+    function syncFromURL() {
+      const m = location.pathname.match(/^\/work\/([^/]+)\/?$/) || location.hash.match(/^#video\/(.+)$/);
       const slug = m ? decodeURIComponent(m[1]) : null;
       // A link to a video outside the current list switches to All, or to its filter if it only shows there
       const linked = slug && !videos.some(v => v.slug === slug) && allVideos.find(v => v.slug === slug);
@@ -1391,6 +1401,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       const i = slug ? videos.findIndex(v => v.slug === slug) : -1;
 
       if (i >= 0) {
+        if (location.hash.startsWith("#video/")) history.replaceState(history.state, "", workURL(slug));
         const wasOpen = !player.hidden;
         showVideo(i);
         if (!wasOpen) {
@@ -1425,7 +1436,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         else if (e.key === "ArrowRight") step(1);
       });
 
-      window.addEventListener("popstate", syncFromHash);
+      window.addEventListener("popstate", syncFromURL);
     }
 
     /* ---------- CONTACT ---------- */
@@ -1730,7 +1741,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         const data = await loadJSON("/data/videos.json");
         useVideos(data.videos);
         stats.visit();
-        syncFromHash(); // open a shared #video/... link
+        syncFromURL(); // open an older shared #video/... link
       } catch (e) {
         console.error(e);
       }
