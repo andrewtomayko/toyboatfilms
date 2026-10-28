@@ -7,6 +7,7 @@
 //
 // The /work pages are generated, not kept in git. To see them locally: node scripts/build-pages.mjs --local
 // (then `git checkout index.html sitemap.xml` before committing).
+// Add --save-dates to refresh data/video-dates.json.
 
 import { readFile, writeFile, mkdir, rm } from "node:fs/promises";
 
@@ -88,7 +89,12 @@ const videos = rawVideos.filter((v) => v && (v.url || v.id) && !v.hidden).map((v
   return { ...v, title: String(v.title || "").trim(), slug, parsed: parseVideo(v) };
 });
 
-/* ---------- Upload date and length (Google wants these for video results) ---------- */
+/* ---------- Upload date and length (Google wants these for video results) ----------
+   Looked up on every build. YouTube often turns away Netlify's servers, so the last known values are kept in
+   data/video-dates.json (refresh it from a Mac with: node scripts/build-pages.mjs --local --save-dates). */
+const DATES_FILE = new URL("data/video-dates.json", ROOT);
+let savedDates = {};
+try { savedDates = JSON.parse(await readFile(DATES_FILE, "utf8")); } catch {}
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129 Safari/537.36";
 await Promise.all(videos.map(async (v) => {
   if (v.parsed?.kind === "youtube") {
@@ -109,6 +115,16 @@ await Promise.all(videos.map(async (v) => {
     v.duration = Number(o.duration) || 0;
   } catch {}
 }));
+for (const v of videos) {
+  const saved = savedDates[v.url] || {};
+  v.uploadDate ||= saved.uploadDate || "";
+  v.duration ||= saved.duration || 0;
+}
+if (process.argv.includes("--save-dates")) {
+  const out = {};
+  for (const v of videos) if (v.uploadDate) out[v.url] = { uploadDate: v.uploadDate, duration: v.duration };
+  await writeFile(DATES_FILE, JSON.stringify(out, null, 2) + "\n");
+}
 
 /* ---------- Shared bits ---------- */
 const abs = (path) => (/^https?:/.test(path) ? path : ORIGIN + path);
