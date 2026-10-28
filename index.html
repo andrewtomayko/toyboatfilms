@@ -13,28 +13,52 @@
   </script>
 
   <title>Toy Boat Films | Video Production in the Puget Sound</title>
-  <meta name="description" content="Toy Boat is a full-service film production team based in Poulsbo, Washington, capturing authentic stories for brands and organizations across the Puget Sound and beyond." />
+  <meta name="description" content="Commercials, documentaries and brand films by Andrew Tomayko of Toy Boat Films. Based in Poulsbo, serving Seattle and the Puget Sound." />
   <link rel="canonical" href="https://toyboatfilms.com/" />
 
-  <!-- Business details for search engines -->
+  <!-- Business and personal details for search engines (not shown on the page) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Toy Boat Films",
-    "alternateName": "Toy Boat",
-    "url": "https://toyboatfilms.com/",
-    "logo": "https://toyboatfilms.com/Assets/favicon/apple-touch-icon.png",
-    "image": "https://toyboatfilms.com/Assets/reel-poster.jpg",
-    "description": "Full-service film and video production team capturing authentic stories for brands and organizations.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Poulsbo",
-      "addressRegion": "WA",
-      "addressCountry": "US"
-    },
-    "areaServed": ["Puget Sound", "Washington", "Pacific Northwest"],
-    "knowsAbout": ["Video production", "Commercial video", "Documentary film", "Brand storytelling"]
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://toyboatfilms.com/#toyboat",
+        "name": "Toy Boat Films",
+        "alternateName": "Toy Boat",
+        "url": "https://toyboatfilms.com/",
+        "logo": "https://toyboatfilms.com/Assets/favicon/apple-touch-icon.png",
+        "image": "https://toyboatfilms.com/Assets/reel-poster.jpg",
+        "description": "Film and video production by Andrew Tomayko: commercials, documentaries and brand stories, from directing and cinematography to editing.",
+        "founder": { "@id": "https://toyboatfilms.com/#andrew" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Poulsbo",
+          "addressRegion": "WA",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Poulsbo, WA" },
+          { "@type": "City", "name": "Bainbridge Island, WA" },
+          { "@type": "City", "name": "Port Townsend, WA" },
+          { "@type": "City", "name": "Seattle, WA" },
+          { "@type": "AdministrativeArea", "name": "Kitsap County, WA" },
+          { "@type": "AdministrativeArea", "name": "Puget Sound" },
+          { "@type": "AdministrativeArea", "name": "Pacific Northwest" }
+        ],
+        "knowsAbout": ["Video production", "Commercial video", "Documentary film", "Brand films", "Cinematography", "Video editing", "Music videos"]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://toyboatfilms.com/#andrew",
+        "name": "Andrew Tomayko",
+        "url": "https://toyboatfilms.com/",
+        "image": "https://toyboatfilms.com/Assets/about-andrew.jpg",
+        "jobTitle": ["Director", "Cinematographer", "Video Editor", "Filmmaker"],
+        "worksFor": { "@id": "https://toyboatfilms.com/#toyboat" },
+        "homeLocation": { "@type": "Place", "name": "Poulsbo, WA" }
+      }
+    ]
   }
   </script>
 
@@ -989,7 +1013,7 @@
     <main>
       <h2 class="sr-only">Work</h2>
       <nav class="filters" id="filters" aria-label="Filter work" hidden></nav>
-      <section class="grid" id="videoGrid" aria-label="Work"></section>
+      <section class="grid" id="videoGrid" aria-label="Work"><!-- prerender:grid --><!-- /prerender:grid --></section>
     </main>
 
     <!-- FOOTER -->
@@ -1207,7 +1231,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       const grid = document.getElementById("videoGrid");
 
       grid.innerHTML = videos.map((v, i) => `
-        <a class="card" href="#video/${esc(v.slug)}" data-index="${i}">
+        <a class="card" href="/work/${esc(v.slug)}/" data-index="${i}">
           <img ${thumbAttrs(v.thumb)} alt="" loading="${i < 2 ? "eager" : "lazy"}" decoding="async" style="object-position:50% ${cropOf(v)}%">
           <div class="overlay">
             <svg class="playIcon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -1314,7 +1338,13 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         `${String(i + 1).padStart(2, "0")} / ${String(videos.length).padStart(2, "0")}`;
       document.getElementById("playerTitle").textContent = v.title || "";
 
-      const meta = detailsOf(v);
+      // Same lines, in the same order, as the film's own page
+      const types = filtersOf(v).map(id => tagList.find(t => t.id === id).label);
+      const meta = [
+        ...detailsOf(v),
+        ...(v.location ? [{ label: "Location", value: v.location }] : []),
+        ...(types.length ? [{ label: "Type", value: types.join(", ") }] : []),
+      ];
       const metaEl = document.getElementById("playerMeta");
       metaEl.innerHTML = meta.map(d =>
         `<li>${d.label ? `<span class="label">${esc(d.label)}:</span>` : ""}${esc(d.value)}</li>`).join("");
@@ -1335,31 +1365,35 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       player.scrollTop = 0;
     }
 
+    // While the popup is open the address bar shows the film's own page (built by scripts/build-pages.mjs),
+    // so copying or sharing it gives the real page. Reloading it loads that page.
+    const workURL = slug => "/work/" + slug + "/";
+
     function openPlayer(i, fromEl) {
       returnFocus = fromEl || document.activeElement;
-      history.pushState({ tbVideo: true }, "", "#video/" + videos[i].slug);
-      syncFromHash();
+      history.pushState({ tbVideo: true }, "", workURL(videos[i].slug));
+      syncFromURL();
     }
 
     function closePlayer() {
       if (history.state && history.state.tbVideo) {
         history.back();
       } else {
-        history.replaceState(null, "", location.pathname + location.search);
-        syncFromHash();
+        history.replaceState(null, "", "/" + (activeFilter ? "?filter=" + encodeURIComponent(activeFilter) : ""));
+        syncFromURL();
       }
     }
 
     function step(dir) {
       const i = (current + dir + videos.length) % videos.length;
       // Keep the existing state: only a popup opened from the grid may close with history.back()
-      history.replaceState(history.state, "", "#video/" + videos[i].slug);
+      history.replaceState(history.state, "", workURL(videos[i].slug));
       showVideo(i);
     }
 
-    // The address bar is the source of truth, so links to a specific video can be shared
-    function syncFromHash() {
-      const m = location.hash.match(/^#video\/(.+)$/);
+    // The address bar is the source of truth. Older #video/<slug> links still open the popup.
+    function syncFromURL() {
+      const m = location.pathname.match(/^\/work\/([^/]+)\/?$/) || location.hash.match(/^#video\/(.+)$/);
       const slug = m ? decodeURIComponent(m[1]) : null;
       // A link to a video outside the current list switches to All, or to its filter if it only shows there
       const linked = slug && !videos.some(v => v.slug === slug) && allVideos.find(v => v.slug === slug);
@@ -1367,6 +1401,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       const i = slug ? videos.findIndex(v => v.slug === slug) : -1;
 
       if (i >= 0) {
+        if (location.hash.startsWith("#video/")) history.replaceState(history.state, "", workURL(slug));
         const wasOpen = !player.hidden;
         showVideo(i);
         if (!wasOpen) {
@@ -1401,7 +1436,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         else if (e.key === "ArrowRight") step(1);
       });
 
-      window.addEventListener("popstate", syncFromHash);
+      window.addEventListener("popstate", syncFromURL);
     }
 
     /* ---------- CONTACT ---------- */
@@ -1428,6 +1463,11 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       document.getElementById("openContactHeader").onclick = openContact;
       document.getElementById("closeContact").onclick = closeContact;
       contactModal.addEventListener("click", e => { if (e.target === contactModal) closeContact(); });
+      // "Book a call" on the film pages links to /#contact
+      if (location.hash === "#contact") {
+        history.replaceState(null, "", location.pathname + location.search);
+        openContact();
+      }
       document.addEventListener("keydown", e => { if (e.key === "Escape") closeContact(); });
 
       const form = document.getElementById("contactForm");
@@ -1701,7 +1741,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
         const data = await loadJSON("/data/videos.json");
         useVideos(data.videos);
         stats.visit();
-        syncFromHash(); // open a shared #video/... link
+        syncFromURL(); // open an older shared #video/... link
       } catch (e) {
         console.error(e);
       }

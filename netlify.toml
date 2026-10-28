@@ -20,10 +20,22 @@
   status = 301
   force = true
 
-# Server code for /invoices (the website itself has no build step)
+# Each deploy writes a page for every film (/work/...), the homepage grid and the sitemap
+# from data/videos.json, so search engines can read them. Nothing else is built.
+[build]
+  command = "node scripts/build-pages.mjs"
+  publish = "."
+
+# /work on its own has no page: send it to the homepage grid
+[[redirects]]
+  from = "/work"
+  to = "/"
+  status = 301
+
 [build.environment]
   NODE_VERSION = "22"
 
+# Server code for /invoices
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
