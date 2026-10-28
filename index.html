@@ -12,36 +12,60 @@
     }
   </script>
 
-  <title>Toy Boat Films | Video Production in the Puget Sound</title>
-  <meta name="description" content="Toy Boat is a full-service film production team based in Poulsbo, Washington, capturing authentic stories for brands and organizations across the Puget Sound and beyond." />
+  <title>Andrew Tomayko | Filmmaker, Cinematographer &amp; Video Editor in Poulsbo &amp; Seattle</title>
+  <meta name="description" content="Films by Andrew Tomayko and Toy Boat Films: commercials, documentaries and brand stories for clients in Poulsbo, Bainbridge Island, Port Townsend, Kitsap and Seattle." />
   <link rel="canonical" href="https://toyboatfilms.com/" />
 
-  <!-- Business details for search engines -->
+  <!-- Business and personal details for search engines (not shown on the page) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Toy Boat Films",
-    "alternateName": "Toy Boat",
-    "url": "https://toyboatfilms.com/",
-    "logo": "https://toyboatfilms.com/Assets/favicon/apple-touch-icon.png",
-    "image": "https://toyboatfilms.com/Assets/reel-poster.jpg",
-    "description": "Full-service film and video production team capturing authentic stories for brands and organizations.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Poulsbo",
-      "addressRegion": "WA",
-      "addressCountry": "US"
-    },
-    "areaServed": ["Puget Sound", "Washington", "Pacific Northwest"],
-    "knowsAbout": ["Video production", "Commercial video", "Documentary film", "Brand storytelling"]
+    "@graph": [
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://toyboatfilms.com/#toyboat",
+        "name": "Toy Boat Films",
+        "alternateName": "Toy Boat",
+        "url": "https://toyboatfilms.com/",
+        "logo": "https://toyboatfilms.com/Assets/favicon/apple-touch-icon.png",
+        "image": "https://toyboatfilms.com/Assets/reel-poster.jpg",
+        "description": "Film and video production by Andrew Tomayko: commercials, documentaries and brand stories, from directing and cinematography to editing.",
+        "founder": { "@id": "https://toyboatfilms.com/#andrew" },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Poulsbo",
+          "addressRegion": "WA",
+          "addressCountry": "US"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Poulsbo, WA" },
+          { "@type": "City", "name": "Bainbridge Island, WA" },
+          { "@type": "City", "name": "Port Townsend, WA" },
+          { "@type": "City", "name": "Seattle, WA" },
+          { "@type": "AdministrativeArea", "name": "Kitsap County, WA" },
+          { "@type": "AdministrativeArea", "name": "Puget Sound" },
+          { "@type": "AdministrativeArea", "name": "Pacific Northwest" }
+        ],
+        "knowsAbout": ["Video production", "Commercial video", "Documentary film", "Brand films", "Cinematography", "Video editing", "Music videos"]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://toyboatfilms.com/#andrew",
+        "name": "Andrew Tomayko",
+        "url": "https://toyboatfilms.com/",
+        "image": "https://toyboatfilms.com/Assets/about-andrew.jpg",
+        "jobTitle": ["Director", "Cinematographer", "Video Editor", "Filmmaker"],
+        "worksFor": { "@id": "https://toyboatfilms.com/#toyboat" },
+        "homeLocation": { "@type": "Place", "name": "Poulsbo, WA" }
+      }
+    ]
   }
   </script>
 
   <!-- Link previews (texts, social, Slack) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Toy Boat Films" />
-  <meta property="og:title" content="Toy Boat Films" />
+  <meta property="og:title" content="Toy Boat Films · Andrew Tomayko" />
   <meta property="og:description" content="We document characters, capture stories and explore worlds. Full-service film production based in Poulsbo, WA." />
   <meta property="og:url" content="https://toyboatfilms.com/" />
   <meta property="og:image" content="https://toyboatfilms.com/Assets/reel-poster.jpg" />
@@ -989,7 +1013,7 @@
     <main>
       <h2 class="sr-only">Work</h2>
       <nav class="filters" id="filters" aria-label="Filter work" hidden></nav>
-      <section class="grid" id="videoGrid" aria-label="Work"></section>
+      <section class="grid" id="videoGrid" aria-label="Work"><!-- prerender:grid --><!-- /prerender:grid --></section>
     </main>
 
     <!-- FOOTER -->
@@ -1207,7 +1231,7 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       const grid = document.getElementById("videoGrid");
 
       grid.innerHTML = videos.map((v, i) => `
-        <a class="card" href="#video/${esc(v.slug)}" data-index="${i}">
+        <a class="card" href="/work/${esc(v.slug)}/" data-index="${i}">
           <img ${thumbAttrs(v.thumb)} alt="" loading="${i < 2 ? "eager" : "lazy"}" decoding="async" style="object-position:50% ${cropOf(v)}%">
           <div class="overlay">
             <svg class="playIcon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -1428,6 +1452,11 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       document.getElementById("openContactHeader").onclick = openContact;
       document.getElementById("closeContact").onclick = closeContact;
       contactModal.addEventListener("click", e => { if (e.target === contactModal) closeContact(); });
+      // "Book a call" on the film pages links to /#contact
+      if (location.hash === "#contact") {
+        history.replaceState(null, "", location.pathname + location.search);
+        openContact();
+      }
       document.addEventListener("keydown", e => { if (e.key === "Escape") closeContact(); });
 
       const form = document.getElementById("contactForm");
