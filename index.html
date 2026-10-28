@@ -95,7 +95,7 @@
 
     *{ box-sizing:border-box; }
 
-    html{ scroll-behavior:smooth; }
+    html{ scroll-behavior:smooth; scrollbar-gutter:stable; } /* keeps the page still when a popup hides the scrollbar */
     @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
 
     body{
@@ -1339,11 +1339,9 @@ After a decade in Los Angeles, I traded the city for solitude on the high seas. 
       document.getElementById("playerTitle").textContent = v.title || "";
 
       // Same lines, in the same order, as the film's own page
-      const types = filtersOf(v).map(id => tagList.find(t => t.id === id).label);
       const meta = [
         ...detailsOf(v),
         ...(v.location ? [{ label: "Location", value: v.location }] : []),
-        ...(types.length ? [{ label: "Type", value: types.join(", ") }] : []),
       ];
       const metaEl = document.getElementById("playerMeta");
       metaEl.innerHTML = meta.map(d =>

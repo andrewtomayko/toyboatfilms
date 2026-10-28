@@ -294,10 +294,9 @@ ${ldJSON(ld)}
     <article class="info${credits.length ? "" : " no-credits"}">
       <div>
         <h1>${esc(v.title)}</h1>
-        ${details.length || v.location || tags.length ? `<ul class="meta">
+        ${details.length || v.location ? `<ul class="meta">
           ${details.map((d) => `<li>${d.label ? `<span class="label">${esc(d.label)}:</span>` : ""}${esc(d.value)}</li>`).join("\n          ")}
           ${v.location ? `<li><span class="label">Location:</span>${esc(v.location)}</li>` : ""}
-          ${tags.length ? `<li><span class="label">Type:</span>${esc(tags.join(", "))}</li>` : ""}
         </ul>` : ""}
         ${v.description ? `<p class="desc">${esc(String(v.description).trim())}</p>` : ""}
       </div>
