@@ -88,8 +88,18 @@ const videos = rawVideos.filter((v) => v && (v.url || v.id) && !v.hidden).map((v
   return { ...v, title: String(v.title || "").trim(), slug, parsed: parseVideo(v) };
 });
 
-/* ---------- Upload date and length from Vimeo (Google wants these for video results) ---------- */
+/* ---------- Upload date and length (Google wants these for video results) ---------- */
+const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129 Safari/537.36";
 await Promise.all(videos.map(async (v) => {
+  if (v.parsed?.kind === "youtube") {
+    try {
+      const res = await fetch(`https://www.youtube.com/watch?v=${encodeURIComponent(v.parsed.id)}&hl=en`, { headers: { "User-Agent": UA, "Accept-Language": "en-US,en;q=0.9" }, signal: AbortSignal.timeout(8000) });
+      const page = res.ok ? await res.text() : "";
+      v.uploadDate = (page.match(/"(?:uploadDate|publishDate)":"(\d{4}-\d{2}-\d{2})/) || [])[1] || "";
+      v.duration = Number((page.match(/"lengthSeconds":"(\d+)"/) || [])[1]) || 0;
+    } catch {}
+    return;
+  }
   if (v.parsed?.kind !== "vimeo") return;
   try {
     const res = await fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent(v.url)}`, { signal: AbortSignal.timeout(8000) });
@@ -139,7 +149,6 @@ function filmPage(v, i) {
   const details = detailsOf(v);
   const credits = (v.credits || []).filter((c) => c && (c.role || c.name));
   const tags = tagsOf(v);
-  const sub = [thumbDetailOf(v), v.location].filter(Boolean).join(" · ");
   const title = `${v.title} | Andrew Tomayko · Toy Boat Films`;
   const desc = summary(v);
   const image = v.thumb ? abs(v.thumb) : `${ORIGIN}/Assets/reel-poster.jpg`;
@@ -206,7 +215,7 @@ ${ldJSON(ld)}
     .navLink{ font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:8px 0; border-bottom:1px solid transparent; white-space:nowrap; }
     .navLink:hover{ border-bottom-color:var(--text); }
 
-    .player{ position:relative; display:block; width:100%; max-width:1600px; margin:0 auto; aspect-ratio:16 / 9; background:#000; border:0; padding:0; color:#fff; cursor:pointer; overflow:hidden; }
+    .player{ position:relative; display:block; width:100%; max-width:min(1600px, 142vh); margin:0 auto; aspect-ratio:16 / 9; background:#000; border:0; padding:0; color:#fff; cursor:pointer; overflow:hidden; }
     .player img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
     .player svg{ position:absolute; left:50%; top:50%; width:72px; height:72px; transform:translate(-50%, -50%); filter:drop-shadow(0 2px 12px rgba(0,0,0,.5)); transition:transform .3s ease; }
     .player:hover svg{ transform:translate(-50%, -50%) scale(1.08); }
@@ -215,8 +224,7 @@ ${ldJSON(ld)}
     .info{ max-width:1200px; margin:0 auto; padding:48px var(--sidePadding) 24px; display:grid; grid-template-columns:minmax(0, 1.6fr) minmax(0, 1fr); gap:56px; }
     .info.no-credits{ grid-template-columns:minmax(0, 1fr); }
     h1{ margin:0 0 8px; font-size:clamp(22px, 2.6vw, 32px); font-weight:700; letter-spacing:.06em; line-height:1.25; text-transform:uppercase; }
-    .sub{ margin:0; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-    .meta{ margin:18px 0 0; padding:0; list-style:none; font-size:15px; line-height:1.5; }
+    .meta{ margin:14px 0 0; padding:0; list-style:none; font-size:15px; line-height:1.5; }
     .meta li + li{ margin-top:4px; }
     .meta .label{ margin-right:6px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
     .desc{ margin:24px 0 0; max-width:62ch; font-size:16px; line-height:1.7; color:#d6d6d6; white-space:pre-line; }
@@ -270,7 +278,6 @@ ${ldJSON(ld)}
     <article class="info${credits.length ? "" : " no-credits"}">
       <div>
         <h1>${esc(v.title)}</h1>
-        ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}
         ${details.length || v.location || tags.length ? `<ul class="meta">
           ${details.map((d) => `<li>${d.label ? `<span class="label">${esc(d.label)}:</span>` : ""}${esc(d.value)}</li>`).join("\n          ")}
           ${v.location ? `<li><span class="label">Location:</span>${esc(v.location)}</li>` : ""}
