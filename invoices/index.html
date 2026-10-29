@@ -205,6 +205,10 @@
   .ledger tr.year-row td { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); font-weight: 700; padding-block: 9px; }
   .ledger tr.year-row td .sub { font-weight: 500; margin-left: 10px; }
   .ledger tbody tr.year-row:hover { background: none; }
+  #sentUnpaidBtn[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .chip.sent { border-color: color-mix(in srgb, #d29922 60%, var(--line)); color: #d29922; }
+  .chip.notsent { border-style: dotted; }
+  .chip { white-space: nowrap; }
 
   /* Tabs and versions */
   .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
@@ -357,9 +361,13 @@
       <select id="paidFilter" aria-label="Paid or unpaid">
         <option value="">Paid &amp; unpaid</option>
         <option value="unpaid">Unpaid</option>
+        <option value="sent">Sent, not paid</option>
+        <option value="unsent">Not sent yet</option>
         <option value="paid">Paid</option>
       </select>
+      <button class="btn small" id="sentUnpaidBtn" type="button" aria-pressed="false">Sent, not paid</button>
       <button class="btn small" id="markShownPaid" type="button" hidden>Mark these paid</button>
+      <button class="btn small" id="markShownSent" type="button" hidden>Mark these sent</button>
       <button class="btn ghost small" id="clearFilters" type="button" hidden>Clear filters</button>
     </div>
     <p class="list-summary" id="listSummary" aria-live="polite"></p>
@@ -485,6 +493,8 @@
         <fieldset>
           <legend>Advance and payments</legend>
           <div class="paid-row" id="paidRow">
+            <label class="switch"><input type="checkbox" id="sent" data-f="sent" role="switch">Sent</label>
+            <label class="field" id="sentDateField"><span>Sent on</span><input type="date" id="sentDate" data-f="sentDate"></label>
             <label class="switch"><input type="checkbox" id="paid" data-f="paid" role="switch">Paid</label>
             <label class="field" id="paidDateField"><span>Paid on</span><input type="date" id="paidDate" data-f="paidDate"></label>
           </div>
@@ -659,6 +669,18 @@
   const isEstimate = (inv) => inv.docType === 'estimate';
   // An invoice is paid when switched to Paid, or when recorded payments cover the total.
   const isPaid = (inv) => !isEstimate(inv) && (Boolean(inv.paid) || (() => { const t = totals(inv); return t.total > 0 && t.payments.length > 0 && t.balance < 0.005; })());
+  // Sent: the invoice has gone to the client. Paid ones count as sent.
+  const isSent = (inv) => !isEstimate(inv) && (Boolean(inv.sent) || isPaid(inv));
+  const awaitingPayment = (inv) => isSent(inv) && !isPaid(inv);
+  function paidMatch(inv, f) {
+    if (!f) return true;
+    if (isEstimate(inv)) return false;
+    if (f === 'paid') return isPaid(inv);
+    if (f === 'unpaid') return !isPaid(inv);
+    if (f === 'sent') return awaitingPayment(inv);
+    if (f === 'unsent') return !isSent(inv);
+    return true;
+  }
   const owed = (inv) => (isEstimate(inv) || isPaid(inv) ? 0 : Math.max(0, totals(inv).balance));
   const feeLabel = (inv) => String(inv.productionFeeLabel || '').trim() || 'Production fee';
   const kindOf = (inv) => (isEstimate(inv) ? 'Estimate' : 'Invoice');
@@ -944,7 +966,7 @@
       (!year || yearOf(inv) === year) &&
       (!client || clientKey(inv) === client) &&
       (!type || (type === 'estimate') === isEstimate(inv)) &&
-      (!paid || (!isEstimate(inv) && (paid === 'paid') === isPaid(inv))) &&
+      paidMatch(inv, paid) &&
       (!words.length || (() => { const t = searchText(inv); return words.every((w) => t.includes(w)); })()));
   }
 
@@ -953,13 +975,15 @@
     const inv = list.filter((i) => !isEstimate(i)), est = list.filter(isEstimate);
     const billed = inv.reduce((sum, i) => sum + totals(i).total, 0);
     const unpaid = inv.reduce((sum, i) => sum + owed(i), 0);
-    return { invoices: inv.length, estimates: est.length, billed, unpaid };
+    const waiting = inv.filter(awaitingPayment);
+    return { invoices: inv.length, estimates: est.length, billed, unpaid, waitingCount: waiting.length, waiting: waiting.reduce((sum, i) => sum + owed(i), 0) };
   }
   // "5 invoices · $16,225.00 · $1,200.00 unpaid · 1 estimate", leaving out whichever part is zero
   function summaryText(sum, moneyHTML = money) {
     const parts = [];
     if (sum.invoices || !sum.estimates) parts.push(`${countLabel(sum.invoices, 'invoice')} · ${moneyHTML(sum.billed)}`);
     if (sum.unpaid > 0.005) parts.push(`${money(sum.unpaid)} unpaid`);
+    if (sum.waitingCount) parts.push(`${countLabel(sum.waitingCount, 'invoice')} sent and waiting (${money(sum.waiting)})`);
     if (sum.estimates) parts.push(countLabel(sum.estimates, 'estimate'));
     return parts.join(' · ');
   }
@@ -998,7 +1022,7 @@
       html += `
       <tr data-row="${esc(inv.id)}" title="Double-click to open">
         <td class="num">${esc(docNumber(inv))}</td>
-        <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>`}</td>
+        <td><span class="chip ${isEstimate(inv) ? 'est' : ''}">${kindOf(inv)}</span>${isEstimate(inv) ? '' : `<br><button class="chip ${isPaid(inv) ? 'paid' : 'unpaid'}" type="button" data-togglepaid="${esc(inv.id)}" title="${isPaid(inv) ? 'Click to mark unpaid' : 'Click to mark paid'}">${isPaid(inv) ? 'Paid' : 'Unpaid'}</button>${isPaid(inv) ? '' : `<br><button class="chip ${isSent(inv) ? 'sent' : 'notsent'}" type="button" data-togglesent="${esc(inv.id)}" title="${isSent(inv) ? `Sent${inv.sentDate ? ' ' + esc(fmtShort(inv.sentDate)) : ''}. Click to mark not sent` : 'Click to mark sent today'}">${isSent(inv) ? 'Sent' : 'Not sent'}</button>`}`}</td>
         <td class="list-date">${esc(fmtLong(inv.invoiceDate))}</td>
         <td><b>${esc(inv.jobName)}</b><div class="sub">${esc(inv.clientName)}</div></td>
         <td class="right num">${hasOptions(inv) ? `${optionRange(inv)}<div class="sub">${countLabel(optionsOf(inv).length, 'option')}</div>` : money(totals(inv).total)}${listBalance(inv)}</td>
@@ -1014,8 +1038,14 @@
     });
     $('invoiceRows').innerHTML = html;
     const toMark = rows.filter((i) => !isEstimate(i) && !isPaid(i));
-    $('markShownPaid').hidden = $('paidFilter').value !== 'unpaid' || !toMark.length;
+    $('markShownPaid').hidden = !['unpaid', 'sent'].includes($('paidFilter').value) || !toMark.length;
     $('markShownPaid').textContent = `Mark ${toMark.length === 1 ? 'this' : 'these ' + toMark.length} paid`;
+    const toSend = rows.filter((i) => !isEstimate(i) && !isSent(i));
+    $('markShownSent').hidden = $('paidFilter').value !== 'unsent' || !toSend.length;
+    $('markShownSent').textContent = `Mark ${toSend.length === 1 ? 'this' : 'these ' + toSend.length} sent`;
+    $('sentUnpaidBtn').setAttribute('aria-pressed', String($('paidFilter').value === 'sent'));
+    const waitingAll = invoices.filter(awaitingPayment).length;
+    $('sentUnpaidBtn').textContent = `Sent, not paid${waitingAll ? ` (${waitingAll})` : ''}`;
   }
 
   ['searchBox', 'yearFilter', 'clientFilter', 'typeFilter', 'paidFilter'].forEach((id) =>
@@ -1034,6 +1064,24 @@
     btn.disabled = false;
     renderList();
   });
+  // One click shows what's out with clients and still owed; another click goes back to everything.
+  $('sentUnpaidBtn').addEventListener('click', () => {
+    $('paidFilter').value = $('paidFilter').value === 'sent' ? '' : 'sent';
+    renderList();
+  });
+  // Catching up: mark every invoice in the "Not sent yet" list as sent (no date, since it isn't known).
+  $('markShownSent').addEventListener('click', async () => {
+    const list = filteredInvoices().filter((i) => !isEstimate(i) && !isSent(i));
+    if (!list.length || !confirm(`Mark ${countLabel(list.length, 'invoice')} as sent?`)) return;
+    const btn = $('markShownSent'); btn.disabled = true;
+    try {
+      for (const inv of list) await store.saveInvoice({ ...inv, sent: true, sentDate: inv.sentDate || '' });
+    } catch (err) {
+      alert('Some invoices could not be saved: ' + (err?.message || err) + '. Try again.');
+    }
+    btn.disabled = false;
+    renderList();
+  });
   $('clearFilters').addEventListener('click', () => {
     $('searchBox').value = ''; $('yearFilter').value = ''; $('clientFilter').value = ''; $('typeFilter').value = ''; $('paidFilter').value = '';
     renderList();
@@ -1044,7 +1092,7 @@
     const t = totals(inv);
     if (isEstimate(inv)) return '';
     if (isPaid(inv)) return inv.paidDate ? `<div class="sub">Paid ${esc(fmtShort(inv.paidDate))}</div>` : '';
-    if (!t.payments.length) return '';
+    if (!t.payments.length) return inv.sent && inv.sentDate ? `<div class="sub">Sent ${esc(fmtShort(inv.sentDate))}</div>` : '';
     return `<div class="sub">Balance ${money(t.balance)}</div>`;
   }
 
@@ -1058,6 +1106,15 @@
   });
 
   $('invoiceRows').addEventListener('click', async (e) => {
+    const sentToggle = e.target.closest('[data-togglesent]');
+    if (sentToggle) {
+      const inv = invoices.find((i) => i.id === sentToggle.dataset.togglesent);
+      if (!inv) return;
+      sentToggle.disabled = true;
+      const next = inv.sent ? { ...inv, sent: false, sentDate: '' } : { ...inv, sent: true, sentDate: inv.sentDate || todayISO() };
+      try { await store.saveInvoice(next); renderList(); } catch (err) { sentToggle.disabled = false; sentToggle.textContent = 'Save failed'; }
+      return;
+    }
     const toggle = e.target.closest('[data-togglepaid]');
     if (toggle) {
       const inv = invoices.find((i) => i.id === toggle.dataset.togglepaid);
@@ -1125,7 +1182,7 @@
   function duplicateInvoice(src, overrides = {}, title) {
     if (!src) return;
     const copy = JSON.parse(JSON.stringify(src));
-    openEditor({ ...copy, payments: [], rev: 1, ...JSON.parse(JSON.stringify(overrides)), id: 'inv-' + Date.now().toString(36), invoiceNumber: nextInvoiceNumber(), invoiceDate: todayISO() }, true);
+    openEditor({ ...copy, payments: [], rev: 1, sent: false, sentDate: '', paid: false, paidDate: '', pdfFileName: '', ...JSON.parse(JSON.stringify(overrides)), id: 'inv-' + Date.now().toString(36), invoiceNumber: nextInvoiceNumber(), invoiceDate: todayISO() }, true);
     $('editorTitle').textContent = title || `New ${kindOf(current).toLowerCase()} (copy of ${src.invoiceNumber})`;
   }
 
@@ -1220,6 +1277,7 @@
   function renderPaidRow() {
     $('paidRow').hidden = isEstimate(current);
     $('paidDateField').hidden = !current.paid;
+    $('sentDateField').hidden = !current.sent;
   }
 
   function renderPayments() {
@@ -1333,6 +1391,10 @@
     if (el.dataset.f === 'paid') {
       current.paid = el.checked;
       if (el.checked && !current.paidDate) $('paidDate').value = current.paidDate = todayISO();
+      renderPaidRow();
+    } else if (el.dataset.f === 'sent') {
+      current.sent = el.checked;
+      if (el.checked && !current.sentDate) $('sentDate').value = current.sentDate = todayISO();
       renderPaidRow();
     } else if (el.dataset.f) {
       current[el.dataset.f] = el.hasAttribute('data-num') ? num(el.value) : el.value;
