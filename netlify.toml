@@ -20,6 +20,19 @@
   status = 301
   force = true
 
+# Personal domain (takes effect once andrewtomayko.com is added as a domain alias in Netlify)
+[[redirects]]
+  from = "https://andrewtomayko.com/*"
+  to = "https://toyboatfilms.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.andrewtomayko.com/*"
+  to = "https://toyboatfilms.com/:splat"
+  status = 301
+  force = true
+
 # Each deploy writes a page for every film (/work/...), the homepage grid and the sitemap
 # from data/videos.json, so search engines can read them. Nothing else is built.
 [build]
